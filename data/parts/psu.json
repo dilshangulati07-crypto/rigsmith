@@ -1,7 +1,7 @@
 {
   "category": "psu",
   "schemaVersion": 1,
-  "notes": "refPriceTHB is an approximate Thai street price entered by hand, not a live price. Check before buying. connectors counts: atx24 = 24-pin, eps8 = CPU 8-pin (4+4), pcie8 = PCIe 6+2, pcie16 = 12VHPWR / 12V-2x6, sata, molex. null = count not confirmed. atxVersion null = ATX 2.x unit or not confirmed.",
+  "notes": "refPriceTHB is an approximate Thai street price entered by hand, not a live price. Check before buying. connectors are plug counts from the maker's spec page: atx24 = 24-pin, eps8 = CPU 8-pin (4+4), pcie8 = PCIe 6+2, pcie16 = 12VHPWR / 12V-2x6, sata, molex = 4-pin peripheral. pcie16 is 0 only when the page gives a complete connector list without one. null = not stated on the source page (or no source page could be read). atxVersion is the ATX12V/ATX version the page states; null = not stated. formFactor ATX is also taken from a stated 150 x 86 mm (W x H) cross-section, the ATX PSU size. efficiency uses a Cybenetics rating only when the maker page lists no 80 PLUS rating. specSource = page the specs were checked against (2026-11-11).",
   "parts": [
     {
       "id": "deepcool-pf450",
@@ -15,17 +15,19 @@
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=DeepCool%20PF450",
       "wattage": 450,
       "efficiency": "80 PLUS Standard",
-      "modular": "none",
+      "modular": null,
       "formFactor": "ATX",
-      "atxVersion": null,
+      "atxVersion": "2.4",
       "connectors": {
         "atx24": 1,
         "eps8": 1,
-        "pcie8": null,
+        "pcie8": 2,
         "pcie16": 0,
-        "sata": null,
-        "molex": null
-      }
+        "sata": 6,
+        "molex": 2
+      },
+      "specSource": "https://www.deepcool.com/products/PowerSupplyUnits/powersupplyunits/PF450D-230V-Power-Supply-Unit/2021/15141.shtml",
+      "specSourceType": "official"
     },
     {
       "id": "corsair-cv450",
@@ -33,7 +35,7 @@
       "brand": "Corsair",
       "name": "Corsair CV450",
       "tier": "budget",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 1390,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Corsair%20CV450",
@@ -41,15 +43,18 @@
       "efficiency": "80 PLUS Bronze",
       "modular": "none",
       "formFactor": "ATX",
-      "atxVersion": null,
+      "atxVersion": "2.31",
       "connectors": {
         "atx24": 1,
         "eps8": 1,
-        "pcie8": null,
+        "pcie8": 2,
         "pcie16": 0,
-        "sata": null,
-        "molex": null
-      }
+        "sata": 7,
+        "molex": 2
+      },
+      "specSource": "https://www.corsair.com/ww/sv/p/psu/cp-9020209-ww/cv-series-cv450-450-watt-80-plus-bronze-certified-psu-cp-9020209-ww",
+      "specSourceType": "official",
+      "sku": "CP-9020209-WW"
     },
     {
       "id": "thermaltake-smart-500w",
@@ -111,17 +116,19 @@
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=DeepCool%20PK550D",
       "wattage": 550,
       "efficiency": "80 PLUS Bronze",
-      "modular": "none",
+      "modular": null,
       "formFactor": "ATX",
-      "atxVersion": null,
+      "atxVersion": "2.4",
       "connectors": {
         "atx24": 1,
-        "eps8": 1,
-        "pcie8": null,
+        "eps8": 2,
+        "pcie8": 2,
         "pcie16": 0,
-        "sata": null,
-        "molex": null
-      }
+        "sata": 6,
+        "molex": 3
+      },
+      "specSource": "https://www.deepcool.com/products/PowerSupplyUnits/powersupplyunits/PK550D-80-PLUS-Bronze-Power-Supply/2022/15621.shtml",
+      "specSourceType": "official"
     },
     {
       "id": "corsair-cx650",
@@ -129,7 +136,7 @@
       "brand": "Corsair",
       "name": "Corsair CX650",
       "tier": "budget",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 2290,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Corsair%20CX650",
@@ -137,15 +144,18 @@
       "efficiency": "80 PLUS Bronze",
       "modular": "none",
       "formFactor": "ATX",
-      "atxVersion": null,
+      "atxVersion": "2.31",
       "connectors": {
         "atx24": 1,
         "eps8": 1,
-        "pcie8": null,
+        "pcie8": 2,
         "pcie16": 0,
-        "sata": null,
-        "molex": null
-      }
+        "sata": 3,
+        "molex": 2
+      },
+      "specSource": "https://www.corsair.com/us/en/p/psu/cp-9020278-na/cx-series-cx650-650-watt-80-plus-bronze-atx-power-supply-cp-9020278-na",
+      "specSourceType": "official",
+      "sku": "CP-9020278-NA"
     },
     {
       "id": "msi-mag-a650bn",
@@ -153,7 +163,7 @@
       "brand": "MSI",
       "name": "MSI MAG A650BN",
       "tier": "budget",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 1990,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=MSI%20MAG%20A650BN",
@@ -164,12 +174,14 @@
       "atxVersion": null,
       "connectors": {
         "atx24": 1,
-        "eps8": null,
-        "pcie8": null,
+        "eps8": 1,
+        "pcie8": 2,
         "pcie16": 0,
-        "sata": null,
-        "molex": null
-      }
+        "sata": 5,
+        "molex": 2
+      },
+      "specSource": "https://storage-asset.msi.com/datasheet/power-supply/global/MAG-A650BN.pdf",
+      "specSourceType": "official"
     },
     {
       "id": "cooler-master-mwe-650-bronze-v2",
@@ -177,7 +189,7 @@
       "brand": "Cooler Master",
       "name": "Cooler Master MWE 650 Bronze V2",
       "tier": "budget",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 1990,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Cooler%20Master%20MWE%20650%20Bronze%20V2",
@@ -185,15 +197,17 @@
       "efficiency": "80 PLUS Bronze",
       "modular": "none",
       "formFactor": "ATX",
-      "atxVersion": null,
+      "atxVersion": "2.52",
       "connectors": {
         "atx24": 1,
-        "eps8": null,
-        "pcie8": null,
+        "eps8": 2,
+        "pcie8": 4,
         "pcie16": 0,
-        "sata": null,
-        "molex": null
-      }
+        "sata": 8,
+        "molex": 4
+      },
+      "specSource": "https://www.coolermaster.com/en-global/products/mwe-650-bronze-v2.html",
+      "specSourceType": "official"
     },
     {
       "id": "seasonic-focus-gm-650",
@@ -225,7 +239,7 @@
       "brand": "DeepCool",
       "name": "DeepCool PM750D",
       "tier": "mid",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 2690,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=DeepCool%20PM750D",
@@ -233,15 +247,17 @@
       "efficiency": "80 PLUS Gold",
       "modular": "none",
       "formFactor": "ATX",
-      "atxVersion": null,
+      "atxVersion": "2.4",
       "connectors": {
         "atx24": 1,
-        "eps8": null,
-        "pcie8": null,
+        "eps8": 2,
+        "pcie8": 3,
         "pcie16": 0,
-        "sata": null,
-        "molex": null
-      }
+        "sata": 6,
+        "molex": 3
+      },
+      "specSource": "https://global.deepcool.com/products/PowerSupplyUnits/powersupplyunits/PM750D-80-PLUS-Gold-Power-Supply/2021/12995.shtml",
+      "specSourceType": "official"
     },
     {
       "id": "corsair-rm750e",
@@ -249,7 +265,7 @@
       "brand": "Corsair",
       "name": "Corsair RM750e",
       "tier": "mid",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 3690,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Corsair%20RM750e",
@@ -257,15 +273,18 @@
       "efficiency": "80 PLUS Gold",
       "modular": "full",
       "formFactor": "ATX",
-      "atxVersion": "3.0",
+      "atxVersion": "3.1",
       "connectors": {
         "atx24": 1,
-        "eps8": null,
-        "pcie8": null,
+        "eps8": 2,
+        "pcie8": 3,
         "pcie16": 1,
-        "sata": null,
-        "molex": null
-      }
+        "sata": 7,
+        "molex": 4
+      },
+      "specSource": "https://www.corsair.com/us/en/p/psu/cp-9020262-na/rme-series-rm750e-fully-modular-low-noise-atx-power-supply-cp-9020262-na",
+      "specSourceType": "official",
+      "sku": "CP-9020262-NA"
     },
     {
       "id": "msi-mag-a750gl-pcie5",
@@ -273,7 +292,7 @@
       "brand": "MSI",
       "name": "MSI MAG A750GL PCIE5",
       "tier": "mid",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 3290,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=MSI%20MAG%20A750GL%20PCIE5",
@@ -281,15 +300,17 @@
       "efficiency": "80 PLUS Gold",
       "modular": "full",
       "formFactor": "ATX",
-      "atxVersion": "3.0",
+      "atxVersion": "3.1",
       "connectors": {
         "atx24": 1,
-        "eps8": null,
-        "pcie8": null,
+        "eps8": 2,
+        "pcie8": 3,
         "pcie16": 1,
-        "sata": null,
-        "molex": null
-      }
+        "sata": 8,
+        "molex": 4
+      },
+      "specSource": "https://storage-asset.msi.com/datasheet/power-supply/global/MAG-A750GL-PCIE5.pdf",
+      "specSourceType": "official"
     },
     {
       "id": "be-quiet-pure-power-12-m-750w",
@@ -345,7 +366,7 @@
       "brand": "Lian Li",
       "name": "Lian Li SP750",
       "tier": "high",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 4490,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Lian%20Li%20SP750",
@@ -356,36 +377,41 @@
       "atxVersion": null,
       "connectors": {
         "atx24": 1,
-        "eps8": null,
-        "pcie8": null,
+        "eps8": 2,
+        "pcie8": 3,
         "pcie16": 0,
-        "sata": null,
-        "molex": null
-      }
+        "sata": 8,
+        "molex": 4
+      },
+      "specSource": "https://lian-li.com/product/sp750/",
+      "specSourceType": "official"
     },
     {
-      "id": "corsair-sf750-2024",
+      "id": "corsair-sf750",
       "category": "psu",
       "brand": "Corsair",
-      "name": "Corsair SF750 (2024)",
+      "name": "Corsair SF750",
       "tier": "high",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 6490,
       "priceUpdated": "2026-11-11",
-      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Corsair%20SF750%20(2024)",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Corsair%20SF750",
       "wattage": 750,
       "efficiency": "80 PLUS Platinum",
       "modular": "full",
       "formFactor": "SFX",
-      "atxVersion": "3.1",
+      "atxVersion": "2.4",
       "connectors": {
         "atx24": 1,
-        "eps8": null,
-        "pcie8": null,
-        "pcie16": 1,
-        "sata": null,
-        "molex": null
-      }
+        "eps8": 2,
+        "pcie8": 4,
+        "pcie16": 0,
+        "sata": 8,
+        "molex": 3
+      },
+      "specSource": "https://www.corsair.com/us/en/p/psu/cp-9020186-na/sf-series-sf750-750-watt-80-plus-platinum-certified-high-performance-sfx-psu-cp-9020186-na",
+      "specSourceType": "official",
+      "sku": "CP-9020186-NA"
     },
     {
       "id": "cooler-master-v850-sfx-gold",
@@ -401,15 +427,17 @@
       "efficiency": "80 PLUS Gold",
       "modular": "full",
       "formFactor": "SFX",
-      "atxVersion": null,
+      "atxVersion": "3.1",
       "connectors": {
         "atx24": 1,
-        "eps8": null,
-        "pcie8": null,
+        "eps8": 2,
+        "pcie8": 4,
         "pcie16": null,
-        "sata": null,
-        "molex": null
-      }
+        "sata": 8,
+        "molex": 4
+      },
+      "specSource": "https://www.coolermaster.com/en-us/products/v850-sfx-gold.html",
+      "specSourceType": "official"
     },
     {
       "id": "asus-rog-loki-sfx-l-850w-platinum",
@@ -423,17 +451,19 @@
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=ASUS%20ROG%20Loki%20SFX-L%20850W%20Platinum",
       "wattage": 850,
       "efficiency": "80 PLUS Platinum",
-      "modular": "full",
+      "modular": null,
       "formFactor": "SFX-L",
-      "atxVersion": "3.0",
+      "atxVersion": "3.1",
       "connectors": {
         "atx24": 1,
-        "eps8": null,
-        "pcie8": null,
+        "eps8": 2,
+        "pcie8": 3,
         "pcie16": 1,
-        "sata": null,
-        "molex": null
-      }
+        "sata": 6,
+        "molex": 4
+      },
+      "specSource": "https://rog.asus.com/power-supply-units/rog-loki/rog-loki-850p-sfx-l-gaming-model/spec/",
+      "specSourceType": "official"
     },
     {
       "id": "corsair-rm850e",
@@ -441,7 +471,7 @@
       "brand": "Corsair",
       "name": "Corsair RM850e",
       "tier": "mid",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 4290,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Corsair%20RM850e",
@@ -449,15 +479,18 @@
       "efficiency": "80 PLUS Gold",
       "modular": "full",
       "formFactor": "ATX",
-      "atxVersion": "3.0",
+      "atxVersion": "3.1",
       "connectors": {
         "atx24": 1,
-        "eps8": null,
-        "pcie8": null,
+        "eps8": 2,
+        "pcie8": 3,
         "pcie16": 1,
-        "sata": null,
-        "molex": null
-      }
+        "sata": 7,
+        "molex": 4
+      },
+      "specSource": "https://www.corsair.com/us/en/p/psu/CP-9020263-NA/rme-series-rm850e-fully-modular-low-noise-atx-power-supply-cp-9020263-na",
+      "specSourceType": "official",
+      "sku": "CP-9020263-NA"
     },
     {
       "id": "corsair-rm850x-2024",
@@ -465,23 +498,26 @@
       "brand": "Corsair",
       "name": "Corsair RM850x (2024)",
       "tier": "high",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 5290,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Corsair%20RM850x%20(2024)",
       "wattage": 850,
-      "efficiency": "80 PLUS Gold",
+      "efficiency": "Cybenetics Gold",
       "modular": "full",
       "formFactor": "ATX",
       "atxVersion": "3.1",
       "connectors": {
         "atx24": 1,
-        "eps8": null,
-        "pcie8": null,
+        "eps8": 2,
+        "pcie8": 3,
         "pcie16": 1,
-        "sata": null,
-        "molex": null
-      }
+        "sata": 8,
+        "molex": 3
+      },
+      "specSource": "https://www.corsair.com/us/en/p/psu/cp-9020270-ww/rm850x-fully-modular-atx-power-supply-cp-9020270-ww",
+      "specSourceType": "official",
+      "sku": "CP-9020270-NA"
     },
     {
       "id": "msi-mpg-a850g-pcie5",
@@ -489,7 +525,7 @@
       "brand": "MSI",
       "name": "MSI MPG A850G PCIE5",
       "tier": "high",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 4590,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=MSI%20MPG%20A850G%20PCIE5",
@@ -497,15 +533,17 @@
       "efficiency": "80 PLUS Gold",
       "modular": "full",
       "formFactor": "ATX",
-      "atxVersion": "3.0",
+      "atxVersion": "3.1",
       "connectors": {
         "atx24": 1,
-        "eps8": null,
-        "pcie8": null,
+        "eps8": 2,
+        "pcie8": 6,
         "pcie16": 1,
-        "sata": null,
-        "molex": null
-      }
+        "sata": 8,
+        "molex": 4
+      },
+      "specSource": "https://storage-asset.msi.com/datasheet/power-supply/au/MPG-A850G-PCIE5.pdf",
+      "specSourceType": "official"
     },
     {
       "id": "seasonic-focus-gx-850-atx-3-0",
@@ -537,7 +575,7 @@
       "brand": "Cooler Master",
       "name": "Cooler Master MWE Gold 850 V2 Full Modular",
       "tier": "mid",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 3990,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Cooler%20Master%20MWE%20Gold%20850%20V2%20Full%20Modular",
@@ -545,15 +583,17 @@
       "efficiency": "80 PLUS Gold",
       "modular": "full",
       "formFactor": "ATX",
-      "atxVersion": null,
+      "atxVersion": "2.41",
       "connectors": {
         "atx24": 1,
-        "eps8": null,
-        "pcie8": null,
-        "pcie16": null,
-        "sata": null,
-        "molex": null
-      }
+        "eps8": 2,
+        "pcie8": 4,
+        "pcie16": 0,
+        "sata": 12,
+        "molex": 4
+      },
+      "specSource": "https://www.coolermaster.com/en-us/products/mwe-gold-850-v2-full-modular.html",
+      "specSourceType": "official"
     },
     {
       "id": "fsp-hydro-g-pro-850w-atx-3-0",
@@ -561,7 +601,7 @@
       "brand": "FSP",
       "name": "FSP Hydro G Pro 850W ATX 3.0",
       "tier": "high",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 4590,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=FSP%20Hydro%20G%20Pro%20850W%20ATX%203.0",
@@ -572,12 +612,15 @@
       "atxVersion": "3.0",
       "connectors": {
         "atx24": 1,
-        "eps8": null,
-        "pcie8": null,
+        "eps8": 2,
+        "pcie8": 6,
         "pcie16": 1,
-        "sata": null,
-        "molex": null
-      }
+        "sata": 14,
+        "molex": 5
+      },
+      "specSource": "https://www.fsplifestyle.com/jp/product/HYDROGPRO850W_GEN5.html",
+      "specSourceType": "official",
+      "sku": "HG2-850 Gen5"
     },
     {
       "id": "corsair-rm1000x-2024",
@@ -585,23 +628,26 @@
       "brand": "Corsair",
       "name": "Corsair RM1000x (2024)",
       "tier": "high",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 6490,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Corsair%20RM1000x%20(2024)",
       "wattage": 1000,
-      "efficiency": "80 PLUS Gold",
+      "efficiency": "Cybenetics Gold",
       "modular": "full",
       "formFactor": "ATX",
       "atxVersion": "3.1",
       "connectors": {
         "atx24": 1,
-        "eps8": null,
-        "pcie8": null,
+        "eps8": 2,
+        "pcie8": 4,
         "pcie16": 1,
-        "sata": null,
-        "molex": null
-      }
+        "sata": 12,
+        "molex": 6
+      },
+      "specSource": "https://www.corsair.com/us/en/p/psu/cp-9020271-na/rmx-series-rm1000x-fully-modular-power-supply-cp-9020271-na",
+      "specSourceType": "official",
+      "sku": "CP-9020271-NA"
     },
     {
       "id": "msi-mpg-a1000g-pcie5",
@@ -609,7 +655,7 @@
       "brand": "MSI",
       "name": "MSI MPG A1000G PCIE5",
       "tier": "high",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 5990,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=MSI%20MPG%20A1000G%20PCIE5",
@@ -617,15 +663,17 @@
       "efficiency": "80 PLUS Gold",
       "modular": "full",
       "formFactor": "ATX",
-      "atxVersion": "3.0",
+      "atxVersion": "3.1",
       "connectors": {
         "atx24": 1,
-        "eps8": null,
-        "pcie8": null,
+        "eps8": 2,
+        "pcie8": 6,
         "pcie16": 1,
-        "sata": null,
-        "molex": null
-      }
+        "sata": 12,
+        "molex": 4
+      },
+      "specSource": "https://storage-asset.msi.com/datasheet/power-supply/global/MPG-A1000G-PCIE5.pdf",
+      "specSourceType": "official"
     },
     {
       "id": "seasonic-focus-gx-1000-atx-3-0",
@@ -748,28 +796,31 @@
       }
     },
     {
-      "id": "corsair-hx1200i-2023",
+      "id": "corsair-hx1200i",
       "category": "psu",
       "brand": "Corsair",
-      "name": "Corsair HX1200i (2023)",
+      "name": "Corsair HX1200i",
       "tier": "flagship",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 11500,
       "priceUpdated": "2026-11-11",
-      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Corsair%20HX1200i%20(2023)",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Corsair%20HX1200i",
       "wattage": 1200,
       "efficiency": "80 PLUS Platinum",
       "modular": "full",
       "formFactor": "ATX",
-      "atxVersion": "3.0",
+      "atxVersion": "3.1",
       "connectors": {
         "atx24": 1,
-        "eps8": null,
-        "pcie8": null,
-        "pcie16": 1,
-        "sata": null,
-        "molex": null
-      }
+        "eps8": 2,
+        "pcie8": 5,
+        "pcie16": 2,
+        "sata": 8,
+        "molex": 6
+      },
+      "specSource": "https://www.corsair.com/us/en/p/psu/cp-9020307-na/hx1200i-fully-modular-ultra-low-noise-platinum-atx-1200-watt-pc-power-supply-cp-9020307-na",
+      "specSourceType": "official",
+      "sku": "CP-9020307-NA"
     },
     {
       "id": "asus-rog-thor-1200w-platinum-ii",
@@ -783,17 +834,20 @@
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=ASUS%20ROG%20Thor%201200W%20Platinum%20II",
       "wattage": 1200,
       "efficiency": "80 PLUS Platinum",
-      "modular": "full",
+      "modular": null,
       "formFactor": "ATX",
       "atxVersion": null,
       "connectors": {
         "atx24": 1,
-        "eps8": null,
-        "pcie8": null,
-        "pcie16": 0,
-        "sata": null,
-        "molex": null
-      }
+        "eps8": 2,
+        "pcie8": 8,
+        "pcie16": 1,
+        "sata": 12,
+        "molex": 6
+      },
+      "specSource": "https://rog.asus.com/power-supply-units/rog-thor/rog-thor-1200p2-gaming-model/spec/",
+      "specSourceType": "official",
+      "sku": "ROG-THOR-1200P2-GAMING"
     }
   ]
 }

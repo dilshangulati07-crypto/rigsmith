@@ -20,17 +20,23 @@ export const ENUMS = {
   storageFormFactor: ['M.2 2280', '2.5in', '3.5in'],
   coolerType: ['air', 'aio'],
   modular: ['full', 'semi', 'none'],
-  efficiency: ['80 PLUS Standard', '80 PLUS White', '80 PLUS Bronze', '80 PLUS Gold', '80 PLUS Platinum', '80 PLUS Titanium'],
+  // Cybenetics values are used only when the maker lists no 80 PLUS rating.
+  efficiency: ['80 PLUS Standard', '80 PLUS White', '80 PLUS Bronze', '80 PLUS Gold', '80 PLUS Platinum', '80 PLUS Titanium',
+    'Cybenetics Bronze', 'Cybenetics Silver', 'Cybenetics Gold', 'Cybenetics Platinum', 'Cybenetics Titanium'],
   psuFormFactor: ['ATX', 'SFX', 'SFX-L'],
   gpuPower: ['6-pin', '8-pin', '16-pin'],
   chipMaker: ['NVIDIA', 'AMD', 'Intel'],
   caseType: ['full-tower', 'mid-tower', 'matx', 'itx'],
   sidePanel: ['glass', 'mesh', 'solid', 'acrylic'],
   radiatorPosition: ['front', 'top', 'side', 'bottom', 'rear'],
+  specSourceType: ['official', 'retailer', 'review'],
 };
 
 const PSU_CONNECTORS = ['atx24', 'eps8', 'pcie8', 'pcie16', 'sata', 'molex'];
-const RADIATOR_SIZES = [120, 140, 240, 280, 360, 420, 480];
+const RADIATOR_SIZES = [92, 120, 140, 240, 280, 360, 420, 480];
+const FAN_SIZES = ['80', '92', '120', '140', '160', '200'];
+// Fan mounts also exist on top of the PSU shroud, where no radiator fits.
+const FAN_POSITIONS = [...['front', 'top', 'side', 'bottom', 'rear'], 'shroud'];
 
 // Chipset -> socket, used to catch typos like an "X870" board on LGA1700.
 const CHIPSET_SOCKET = {
@@ -72,6 +78,11 @@ const SCHEMAS = {
   fans: { sizeMM: 'int', thicknessMM: 'int', packCount: 'int', rgb: 'bool', rpmMax: 'int' },
 };
 
+// Optional on every part: where the specs were checked.
+const COMMON_OPTIONAL = { specSource: 'url', specSourceType: 'enum:specSourceType', sku: 'string' };
+// Categories that went through the source-checked pass: a verified part must cite its source.
+const NEEDS_SOURCE = ['psu', 'case'];
+
 // Optional fields that are type-checked when present.
 const OPTIONAL = {
   cpu: {
@@ -81,7 +92,8 @@ const OPTIONAL = {
   ram: { modules: 'int', moduleGB: 'int', casLatency: 'int', rgb: 'bool' },
   gpu: { chipMaker: 'enum:chipMaker', chip: 'string', launchYear: 'int', fans: 'int' },
   psu: { formFactor: 'enum:psuFormFactor', atxVersion: 'string?' },
-  case: { caseType: 'enum:caseType', psuFormFactors: 'enum:psuFormFactor[]', sidePanel: 'enum:sidePanel' },
+  // psuFormFactors null = the maker page gives only a PSU length, not a type.
+  case: { caseType: 'enum:caseType', psuFormFactors: 'enum:psuFormFactor[]?', sidePanel: 'enum:sidePanel' },
   cooler: { fans: 'int', fanSizeMM: 'int', rgb: 'bool' },
   storage: { interface: 'string', pcieGen: 'int', readMBs: 'int', writeMBs: 'int', rpm: 'int' },
   fans: { airflowCFM: 'number?', staticPressureMMH2O: 'number?', noiseDBA: 'number?' },
@@ -234,25 +246,42 @@ const SANITY = {
     for (const k of Object.keys(c)) if (!PSU_CONNECTORS.includes(k)) err(w, `unknown connector "${k}"`);
     nestedNulls(w, p, 'connectors');
     if (c.atx24 !== 1) err(w, 'every PSU has exactly one 24-pin');
-    if (p.atxVersion && !/^3\.\d$/.test(p.atxVersion)) err(w, `atxVersion "${p.atxVersion}" invalid`);
-    if (p.atxVersion && c.pcie16 === 0) warn(w, 'ATX 3.x unit without a 16-pin connector');
+    if (p.atxVersion && !/^[23]\.\d+$/.test(p.atxVersion)) err(w, `atxVersion "${p.atxVersion}" invalid`);
+    if (p.atxVersion?.startsWith('3') && c.pcie16 === 0) warn(w, 'ATX 3.x unit without a 16-pin connector');
   },
   case(p, w) {
     if (known(p.maxGPULengthMM)) range(w, 'maxGPULengthMM', p.maxGPULengthMM, 150, 600);
     if (known(p.maxCoolerHeightMM)) range(w, 'maxCoolerHeightMM', p.maxCoolerHeightMM, 30, 220);
+    // radiatorSupport: [{ position, maxMM, sizesMM? }]; sizesMM is the full list when the maker prints one.
     (p.radiatorSupport || []).forEach((r, i) => {
-      if (!ENUMS.radiatorPosition.includes(r.position)) err(w, `radiatorSupport[${i}].position "${r.position}" invalid`);
-      if (!RADIATOR_SIZES.includes(r.maxMM)) err(w, `radiatorSupport[${i}].maxMM ${r.maxMM} invalid`);
+      const at = `radiatorSupport[${i}]`;
+      if (!ENUMS.radiatorPosition.includes(r.position)) err(w, `${at}.position "${r.position}" invalid`);
+      if (!RADIATOR_SIZES.includes(r.maxMM)) err(w, `${at}.maxMM ${r.maxMM} invalid`);
+      if ('sizesMM' in r) {
+        if (!Array.isArray(r.sizesMM) || !r.sizesMM.length || r.sizesMM.some((s) => !RADIATOR_SIZES.includes(s))) err(w, `${at}.sizesMM invalid`);
+        else if (Math.max(...r.sizesMM) !== r.maxMM) err(w, `${at}.maxMM is not the largest of sizesMM`);
+      }
     });
-    nestedNulls(w, p, 'fanMounts');
+    if (p.radiatorSupport && new Set(p.radiatorSupport.map((r) => r.position)).size !== p.radiatorSupport.length) err(w, 'radiatorSupport repeats a position');
+    // fanMounts: { position: { "120": n, "140": n } }; a position missing = no mount there.
+    if (p.fanMounts) {
+      for (const [pos, sizes] of Object.entries(p.fanMounts)) {
+        if (!FAN_POSITIONS.includes(pos)) err(w, `fan position "${pos}" invalid`);
+        if (!sizes || typeof sizes !== 'object' || !Object.keys(sizes).length) { err(w, `fanMounts.${pos} must be an object of size: count`); continue; }
+        for (const [s, n] of Object.entries(sizes)) {
+          if (!FAN_SIZES.includes(s)) err(w, `fanMounts.${pos} fan size "${s}" invalid`);
+          if (!Number.isInteger(n) || n < 1 || n > 4) err(w, `fanMounts.${pos}.${s} count ${n} invalid`);
+        }
+      }
+    }
     nestedNulls(w, p, 'drivebays');
     nestedNulls(w, p, 'dimensionsMM');
     if (p.drivebays) for (const k of Object.keys(p.drivebays)) if (!['3.5', '2.5'].includes(k)) err(w, `drive bay size "${k}" invalid`);
-    if (p.fanMounts) for (const k of Object.keys(p.fanMounts)) if (!ENUMS.radiatorPosition.includes(k)) err(w, `fan position "${k}" invalid`);
     const d = p.dimensionsMM;
     if (d) {
       for (const k of ['depth', 'width', 'height']) range(w, `dimensionsMM.${k}`, d[k], 100, 800);
-      if (known(p.maxGPULengthMM) && d.depth && p.maxGPULengthMM > d.depth) err(w, 'max GPU length is longer than the case');
+      // Some small cases (e.g. Corsair 2000D) mount the GPU vertically, so compare with the longest side.
+      if (known(p.maxGPULengthMM) && d.depth && p.maxGPULengthMM > Math.max(d.depth, d.height || 0)) err(w, 'max GPU length is longer than the case');
       if (known(p.maxCoolerHeightMM) && d.width && p.maxCoolerHeightMM > d.width) err(w, 'max cooler height exceeds case width');
     }
     if (p.caseType === 'itx' && p.formFactorsSupported?.some((f) => f !== 'ITX')) err(w, 'ITX case lists a larger board');
@@ -307,6 +336,9 @@ for (const cat of categories) {
     for (const [f, s] of Object.entries(COMMON)) checkField(w, p, f, s, true);
     for (const [f, s] of Object.entries(SCHEMAS[cat])) checkField(w, p, f, s, true);
     for (const [f, s] of Object.entries(OPTIONAL[cat] || {})) checkField(w, p, f, s, false);
+    for (const [f, s] of Object.entries(COMMON_OPTIONAL)) checkField(w, p, f, s, false);
+    if (NEEDS_SOURCE.includes(cat) && p.specsVerified === true && !p.specSource) err(w, 'specsVerified is true but specSource is missing');
+    if (p.specSourceType && !p.specSource) err(w, 'specSourceType without specSource');
     if (p.category !== cat) err(w, `category "${p.category}" should be "${cat}"`);
     if (known(p.refPriceTHB) && (p.refPriceTHB < 100 || p.refPriceTHB > 300000)) err(w, `refPriceTHB ${p.refPriceTHB} looks wrong`);
     if (p.brand && p.name && !p.name.toLowerCase().startsWith(p.brand.toLowerCase())) warn(w, 'name does not start with brand');
@@ -349,9 +381,9 @@ if (cpu) for (const t of ENUMS.tier) if (!cpu.some((c) => c.tier === t)) warn('c
 if (pcCase && motherboard) {
   const boardSizes = new Set(motherboard.map((b) => b.formFactor));
   for (const c of pcCase) {
-    if (!c.formFactorsSupported.some((f) => boardSizes.has(f))) err('cross', `${c.id}: supports no board size that exists in motherboard.json`);
+    if (c.formFactorsSupported && !c.formFactorsSupported.some((f) => boardSizes.has(f))) err('cross', `${c.id}: supports no board size that exists in motherboard.json`);
   }
-  for (const f of boardSizes) if (!pcCase.some((c) => c.formFactorsSupported.includes(f))) err('cross', `no case takes ${f} boards`);
+  for (const f of boardSizes) if (!pcCase.some((c) => c.formFactorsSupported?.includes(f))) err('cross', `no case takes ${f} boards`);
 }
 if (pcCase && gpu) {
   const maxLimit = Math.max(...pcCase.map((c) => c.maxGPULengthMM).filter(known));
@@ -398,7 +430,7 @@ if (gpu && psu) {
   }
 }
 if (pcCase && psu) {
-  for (const c of pcCase) {
+  for (const c of pcCase.filter((x) => x.psuFormFactors)) {
     if (!psu.some((p) => c.psuFormFactors.includes(p.formFactor))) err('cross', `${c.id}: no PSU in a supported form factor (${c.psuFormFactors.join('/')})`);
   }
 }
