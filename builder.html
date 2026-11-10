@@ -4,12 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Builder · Rigsmith</title>
+  <meta name="description" content="Pick PC parts with a live compatibility check, reference prices and a performance estimate.">
   <meta name="theme-color" content="#0B0D10">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/builder.css">
   <script type="importmap">
     {
       "imports": {
@@ -19,21 +21,98 @@
     }
   </script>
   <script type="module" src="js/ui/shell.js"></script>
+  <script type="module" src="js/builder.js"></script>
 </head>
-<body>
+<body class="page-builder">
   <a class="skip-link" href="#main">Skip to content</a>
   <header id="site-header" data-page="builder"></header>
-  <main id="main" class="container">
-    <div class="page-head">
-      <p class="label">Quick Build · 3D viewer · Hands-on assembly</p>
-      <h1>Builder</h1>
+
+  <div class="loader" id="loader" role="status" aria-busy="true" aria-live="polite">
+    <div class="loader__box">
+      <p class="label">Loading parts catalogue</p>
+      <div class="loader__bar"><div class="loader__fill" style="width:60%"></div></div>
+      <div class="loader__row"><span id="loader-step">Reading data/parts</span></div>
     </div>
-    <div class="panel notice">
-      <span class="tag tag--warn tag--dot">In progress</span>
-      <p style="margin-top:12px">Not built yet. This page will hold the parts browser with live compatibility checks, the 3D viewer, and the hands-on and auto-build modes.</p>
-      <a class="btn btn--sm" href="index.html">Back to home</a>
+  </div>
+
+  <main id="main" class="builder">
+    <div class="builder__bar">
+      <div class="builder__heading">
+        <p class="label">Quick Build</p>
+        <h1 class="builder__title"><span id="build-name">Untitled build</span> <span class="builder__state mono" id="build-state"></span></h1>
+      </div>
+      <div class="builder__actions">
+        <button class="btn btn--primary btn--sm" type="button" data-cmd="autofill" aria-keyshortcuts="A">Auto-fill</button>
+        <button class="btn btn--sm" type="button" data-cmd="builds" aria-keyshortcuts="B">Builds</button>
+        <button class="btn btn--sm btn--ghost" type="button" data-cmd="clear">Clear</button>
+        <button class="btn btn--sm btn--ghost btn--icon-sm" type="button" data-cmd="shortcuts" aria-keyshortcuts="?" aria-label="Keyboard shortcuts"><span aria-hidden="true">?</span></button>
+      </div>
+    </div>
+
+    <nav class="builder__tabs" aria-label="Builder sections">
+      <button class="tabbtn" type="button" data-tab="build" aria-controls="col-build" aria-pressed="false">Build</button>
+      <button class="tabbtn" type="button" data-tab="parts" aria-controls="col-parts" aria-pressed="true">Parts</button>
+      <button class="tabbtn" type="button" data-tab="summary" aria-controls="col-summary" aria-pressed="false">Summary</button>
+    </nav>
+
+    <div class="builder__grid" id="builder-grid" data-tab="parts">
+      <aside class="col col--build" id="col-build" aria-labelledby="col-build-h">
+        <div class="col__head"><h2 class="label" id="col-build-h">Your build</h2><span class="muted col__hint">Text view of the 3D build</span></div>
+        <div id="cat-list"></div>
+      </aside>
+
+      <section class="col col--parts" id="col-parts" aria-label="Parts">
+        <div class="viewswitch" role="group" aria-label="Centre view">
+          <button class="viewswitch__btn" type="button" data-view="parts" aria-pressed="true">Parts</button>
+          <button class="viewswitch__btn" type="button" data-view="3d" aria-pressed="false" aria-keyshortcuts="V">3D view</button>
+        </div>
+        <div id="view-parts" class="browser"></div>
+        <div id="view-3d" class="viewer brackets" hidden>
+          <div class="viewer__ticks ticks" aria-hidden="true"></div>
+          <div class="viewer__empty">
+            <p class="label">3D view</p>
+            <p>The 3D build view goes here in the next phase. Until then, the list under “Your build” describes the same machine part by part.</p>
+          </div>
+          <span class="viewer__corner mono" aria-hidden="true">VIEW 00 · PENDING</span>
+        </div>
+      </section>
+
+      <aside class="col col--summary" id="col-summary" aria-label="Build summary">
+        <div id="summary"></div>
+      </aside>
+    </div>
+
+    <div class="mbar" aria-label="Build status">
+      <span class="mbar__total mono" id="mbar-total">฿0</span>
+      <span class="tag tag--dot" id="mbar-status">Empty</span>
+      <button class="btn btn--sm" type="button" data-tab="summary" aria-controls="col-summary">Summary</button>
     </div>
   </main>
-  <footer id="site-footer"></footer>
+
+  <dialog class="drawer" id="part-drawer"></dialog>
+  <dialog class="modal" id="autofill-dialog"></dialog>
+  <dialog class="modal" id="builds-dialog"></dialog>
+  <dialog class="modal modal--sm" id="shortcuts-dialog" aria-labelledby="sc-title">
+    <div class="modal__inner">
+      <header class="modal__head">
+        <h2 id="sc-title">Keyboard shortcuts</h2>
+        <button class="btn btn--sm btn--ghost" type="button" data-cmd="close-dialog">Close</button>
+      </header>
+      <table class="spec-table shortcuts">
+        <tbody>
+          <tr><th scope="row">Search parts</th><td><kbd>/</kbd></td></tr>
+          <tr><th scope="row">Next / previous category</th><td><kbd>]</kbd> <kbd>[</kbd></td></tr>
+          <tr><th scope="row">Jump to category</th><td><kbd>1</kbd>–<kbd>9</kbd></td></tr>
+          <tr><th scope="row">Auto-fill</th><td><kbd>A</kbd></td></tr>
+          <tr><th scope="row">Saved builds</th><td><kbd>B</kbd></td></tr>
+          <tr><th scope="row">Parts / 3D view</th><td><kbd>V</kbd></td></tr>
+          <tr><th scope="row">Close a dialog</th><td><kbd>Esc</kbd></td></tr>
+          <tr><th scope="row">This list</th><td><kbd>?</kbd></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" data-show="false"></div>
 </body>
 </html>
