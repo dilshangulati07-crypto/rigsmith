@@ -1,7 +1,7 @@
 {
   "category": "fans",
   "schemaVersion": 1,
-  "notes": "refPriceTHB is an approximate Thai street price entered by hand, not a live price. Check before buying. Figures are the maker's maximum-speed specs. packCount = fans per box.",
+  "notes": "refPriceTHB is an approximate Thai street price entered by hand, not a live price. Check before buying. Figures are the maker's maximum-speed specs. packCount = fans per box. noiseDBA is the top of the stated range. Fans with normal and reverse-blade versions use the normal model. specSource = page the specs were checked against (2026-11-11).",
   "parts": [
     {
       "id": "noctua-nf-a12x25-pwm",
@@ -104,18 +104,21 @@
       "brand": "Lian Li",
       "name": "Lian Li UNI FAN SL120 V2 3-pack",
       "tier": "high",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 2690,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Lian%20Li%20UNI%20FAN%20SL120%20V2%203-pack",
       "sizeMM": 120,
-      "thicknessMM": 25,
+      "thicknessMM": 28,
       "packCount": 3,
       "rgb": true,
-      "rpmMax": null,
-      "airflowCFM": null,
-      "staticPressureMMH2O": null,
-      "noiseDBA": null
+      "rpmMax": 2000,
+      "airflowCFM": 64.5,
+      "staticPressureMMH2O": 2.59,
+      "noiseDBA": 29.2,
+      "specSource": "https://lian-li.com/product/uni-fan-sl-v2/",
+      "specSourceType": "official",
+      "sku": "UF-SL120V2-3B"
     },
     {
       "id": "lian-li-uni-fan-tl120-3-pack",
@@ -123,18 +126,21 @@
       "brand": "Lian Li",
       "name": "Lian Li UNI FAN TL120 3-pack",
       "tier": "high",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 2990,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Lian%20Li%20UNI%20FAN%20TL120%203-pack",
       "sizeMM": 120,
-      "thicknessMM": 25,
+      "thicknessMM": 28,
       "packCount": 3,
       "rgb": true,
-      "rpmMax": null,
-      "airflowCFM": null,
-      "staticPressureMMH2O": null,
-      "noiseDBA": null
+      "rpmMax": 2600,
+      "airflowCFM": 90.1,
+      "staticPressureMMH2O": 3.97,
+      "noiseDBA": 33,
+      "specSource": "https://lian-li.com/product/uni-fan-tl/",
+      "specSourceType": "official",
+      "sku": "12TL3B"
     },
     {
       "id": "corsair-icue-link-rx120-rgb-3-pack",
@@ -142,7 +148,7 @@
       "brand": "Corsair",
       "name": "Corsair iCUE LINK RX120 RGB 3-pack",
       "tier": "high",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 3490,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Corsair%20iCUE%20LINK%20RX120%20RGB%203-pack",
@@ -150,10 +156,13 @@
       "thicknessMM": 25,
       "packCount": 3,
       "rgb": true,
-      "rpmMax": null,
-      "airflowCFM": null,
-      "staticPressureMMH2O": null,
-      "noiseDBA": null
+      "rpmMax": 2100,
+      "airflowCFM": 73.5,
+      "staticPressureMMH2O": 4.33,
+      "noiseDBA": 36,
+      "specSource": "https://www.corsair.com/us/en/p/pc-components-accessories/co-9051018-ww/icue-link-rx120-rgb-120mm-pwm-fans-triple-fan-kit-co-9051018-ww",
+      "specSourceType": "official",
+      "sku": "CO-9051018-WW"
     },
     {
       "id": "be-quiet-silent-wings-4-120mm-pwm-high-speed",
@@ -180,7 +189,7 @@
       "brand": "Thermalright",
       "name": "Thermalright TL-C12C X3",
       "tier": "budget",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 490,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Thermalright%20TL-C12C%20X3",
@@ -188,10 +197,12 @@
       "thicknessMM": 25,
       "packCount": 3,
       "rgb": true,
-      "rpmMax": null,
-      "airflowCFM": null,
-      "staticPressureMMH2O": null,
-      "noiseDBA": null
+      "rpmMax": 1550,
+      "airflowCFM": 66.17,
+      "staticPressureMMH2O": 1.53,
+      "noiseDBA": 25.6,
+      "specSource": "https://www.thermalright.com/product/tl-c12c-x3/",
+      "specSourceType": "official"
     },
     {
       "id": "deepcool-fc120-3-in-1",
@@ -199,7 +210,7 @@
       "brand": "DeepCool",
       "name": "DeepCool FC120 3 in 1",
       "tier": "mid",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 990,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=DeepCool%20FC120%203%20in%201",
@@ -207,10 +218,12 @@
       "thicknessMM": 25,
       "packCount": 3,
       "rgb": true,
-      "rpmMax": null,
-      "airflowCFM": null,
-      "staticPressureMMH2O": null,
-      "noiseDBA": null
+      "rpmMax": 1800,
+      "airflowCFM": 61.91,
+      "staticPressureMMH2O": 1.83,
+      "noiseDBA": 28,
+      "specSource": "https://www.deepcool.com/products/Cooling/fans/FC120-3-IN-1-Daisy-Chain-Performance-ARGB-Fan/2021/13582.shtml",
+      "specSourceType": "official"
     },
     {
       "id": "cooler-master-sickleflow-120-argb-3-in-1",
@@ -218,7 +231,7 @@
       "brand": "Cooler Master",
       "name": "Cooler Master SickleFlow 120 ARGB 3 in 1",
       "tier": "budget",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 890,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Cooler%20Master%20SickleFlow%20120%20ARGB%203%20in%201",
@@ -226,10 +239,13 @@
       "thicknessMM": 25,
       "packCount": 3,
       "rgb": true,
-      "rpmMax": null,
-      "airflowCFM": null,
-      "staticPressureMMH2O": null,
-      "noiseDBA": null
+      "rpmMax": 1800,
+      "airflowCFM": 62,
+      "staticPressureMMH2O": 2.5,
+      "noiseDBA": 27,
+      "specSource": "https://legacy.coolermaster.com/en-global/products/sickleflow-120-argb-3in1/?tab=tech_spec",
+      "specSourceType": "official",
+      "sku": "MFX-B2DN-183PA-R1"
     },
     {
       "id": "phanteks-d30-120-3-pack",
@@ -237,7 +253,7 @@
       "brand": "Phanteks",
       "name": "Phanteks D30-120 3-pack",
       "tier": "high",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 2290,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Phanteks%20D30-120%203-pack",
@@ -245,10 +261,13 @@
       "thicknessMM": 30,
       "packCount": 3,
       "rgb": true,
-      "rpmMax": null,
-      "airflowCFM": null,
-      "staticPressureMMH2O": null,
-      "noiseDBA": null
+      "rpmMax": 2000,
+      "airflowCFM": 64.3,
+      "staticPressureMMH2O": 3.01,
+      "noiseDBA": 30.2,
+      "specSource": "https://phanteks.com/product/d30-120-black/",
+      "specSourceType": "official",
+      "sku": "PH-F120D30_DRGB_PWM_BK01_3P"
     }
   ]
 }

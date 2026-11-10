@@ -1,7 +1,7 @@
 {
   "category": "cooler",
   "schemaVersion": 1,
-  "notes": "refPriceTHB is an approximate Thai street price entered by hand, not a live price. Check before buying. heightMM applies to air coolers (null for AIO). radiatorSizeMM applies to AIOs (null for air). tdpRating is the maker's published rating; null when the maker publishes none. LGA1851 uses the LGA1700 mounting.",
+  "notes": "refPriceTHB is an approximate Thai street price entered by hand, not a live price. Check before buying. heightMM applies to air coolers (null for AIO). radiatorSizeMM applies to AIOs (null for air). tdpRating is the maker's published rating; null when the maker publishes none. LGA1851 uses the LGA1700 mounting. specSource = page the specs were checked against (2026-11-11).",
   "parts": [
     {
       "id": "deepcool-ag400",
@@ -201,7 +201,7 @@
       "brand": "Cooler Master",
       "name": "Cooler Master Hyper 212 Spectrum V3",
       "tier": "budget",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 1090,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Cooler%20Master%20Hyper%20212%20Spectrum%20V3",
@@ -212,12 +212,15 @@
         "LGA1700",
         "LGA1851"
       ],
-      "heightMM": null,
+      "heightMM": 152,
       "radiatorSizeMM": null,
       "tdpRating": null,
       "fans": 1,
       "fanSizeMM": 120,
-      "rgb": true
+      "rgb": true,
+      "specSource": "https://www.coolermaster.com/en-global/products/hyper-212-spectrum-v3.html",
+      "specSourceType": "official",
+      "sku": "RR-S4NA-17PA-R1"
     },
     {
       "id": "id-cooling-se-224-xts",
@@ -225,7 +228,7 @@
       "brand": "ID-COOLING",
       "name": "ID-COOLING SE-224-XTS",
       "tier": "budget",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 690,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=ID-COOLING%20SE-224-XTS",
@@ -236,12 +239,14 @@
         "LGA1700",
         "LGA1851"
       ],
-      "heightMM": null,
+      "heightMM": 151,
       "radiatorSizeMM": null,
-      "tdpRating": null,
+      "tdpRating": 220,
       "fans": 1,
       "fanSizeMM": 120,
-      "rgb": false
+      "rgb": false,
+      "specSource": "https://www.idcooling.com/product/detail?id=318&name=SE-224-XTS",
+      "specSourceType": "official"
     },
     {
       "id": "id-cooling-is-55",

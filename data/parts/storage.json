@@ -1,7 +1,7 @@
 {
   "category": "storage",
   "schemaVersion": 1,
-  "notes": "refPriceTHB is an approximate Thai street price entered by hand, not a live price. Check before buying. readMBs/writeMBs are the maker's sequential figures. capacityGB is the marketed decimal capacity.",
+  "notes": "refPriceTHB is an approximate Thai street price entered by hand, not a live price. Check before buying. readMBs/writeMBs are the maker's sequential figures. capacityGB is the marketed decimal capacity. Hard drive makers publish one transfer rate (internal / sustained); it is used for both readMBs and writeMBs. specSource = page the specs were checked against (2026-11-11).",
   "parts": [
     {
       "id": "samsung-990-pro-1tb",
@@ -491,7 +491,7 @@
       "brand": "Western Digital",
       "name": "Western Digital WD Blue 2TB WD20EZBX",
       "tier": "budget",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 2190,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Western%20Digital%20WD%20Blue%202TB%20WD20EZBX",
@@ -499,9 +499,12 @@
       "capacityGB": 2000,
       "formFactor": "3.5in",
       "interface": "SATA III",
-      "readMBs": null,
-      "writeMBs": null,
-      "rpm": 7200
+      "readMBs": 215,
+      "writeMBs": 215,
+      "rpm": 7200,
+      "specSource": "https://www.westerndigital.com/content/dam/doc-library/en_us/assets/public/western-digital/product/internal-drives/wd-blue-hdd/data-sheet-western-digital-wd-blue-pc-hdd.pdf",
+      "specSourceType": "official",
+      "sku": "WD20EZBX"
     },
     {
       "id": "western-digital-wd-red-plus-4tb-wd40efpx",
@@ -509,7 +512,7 @@
       "brand": "Western Digital",
       "name": "Western Digital WD Red Plus 4TB WD40EFPX",
       "tier": "mid",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 4290,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Western%20Digital%20WD%20Red%20Plus%204TB%20WD40EFPX",
@@ -517,9 +520,12 @@
       "capacityGB": 4000,
       "formFactor": "3.5in",
       "interface": "SATA III",
-      "readMBs": null,
-      "writeMBs": null,
-      "rpm": 5400
+      "readMBs": 180,
+      "writeMBs": 180,
+      "rpm": 5400,
+      "specSource": "https://www.westerndigital.com/content/dam/doc-library/en_us/assets/public/western-digital/product/internal-drives/wd-red-plus-hdd/data-sheet-western-digital-wd-red-plus-hdd.pdf",
+      "specSourceType": "official",
+      "sku": "WD40EFPX"
     }
   ]
 }

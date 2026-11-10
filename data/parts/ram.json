@@ -1,7 +1,7 @@
 {
   "category": "ram",
   "schemaVersion": 1,
-  "notes": "refPriceTHB is an approximate Thai street price entered by hand, not a live price. Check before buying. kit = modules x GB per module. heightMM is module height including heatspreader; null where not confirmed. Memory prices move fast; treat these as rough.",
+  "notes": "refPriceTHB is an approximate Thai street price entered by hand, not a live price. Check before buying. kit = modules x GB per module. heightMM is module height including heatspreader; null where not confirmed. Memory prices move fast; treat these as rough. heightMM is from the maker's product page, or the maker FAQ where the spec page points there (G.Skill lists height per series). specSource = page the specs were checked against (2026-11-11).",
   "parts": [
     {
       "id": "kingston-fury-beast-ddr4-8gb-1x8gb-3200mt-s-cl16",
@@ -269,7 +269,7 @@
       "brand": "TeamGroup",
       "name": "TeamGroup T-Force Delta RGB DDR4 32GB (2x16GB) 3600MT/s CL18",
       "tier": "mid",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 3390,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=TeamGroup%20T-Force%20Delta%20RGB%20DDR4%2032GB%20(2x16GB)%203600MT%2Fs%20CL18",
@@ -280,8 +280,11 @@
       "moduleGB": 16,
       "speedMTs": 3600,
       "casLatency": 18,
-      "heightMM": null,
-      "rgb": true
+      "heightMM": 49,
+      "rgb": true,
+      "specSource": "https://www.teamgroupinc.com/en/product-detail/memory/T-FORCE/delta-rgb-ddr4-black/delta-rgb-ddr4-black-TF3D432G3600HC18JDC01/",
+      "specSourceType": "official",
+      "sku": "TF3D432G3600HC18JDC01"
     },
     {
       "id": "crucial-ddr4-16gb-1x16gb-3200mt-s-cl22",
@@ -501,7 +504,10 @@
       "speedMTs": 6000,
       "casLatency": 30,
       "heightMM": null,
-      "rgb": true
+      "rgb": true,
+      "specSource": "https://www.corsair.com/us/en/p/memory/cmh32gx5m2b6000c30/vengeance-rgb-32gb-2x16gb-ddr5-dram-6000mts-cl30-memory-kit-black-cmh32gx5m2b6000c30",
+      "specSourceType": "official",
+      "sku": "CMH32GX5M2B6000C30"
     },
     {
       "id": "corsair-dominator-platinum-rgb-ddr5-32gb-2x16gb-6000mt-s-cl30",
@@ -569,7 +575,7 @@
       "brand": "G.Skill",
       "name": "G.Skill Trident Z5 RGB DDR5 32GB (2x16GB) 6000MT/s CL30",
       "tier": "high",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 4890,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=G.Skill%20Trident%20Z5%20RGB%20DDR5%2032GB%20(2x16GB)%206000MT%2Fs%20CL30",
@@ -580,8 +586,11 @@
       "moduleGB": 16,
       "speedMTs": 6000,
       "casLatency": 30,
-      "heightMM": null,
-      "rgb": true
+      "heightMM": 44,
+      "rgb": true,
+      "specSource": "https://www.gskill.com/faq",
+      "specSourceType": "official",
+      "sku": "F5-6000J3040F16GX2-TZ5RK"
     },
     {
       "id": "g-skill-trident-z5-neo-rgb-ddr5-64gb-2x32gb-6000mt-s-cl30",
@@ -589,7 +598,7 @@
       "brand": "G.Skill",
       "name": "G.Skill Trident Z5 Neo RGB DDR5 64GB (2x32GB) 6000MT/s CL30",
       "tier": "flagship",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 8990,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=G.Skill%20Trident%20Z5%20Neo%20RGB%20DDR5%2064GB%20(2x32GB)%206000MT%2Fs%20CL30",
@@ -600,8 +609,11 @@
       "moduleGB": 32,
       "speedMTs": 6000,
       "casLatency": 30,
-      "heightMM": null,
-      "rgb": true
+      "heightMM": 44,
+      "rgb": true,
+      "specSource": "https://www.gskill.com/faq",
+      "specSourceType": "official",
+      "sku": "F5-6000J3040G32GX2-TZ5NR"
     },
     {
       "id": "teamgroup-t-force-delta-rgb-ddr5-32gb-2x16gb-6000mt-s-cl30",
@@ -609,7 +621,7 @@
       "brand": "TeamGroup",
       "name": "TeamGroup T-Force Delta RGB DDR5 32GB (2x16GB) 6000MT/s CL30",
       "tier": "mid",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 4190,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=TeamGroup%20T-Force%20Delta%20RGB%20DDR5%2032GB%20(2x16GB)%206000MT%2Fs%20CL30",
@@ -620,8 +632,11 @@
       "moduleGB": 16,
       "speedMTs": 6000,
       "casLatency": 30,
-      "heightMM": null,
-      "rgb": true
+      "heightMM": 46.1,
+      "rgb": true,
+      "specSource": "https://www.teamgroupinc.com/en/product-detail/memory/T-FORCE/delta-rgb-ddr5-black/delta-rgb-ddr5-black-FF3D532G6000HC30DC01/",
+      "specSourceType": "official",
+      "sku": "FF3D532G6000HC30DC01"
     },
     {
       "id": "crucial-pro-ddr5-32gb-2x16gb-6000mt-s-cl36",

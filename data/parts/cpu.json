@@ -1,7 +1,7 @@
 {
   "category": "cpu",
   "schemaVersion": 1,
-  "notes": "refPriceTHB is an approximate Thai street price entered by hand, not a live price. Check before buying. tdp = Intel Processor Base Power / AMD default TDP. maxPowerW = Intel Maximum Turbo Power / AMD PPT. Intel hybrid CPUs list P-core base clock.",
+  "notes": "refPriceTHB is an approximate Thai street price entered by hand, not a live price. Check before buying. tdp = Intel Processor Base Power / AMD default TDP. maxPowerW = Intel Maximum Turbo Power / AMD PPT. Intel hybrid CPUs list P-core base clock. coolerIncluded = the boxed (retail) version ships with a cooler, per the maker's box-contents or product page. specSource = page the specs were checked against (2026-11-11).",
   "parts": [
     {
       "id": "intel-core-i3-12100f",
@@ -485,7 +485,7 @@
       "brand": "Intel",
       "name": "Intel Core i7-14700F",
       "tier": "high",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 12490,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Intel%20Core%20i7-14700F",
@@ -505,7 +505,9 @@
       ],
       "igpu": false,
       "igpuName": null,
-      "coolerIncluded": null
+      "coolerIncluded": true,
+      "specSource": "https://www.intel.com/content/www/us/en/support/articles/000089190/processors/intel-core-processors.html",
+      "specSourceType": "official"
     },
     {
       "id": "intel-core-i7-14700k",
@@ -597,7 +599,7 @@
       "brand": "Intel",
       "name": "Intel Core Ultra 5 225F",
       "tier": "mid",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 6990,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Intel%20Core%20Ultra%205%20225F",
@@ -616,7 +618,10 @@
       ],
       "igpu": false,
       "igpuName": null,
-      "coolerIncluded": null
+      "coolerIncluded": true,
+      "specSource": "https://www.intel.com/content/www/us/en/support/articles/000100172/processors.html",
+      "specSourceType": "official",
+      "sku": "BX80768225F"
     },
     {
       "id": "intel-core-ultra-5-225",
@@ -624,7 +629,7 @@
       "brand": "Intel",
       "name": "Intel Core Ultra 5 225",
       "tier": "mid",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 7990,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Intel%20Core%20Ultra%205%20225",
@@ -643,7 +648,9 @@
       ],
       "igpu": true,
       "igpuName": "Intel Graphics",
-      "coolerIncluded": null
+      "coolerIncluded": true,
+      "specSource": "https://www.intel.com/content/www/us/en/support/articles/000100172/processors.html",
+      "specSourceType": "official"
     },
     {
       "id": "intel-core-ultra-5-245kf",
@@ -1029,7 +1036,7 @@
       "brand": "AMD",
       "name": "AMD Ryzen 5 7500F",
       "tier": "budget",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 4990,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=AMD%20Ryzen%205%207500F",
@@ -1048,7 +1055,10 @@
       ],
       "igpu": false,
       "igpuName": null,
-      "coolerIncluded": null
+      "coolerIncluded": true,
+      "specSource": "https://www.amd.com/en/products/processors/desktops/ryzen/7000-series/amd-ryzen-5-7500f.html",
+      "specSourceType": "official",
+      "sku": "100-100000597MPK"
     },
     {
       "id": "amd-ryzen-5-7600",
