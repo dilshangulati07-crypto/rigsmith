@@ -1,7 +1,7 @@
 {
   "category": "gpu",
   "schemaVersion": 1,
-  "notes": "refPriceTHB is an approximate Thai street price entered by hand, not a live price. Check before buying. tdp = total board power (W). slotWidth in expansion slots. powerConnectors: 16-pin covers 12VHPWR and 12V-2x6; an empty list means slot-powered. Reference/Founders/Limited Edition cards are listed under the chip maker.",
+  "notes": "refPriceTHB is an approximate Thai street price entered by hand, not a live price. Check before buying. tdp = total/typical board power (W) as printed on the card maker's page; null when the page gives none. slotWidth = the maker's slot figure; thicknessMM = card thickness as printed. lengthMM: where a maker gives length with and without the I/O bracket, the larger is used. powerConnectors: 16-pin covers 12VHPWR and 12V-2x6; an empty list means slot-powered. Reference/Founders/Limited Edition cards are listed under the chip maker. specSource = page checked (2026-11-11).",
   "parts": [
     {
       "id": "nvidia-geforce-rtx-5090-founders-edition",
@@ -203,12 +203,16 @@
       "lengthMM": 358,
       "slotWidth": 3.8,
       "tdp": null,
-      "recommendedPSU": null,
+      "recommendedPSU": 1000,
       "powerConnectors": [
         "16-pin"
       ],
       "vramGB": 32,
-      "fans": 4
+      "fans": 4,
+      "thicknessMM": 76,
+      "specSource": "https://rog.asus.com/graphics-cards/graphics-cards/rog-astral/rog-astral-rtx5090-o32g-gaming/spec/",
+      "specSourceType": "official",
+      "sku": "ROG-ASTRAL-RTX5090-O32G-GAMING"
     },
     {
       "id": "asus-tuf-gaming-geforce-rtx-4070-ti-super-oc-edition",
@@ -269,7 +273,7 @@
       "chipMaker": "NVIDIA",
       "chip": "RTX 5070 Ti",
       "launchYear": 2025,
-      "lengthMM": null,
+      "lengthMM": 303,
       "slotWidth": null,
       "tdp": 300,
       "recommendedPSU": 750,
@@ -277,7 +281,11 @@
         "16-pin"
       ],
       "vramGB": 16,
-      "fans": 3
+      "fans": 3,
+      "thicknessMM": 49,
+      "specSource": "https://storage-asset.msi.com/datasheet/vga/global/GeForce-RTX-5070-Ti-16G-VENTUS-3X-OC.pdf",
+      "specSourceType": "official",
+      "sku": "G507T-16V3C"
     },
     {
       "id": "gigabyte-geforce-rtx-5070-windforce-oc-sff-12g",
@@ -313,13 +321,18 @@
       "chipMaker": "NVIDIA",
       "chip": "RTX 4070 SUPER",
       "launchYear": 2024,
-      "lengthMM": null,
+      "lengthMM": 242,
       "slotWidth": null,
       "tdp": 220,
       "recommendedPSU": 650,
-      "powerConnectors": null,
+      "powerConnectors": [
+        "16-pin"
+      ],
       "vramGB": 12,
-      "fans": 2
+      "fans": 2,
+      "thicknessMM": 43,
+      "specSource": "https://storage-asset.msi.com/datasheet/vga/global/GeForce-RTX-4070-SUPER-12G-VENTUS-2X-OC.pdf",
+      "specSourceType": "official"
     },
     {
       "id": "gigabyte-geforce-rtx-4070-super-windforce-oc-12g",
@@ -376,13 +389,19 @@
       "chipMaker": "NVIDIA",
       "chip": "RTX 5060 Ti",
       "launchYear": 2025,
-      "lengthMM": null,
-      "slotWidth": null,
-      "tdp": 180,
-      "recommendedPSU": null,
-      "powerConnectors": null,
+      "lengthMM": 229,
+      "slotWidth": 2.5,
+      "tdp": null,
+      "recommendedPSU": 550,
+      "powerConnectors": [
+        "8-pin"
+      ],
       "vramGB": 16,
-      "fans": 2
+      "fans": 2,
+      "thicknessMM": 50,
+      "specSource": "https://www.asus.com/motherboards-components/graphics-cards/dual/dual-rtx5060ti-o16g/techspec/",
+      "specSourceType": "official",
+      "sku": "DUAL-RTX5060TI-O16G"
     },
     {
       "id": "msi-geforce-rtx-5060-8g-ventus-2x-oc",
@@ -397,13 +416,19 @@
       "chipMaker": "NVIDIA",
       "chip": "RTX 5060",
       "launchYear": 2025,
-      "lengthMM": null,
+      "lengthMM": 197,
       "slotWidth": null,
       "tdp": 145,
-      "recommendedPSU": null,
-      "powerConnectors": null,
+      "recommendedPSU": 550,
+      "powerConnectors": [
+        "8-pin"
+      ],
       "vramGB": 8,
-      "fans": 2
+      "fans": 2,
+      "thicknessMM": 41,
+      "specSource": "https://storage-asset.msi.com/datasheet/vga/global/GeForce-RTX-5060-8G-VENTUS-2X-OC.pdf",
+      "specSourceType": "official",
+      "sku": "G5060-8V2C"
     },
     {
       "id": "asus-dual-geforce-rtx-4060-ti-oc-edition-8gb",
@@ -533,13 +558,16 @@
       "chipMaker": "NVIDIA",
       "chip": "RTX 3050 6GB",
       "launchYear": 2024,
-      "lengthMM": null,
-      "slotWidth": 2,
+      "lengthMM": 189,
+      "slotWidth": null,
       "tdp": 70,
       "recommendedPSU": 300,
       "powerConnectors": [],
       "vramGB": 6,
-      "fans": 2
+      "fans": 2,
+      "thicknessMM": 42,
+      "specSource": "https://storage-asset.msi.com/datasheet/vga/global/GeForce-RTX-3050-VENTUS-2X-6G-OC.pdf",
+      "specSourceType": "official"
     },
     {
       "id": "amd-radeon-rx-7900-xtx",
@@ -619,7 +647,7 @@
       "brand": "Sapphire",
       "name": "Sapphire NITRO+ AMD Radeon RX 7900 XTX Vapor-X 24GB",
       "tier": "flagship",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 42900,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Sapphire%20NITRO%2B%20AMD%20Radeon%20RX%207900%20XTX%20Vapor-X%2024GB",
@@ -628,15 +656,18 @@
       "launchYear": 2022,
       "lengthMM": 320,
       "slotWidth": 3.5,
-      "tdp": null,
-      "recommendedPSU": null,
+      "tdp": 420,
+      "recommendedPSU": 800,
       "powerConnectors": [
         "8-pin",
         "8-pin",
         "8-pin"
       ],
       "vramGB": 24,
-      "fans": 3
+      "fans": 3,
+      "thicknessMM": 71.6,
+      "specSource": "https://www.sapphiretech.com/en/consumer/nitro-radeon-rx-7900-xtx-vaporx-24g-gddr6",
+      "specSourceType": "official"
     },
     {
       "id": "powercolor-hellhound-amd-radeon-rx-7900-xtx-24gb",
@@ -651,16 +682,20 @@
       "chipMaker": "AMD",
       "chip": "RX 7900 XTX",
       "launchYear": 2023,
-      "lengthMM": 332,
-      "slotWidth": null,
-      "tdp": 355,
+      "lengthMM": 338,
+      "slotWidth": 3,
+      "tdp": null,
       "recommendedPSU": 800,
       "powerConnectors": [
         "8-pin",
         "8-pin"
       ],
       "vramGB": 24,
-      "fans": 3
+      "fans": 3,
+      "thicknessMM": 62,
+      "specSource": "https://www.powercolor.com/product-detail72.htm",
+      "specSourceType": "official",
+      "sku": "RX7900XTX 24G-L/OC"
     },
     {
       "id": "sapphire-pulse-amd-radeon-rx-7800-xt-16gb",
@@ -668,7 +703,7 @@
       "brand": "Sapphire",
       "name": "Sapphire PULSE AMD Radeon RX 7800 XT 16GB",
       "tier": "mid",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 18900,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Sapphire%20PULSE%20AMD%20Radeon%20RX%207800%20XT%2016GB",
@@ -676,36 +711,46 @@
       "chip": "RX 7800 XT",
       "launchYear": 2023,
       "lengthMM": 280,
-      "slotWidth": null,
-      "tdp": 263,
+      "slotWidth": 2.5,
+      "tdp": 266,
       "recommendedPSU": 700,
       "powerConnectors": [
         "8-pin",
         "8-pin"
       ],
       "vramGB": 16,
-      "fans": 2
+      "fans": 2,
+      "thicknessMM": 52.57,
+      "specSource": "https://www.sapphiretech.com/en/consumer/pulse-radeon-rx-7800-xt-16g-gddr6",
+      "specSourceType": "official"
     },
     {
-      "id": "xfx-speedster-qick-319-radeon-rx-7700-xt",
+      "id": "xfx-speedster-qick-319-radeon-rx-7700-xt-black-edition",
       "category": "gpu",
       "brand": "XFX",
-      "name": "XFX Speedster QICK 319 Radeon RX 7700 XT",
+      "name": "XFX Speedster QICK 319 Radeon RX 7700 XT Black Edition",
       "tier": "mid",
       "specsVerified": false,
       "refPriceTHB": 15900,
       "priceUpdated": "2026-11-11",
-      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=XFX%20Speedster%20QICK%20319%20Radeon%20RX%207700%20XT",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=XFX%20Speedster%20QICK%20319%20Radeon%20RX%207700%20XT%20Black%20Edition",
       "chipMaker": "AMD",
       "chip": "RX 7700 XT",
       "launchYear": 2023,
-      "lengthMM": null,
-      "slotWidth": null,
-      "tdp": 245,
+      "lengthMM": 335,
+      "slotWidth": 2.5,
+      "tdp": null,
       "recommendedPSU": 700,
-      "powerConnectors": null,
+      "powerConnectors": [
+        "8-pin",
+        "8-pin"
+      ],
       "vramGB": 12,
-      "fans": 3
+      "fans": 3,
+      "thicknessMM": 52,
+      "specSource": "https://www.xfxforce.com/shop/xfx-speedster-qick-319-radeon-tm-rx-7700-xt-black-edition",
+      "specSourceType": "official",
+      "sku": "RX-77TQICKB9"
     },
     {
       "id": "sapphire-pulse-amd-radeon-rx-7600-xt-16gb",
@@ -713,20 +758,26 @@
       "brand": "Sapphire",
       "name": "Sapphire PULSE AMD Radeon RX 7600 XT 16GB",
       "tier": "mid",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 11900,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Sapphire%20PULSE%20AMD%20Radeon%20RX%207600%20XT%2016GB",
       "chipMaker": "AMD",
       "chip": "RX 7600 XT",
       "launchYear": 2024,
-      "lengthMM": null,
-      "slotWidth": null,
-      "tdp": 190,
+      "lengthMM": 250,
+      "slotWidth": 2.2,
+      "tdp": 192,
       "recommendedPSU": 600,
-      "powerConnectors": null,
+      "powerConnectors": [
+        "8-pin",
+        "8-pin"
+      ],
       "vramGB": 16,
-      "fans": 2
+      "fans": 2,
+      "thicknessMM": 44.56,
+      "specSource": "https://www.sapphiretech.com/en/consumer/pulse-radeon-rx-7600-xt-16g-gddr6",
+      "specSourceType": "official"
     },
     {
       "id": "sapphire-pulse-amd-radeon-rx-7600-8gb",
@@ -757,15 +808,15 @@
       "brand": "Sapphire",
       "name": "Sapphire PULSE AMD Radeon RX 9070 XT 16GB",
       "tier": "high",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 25900,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Sapphire%20PULSE%20AMD%20Radeon%20RX%209070%20XT%2016GB",
       "chipMaker": "AMD",
       "chip": "RX 9070 XT",
       "launchYear": 2025,
-      "lengthMM": null,
-      "slotWidth": null,
+      "lengthMM": 320,
+      "slotWidth": 3,
       "tdp": 304,
       "recommendedPSU": 750,
       "powerConnectors": [
@@ -773,7 +824,10 @@
         "8-pin"
       ],
       "vramGB": 16,
-      "fans": 3
+      "fans": 3,
+      "thicknessMM": 61.6,
+      "specSource": "https://www.sapphiretech.com/en/consumer/pulse-radeon-rx-9070-xt-16g-gddr6",
+      "specSourceType": "official"
     },
     {
       "id": "sapphire-nitro-plus-amd-radeon-rx-9070-xt-16gb",
@@ -781,22 +835,25 @@
       "brand": "Sapphire",
       "name": "Sapphire NITRO+ AMD Radeon RX 9070 XT 16GB",
       "tier": "high",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 29900,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Sapphire%20NITRO%2B%20AMD%20Radeon%20RX%209070%20XT%2016GB",
       "chipMaker": "AMD",
       "chip": "RX 9070 XT",
       "launchYear": 2025,
-      "lengthMM": 330,
-      "slotWidth": null,
-      "tdp": null,
-      "recommendedPSU": null,
+      "lengthMM": 331,
+      "slotWidth": 3.2,
+      "tdp": 330,
+      "recommendedPSU": 850,
       "powerConnectors": [
         "16-pin"
       ],
       "vramGB": 16,
-      "fans": 3
+      "fans": 3,
+      "thicknessMM": 65.68,
+      "specSource": "https://www.sapphiretech.com/en/consumer/nitro-radeon-rx-9070-xt-16g-gddr6",
+      "specSourceType": "official"
     },
     {
       "id": "powercolor-reaper-amd-radeon-rx-9070-xt-16gb",
@@ -813,11 +870,18 @@
       "launchYear": 2025,
       "lengthMM": 304,
       "slotWidth": 2,
-      "tdp": 304,
+      "tdp": null,
       "recommendedPSU": 750,
-      "powerConnectors": null,
+      "powerConnectors": [
+        "8-pin",
+        "8-pin"
+      ],
       "vramGB": 16,
-      "fans": 3
+      "fans": 3,
+      "thicknessMM": 42,
+      "specSource": "https://www.powercolor.com/product-detail212.htm",
+      "specSourceType": "official",
+      "sku": "RX9070XT 16G-A"
     },
     {
       "id": "asus-tuf-gaming-radeon-rx-9070-xt-oc-edition",
@@ -832,17 +896,21 @@
       "chipMaker": "AMD",
       "chip": "RX 9070 XT",
       "launchYear": 2025,
-      "lengthMM": null,
-      "slotWidth": null,
+      "lengthMM": 330,
+      "slotWidth": 3.125,
       "tdp": null,
-      "recommendedPSU": null,
+      "recommendedPSU": 850,
       "powerConnectors": [
         "8-pin",
         "8-pin",
         "8-pin"
       ],
       "vramGB": 16,
-      "fans": 3
+      "fans": 3,
+      "thicknessMM": 62.5,
+      "specSource": "https://www.asus.com/motherboards-components/graphics-cards/tuf-gaming/tuf-rx9070xt-o16g-gaming/techspec/",
+      "specSourceType": "official",
+      "sku": "TUF-RX9070XT-O16G-GAMING"
     },
     {
       "id": "sapphire-pulse-amd-radeon-rx-9070-16gb",
@@ -850,20 +918,26 @@
       "brand": "Sapphire",
       "name": "Sapphire PULSE AMD Radeon RX 9070 16GB",
       "tier": "high",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 22900,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Sapphire%20PULSE%20AMD%20Radeon%20RX%209070%2016GB",
       "chipMaker": "AMD",
       "chip": "RX 9070",
       "launchYear": 2025,
-      "lengthMM": null,
-      "slotWidth": null,
+      "lengthMM": 280,
+      "slotWidth": 2.5,
       "tdp": 220,
       "recommendedPSU": 650,
-      "powerConnectors": null,
+      "powerConnectors": [
+        "8-pin",
+        "8-pin"
+      ],
       "vramGB": 16,
-      "fans": 3
+      "fans": 3,
+      "thicknessMM": 51.5,
+      "specSource": "https://www.sapphiretech.com/en/consumer/pulse-radeon-rx-9070-16g-gddr6",
+      "specSourceType": "official"
     },
     {
       "id": "sapphire-pulse-amd-radeon-rx-9060-xt-16gb",
@@ -871,20 +945,25 @@
       "brand": "Sapphire",
       "name": "Sapphire PULSE AMD Radeon RX 9060 XT 16GB",
       "tier": "mid",
-      "specsVerified": false,
+      "specsVerified": true,
       "refPriceTHB": 13900,
       "priceUpdated": "2026-11-11",
       "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Sapphire%20PULSE%20AMD%20Radeon%20RX%209060%20XT%2016GB",
       "chipMaker": "AMD",
       "chip": "RX 9060 XT 16GB",
       "launchYear": 2025,
-      "lengthMM": null,
-      "slotWidth": null,
-      "tdp": null,
-      "recommendedPSU": null,
-      "powerConnectors": null,
+      "lengthMM": 240,
+      "slotWidth": 2.3,
+      "tdp": 170,
+      "recommendedPSU": 450,
+      "powerConnectors": [
+        "8-pin"
+      ],
       "vramGB": 16,
-      "fans": 2
+      "fans": 2,
+      "thicknessMM": 46.08,
+      "specSource": "https://www.sapphiretech.com/en/consumer/pulse-radeon-rx-9060-xt-16g-gddr6",
+      "specSourceType": "official"
     },
     {
       "id": "asrock-radeon-rx-6600-challenger-d-8gb",

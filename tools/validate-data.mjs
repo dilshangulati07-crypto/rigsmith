@@ -90,7 +90,7 @@ const OPTIONAL = {
     architecture: 'string', launchYear: 'int',
   },
   ram: { modules: 'int', moduleGB: 'int', casLatency: 'int', rgb: 'bool' },
-  gpu: { chipMaker: 'enum:chipMaker', chip: 'string', launchYear: 'int', fans: 'int' },
+  gpu: { chipMaker: 'enum:chipMaker', chip: 'string', launchYear: 'int', fans: 'int', thicknessMM: 'number' },
   psu: { formFactor: 'enum:psuFormFactor', atxVersion: 'string?' },
   // psuFormFactors null = the maker page gives only a PSU length, not a type.
   case: { caseType: 'enum:caseType', psuFormFactors: 'enum:psuFormFactor[]?', sidePanel: 'enum:sidePanel' },
@@ -213,6 +213,7 @@ const SANITY = {
         if (![1, 2, 4, 8, 16].includes(s.lanes)) err(w, `pcieSlots[${i}].lanes invalid`);
         if (![2, 3, 4, 5].includes(s.gen)) err(w, `pcieSlots[${i}].gen invalid`);
         if (s.lanes > Number(s.size.slice(1))) err(w, `pcieSlots[${i}] has more lanes than its physical size`);
+        if ('from' in s && !['cpu', 'chipset'].includes(s.from)) err(w, `pcieSlots[${i}].from "${s.from}" invalid`);
       });
       if (!p.pcieSlots.some((s) => s.size === 'x16')) warn(w, 'no x16 slot listed');
     }
