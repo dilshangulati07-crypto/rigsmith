@@ -1,0 +1,1132 @@
+{
+  "category": "case",
+  "schemaVersion": 1,
+  "notes": "refPriceTHB is an approximate Thai street price entered by hand, not a live price. Check before buying. radiatorSupport lists the largest radiator per position. fanMounts counts 120 mm positions. dimensionsMM = depth x width x height. maxGPULengthMM is the maker's figure with the default fan layout.",
+  "parts": [
+    {
+      "id": "corsair-4000d-airflow",
+      "category": "case",
+      "brand": "Corsair",
+      "name": "Corsair 4000D AIRFLOW",
+      "tier": "mid",
+      "specsVerified": true,
+      "refPriceTHB": 3290,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Corsair%204000D%20AIRFLOW",
+      "caseType": "mid-tower",
+      "formFactorsSupported": [
+        "ATX",
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": 360,
+      "maxCoolerHeightMM": 170,
+      "radiatorSupport": [
+        {
+          "position": "front",
+          "maxMM": 360
+        },
+        {
+          "position": "top",
+          "maxMM": 280
+        },
+        {
+          "position": "rear",
+          "maxMM": 120
+        }
+      ],
+      "fanMounts": {
+        "front": 3,
+        "top": 2,
+        "rear": 1
+      },
+      "drivebays": {
+        "3.5": 2,
+        "2.5": 2
+      },
+      "dimensionsMM": {
+        "depth": 453,
+        "width": 230,
+        "height": 466
+      },
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "corsair-3000d-airflow",
+      "category": "case",
+      "brand": "Corsair",
+      "name": "Corsair 3000D AIRFLOW",
+      "tier": "budget",
+      "specsVerified": false,
+      "refPriceTHB": 2790,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Corsair%203000D%20AIRFLOW",
+      "caseType": "mid-tower",
+      "formFactorsSupported": [
+        "ATX",
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": 360,
+      "maxCoolerHeightMM": 170,
+      "radiatorSupport": null,
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": null,
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "corsair-5000d-airflow",
+      "category": "case",
+      "brand": "Corsair",
+      "name": "Corsair 5000D AIRFLOW",
+      "tier": "high",
+      "specsVerified": false,
+      "refPriceTHB": 5490,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Corsair%205000D%20AIRFLOW",
+      "caseType": "mid-tower",
+      "formFactorsSupported": [
+        "E-ATX",
+        "ATX",
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": 420,
+      "maxCoolerHeightMM": 170,
+      "radiatorSupport": [
+        {
+          "position": "front",
+          "maxMM": 360
+        },
+        {
+          "position": "top",
+          "maxMM": 360
+        },
+        {
+          "position": "side",
+          "maxMM": 360
+        },
+        {
+          "position": "rear",
+          "maxMM": 120
+        }
+      ],
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": {
+        "depth": 520,
+        "width": 245,
+        "height": 520
+      },
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "corsair-7000d-airflow",
+      "category": "case",
+      "brand": "Corsair",
+      "name": "Corsair 7000D AIRFLOW",
+      "tier": "flagship",
+      "specsVerified": false,
+      "refPriceTHB": 8990,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Corsair%207000D%20AIRFLOW",
+      "caseType": "full-tower",
+      "formFactorsSupported": [
+        "E-ATX",
+        "ATX",
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": 450,
+      "maxCoolerHeightMM": 190,
+      "radiatorSupport": null,
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": {
+        "depth": 550,
+        "width": 248,
+        "height": 600
+      },
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "corsair-2000d-airflow",
+      "category": "case",
+      "brand": "Corsair",
+      "name": "Corsair 2000D AIRFLOW",
+      "tier": "high",
+      "specsVerified": false,
+      "refPriceTHB": 4990,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Corsair%202000D%20AIRFLOW",
+      "caseType": "itx",
+      "formFactorsSupported": [
+        "ITX"
+      ],
+      "maxGPULengthMM": 365,
+      "maxCoolerHeightMM": 70,
+      "radiatorSupport": null,
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": null,
+      "psuFormFactors": [
+        "SFX",
+        "SFX-L"
+      ],
+      "sidePanel": "mesh"
+    },
+    {
+      "id": "nzxt-h5-flow",
+      "category": "case",
+      "brand": "NZXT",
+      "name": "NZXT H5 Flow",
+      "tier": "mid",
+      "specsVerified": false,
+      "refPriceTHB": 3290,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=NZXT%20H5%20Flow",
+      "caseType": "mid-tower",
+      "formFactorsSupported": [
+        "ATX",
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": 365,
+      "maxCoolerHeightMM": 165,
+      "radiatorSupport": [
+        {
+          "position": "front",
+          "maxMM": 280
+        },
+        {
+          "position": "top",
+          "maxMM": 240
+        },
+        {
+          "position": "rear",
+          "maxMM": 120
+        }
+      ],
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": {
+        "depth": 428,
+        "width": 227,
+        "height": 464
+      },
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "nzxt-h7-flow",
+      "category": "case",
+      "brand": "NZXT",
+      "name": "NZXT H7 Flow",
+      "tier": "mid",
+      "specsVerified": false,
+      "refPriceTHB": 4490,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=NZXT%20H7%20Flow",
+      "caseType": "mid-tower",
+      "formFactorsSupported": [
+        "ATX",
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": 400,
+      "maxCoolerHeightMM": 185,
+      "radiatorSupport": [
+        {
+          "position": "front",
+          "maxMM": 360
+        },
+        {
+          "position": "top",
+          "maxMM": 360
+        },
+        {
+          "position": "rear",
+          "maxMM": 120
+        }
+      ],
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": {
+        "depth": 480,
+        "width": 230,
+        "height": 505
+      },
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "nzxt-h9-flow",
+      "category": "case",
+      "brand": "NZXT",
+      "name": "NZXT H9 Flow",
+      "tier": "high",
+      "specsVerified": false,
+      "refPriceTHB": 6290,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=NZXT%20H9%20Flow",
+      "caseType": "mid-tower",
+      "formFactorsSupported": [
+        "ATX",
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": 435,
+      "maxCoolerHeightMM": 165,
+      "radiatorSupport": [
+        {
+          "position": "top",
+          "maxMM": 360
+        },
+        {
+          "position": "side",
+          "maxMM": 360
+        },
+        {
+          "position": "bottom",
+          "maxMM": 360
+        }
+      ],
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": {
+        "depth": 466,
+        "width": 290,
+        "height": 495
+      },
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "lian-li-o11-dynamic-evo",
+      "category": "case",
+      "brand": "Lian Li",
+      "name": "Lian Li O11 Dynamic EVO",
+      "tier": "high",
+      "specsVerified": false,
+      "refPriceTHB": 5290,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Lian%20Li%20O11%20Dynamic%20EVO",
+      "caseType": "mid-tower",
+      "formFactorsSupported": [
+        "E-ATX",
+        "ATX",
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": null,
+      "maxCoolerHeightMM": 167,
+      "radiatorSupport": [
+        {
+          "position": "top",
+          "maxMM": 360
+        },
+        {
+          "position": "side",
+          "maxMM": 360
+        },
+        {
+          "position": "bottom",
+          "maxMM": 360
+        }
+      ],
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": {
+        "depth": 465,
+        "width": 285,
+        "height": 459
+      },
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "lian-li-o11-dynamic-evo-xl",
+      "category": "case",
+      "brand": "Lian Li",
+      "name": "Lian Li O11 Dynamic EVO XL",
+      "tier": "flagship",
+      "specsVerified": false,
+      "refPriceTHB": 7990,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Lian%20Li%20O11%20Dynamic%20EVO%20XL",
+      "caseType": "full-tower",
+      "formFactorsSupported": [
+        "E-ATX",
+        "ATX",
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": null,
+      "maxCoolerHeightMM": 167,
+      "radiatorSupport": null,
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": null,
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "lian-li-o11-vision",
+      "category": "case",
+      "brand": "Lian Li",
+      "name": "Lian Li O11 Vision",
+      "tier": "high",
+      "specsVerified": false,
+      "refPriceTHB": 4990,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Lian%20Li%20O11%20Vision",
+      "caseType": "mid-tower",
+      "formFactorsSupported": [
+        "ATX",
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": null,
+      "maxCoolerHeightMM": 167,
+      "radiatorSupport": null,
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": null,
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "lian-li-lancool-216",
+      "category": "case",
+      "brand": "Lian Li",
+      "name": "Lian Li LANCOOL 216",
+      "tier": "mid",
+      "specsVerified": false,
+      "refPriceTHB": 3490,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Lian%20Li%20LANCOOL%20216",
+      "caseType": "mid-tower",
+      "formFactorsSupported": [
+        "E-ATX",
+        "ATX",
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": 392,
+      "maxCoolerHeightMM": 180,
+      "radiatorSupport": null,
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": {
+        "depth": 480,
+        "width": 235,
+        "height": 491
+      },
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "lian-li-lancool-207",
+      "category": "case",
+      "brand": "Lian Li",
+      "name": "Lian Li LANCOOL 207",
+      "tier": "budget",
+      "specsVerified": false,
+      "refPriceTHB": 2590,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Lian%20Li%20LANCOOL%20207",
+      "caseType": "mid-tower",
+      "formFactorsSupported": [
+        "ATX",
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": null,
+      "maxCoolerHeightMM": null,
+      "radiatorSupport": null,
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": null,
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "lian-li-a4-h2o",
+      "category": "case",
+      "brand": "Lian Li",
+      "name": "Lian Li A4-H2O",
+      "tier": "high",
+      "specsVerified": false,
+      "refPriceTHB": 4290,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Lian%20Li%20A4-H2O",
+      "caseType": "itx",
+      "formFactorsSupported": [
+        "ITX"
+      ],
+      "maxGPULengthMM": 322,
+      "maxCoolerHeightMM": 55,
+      "radiatorSupport": [
+        {
+          "position": "side",
+          "maxMM": 240
+        }
+      ],
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": null,
+      "psuFormFactors": [
+        "SFX"
+      ],
+      "sidePanel": "mesh"
+    },
+    {
+      "id": "lian-li-dan-case-a3-matx",
+      "category": "case",
+      "brand": "Lian Li",
+      "name": "Lian Li DAN Case A3-mATX",
+      "tier": "mid",
+      "specsVerified": false,
+      "refPriceTHB": 2590,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Lian%20Li%20DAN%20Case%20A3-mATX",
+      "caseType": "matx",
+      "formFactorsSupported": [
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": 415,
+      "maxCoolerHeightMM": 165,
+      "radiatorSupport": null,
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": null,
+      "psuFormFactors": [
+        "ATX",
+        "SFX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "fractal-design-north",
+      "category": "case",
+      "brand": "Fractal Design",
+      "name": "Fractal Design North",
+      "tier": "high",
+      "specsVerified": false,
+      "refPriceTHB": 5290,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Fractal%20Design%20North",
+      "caseType": "mid-tower",
+      "formFactorsSupported": [
+        "ATX",
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": 355,
+      "maxCoolerHeightMM": 170,
+      "radiatorSupport": null,
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": {
+        "depth": 447,
+        "width": 215,
+        "height": 469
+      },
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "fractal-design-pop-air",
+      "category": "case",
+      "brand": "Fractal Design",
+      "name": "Fractal Design Pop Air",
+      "tier": "mid",
+      "specsVerified": false,
+      "refPriceTHB": 2990,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Fractal%20Design%20Pop%20Air",
+      "caseType": "mid-tower",
+      "formFactorsSupported": [
+        "ATX",
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": 405,
+      "maxCoolerHeightMM": 170,
+      "radiatorSupport": null,
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": null,
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "fractal-design-meshify-2-compact",
+      "category": "case",
+      "brand": "Fractal Design",
+      "name": "Fractal Design Meshify 2 Compact",
+      "tier": "mid",
+      "specsVerified": false,
+      "refPriceTHB": 3990,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Fractal%20Design%20Meshify%202%20Compact",
+      "caseType": "mid-tower",
+      "formFactorsSupported": [
+        "ATX",
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": null,
+      "maxCoolerHeightMM": 169,
+      "radiatorSupport": null,
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": null,
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "fractal-design-terra",
+      "category": "case",
+      "brand": "Fractal Design",
+      "name": "Fractal Design Terra",
+      "tier": "high",
+      "specsVerified": false,
+      "refPriceTHB": 5990,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Fractal%20Design%20Terra",
+      "caseType": "itx",
+      "formFactorsSupported": [
+        "ITX"
+      ],
+      "maxGPULengthMM": 322,
+      "maxCoolerHeightMM": 77,
+      "radiatorSupport": null,
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": null,
+      "psuFormFactors": [
+        "SFX",
+        "SFX-L"
+      ],
+      "sidePanel": "mesh"
+    },
+    {
+      "id": "fractal-design-ridge",
+      "category": "case",
+      "brand": "Fractal Design",
+      "name": "Fractal Design Ridge",
+      "tier": "mid",
+      "specsVerified": false,
+      "refPriceTHB": 3990,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Fractal%20Design%20Ridge",
+      "caseType": "itx",
+      "formFactorsSupported": [
+        "ITX"
+      ],
+      "maxGPULengthMM": 335,
+      "maxCoolerHeightMM": 70,
+      "radiatorSupport": null,
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": null,
+      "psuFormFactors": [
+        "SFX",
+        "SFX-L"
+      ],
+      "sidePanel": "mesh"
+    },
+    {
+      "id": "cooler-master-masterbox-q300l",
+      "category": "case",
+      "brand": "Cooler Master",
+      "name": "Cooler Master MasterBox Q300L",
+      "tier": "budget",
+      "specsVerified": false,
+      "refPriceTHB": 1590,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Cooler%20Master%20MasterBox%20Q300L",
+      "caseType": "matx",
+      "formFactorsSupported": [
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": 360,
+      "maxCoolerHeightMM": 159,
+      "radiatorSupport": null,
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": null,
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "acrylic"
+    },
+    {
+      "id": "cooler-master-masterbox-nr200p",
+      "category": "case",
+      "brand": "Cooler Master",
+      "name": "Cooler Master MasterBox NR200P",
+      "tier": "mid",
+      "specsVerified": false,
+      "refPriceTHB": 3290,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Cooler%20Master%20MasterBox%20NR200P",
+      "caseType": "itx",
+      "formFactorsSupported": [
+        "ITX"
+      ],
+      "maxGPULengthMM": 330,
+      "maxCoolerHeightMM": 155,
+      "radiatorSupport": null,
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": {
+        "depth": 376,
+        "width": 185,
+        "height": 292
+      },
+      "psuFormFactors": [
+        "SFX",
+        "SFX-L",
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "cooler-master-masterbox-td500-mesh-v2",
+      "category": "case",
+      "brand": "Cooler Master",
+      "name": "Cooler Master MasterBox TD500 Mesh V2",
+      "tier": "mid",
+      "specsVerified": false,
+      "refPriceTHB": 3290,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Cooler%20Master%20MasterBox%20TD500%20Mesh%20V2",
+      "caseType": "mid-tower",
+      "formFactorsSupported": [
+        "ATX",
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": 410,
+      "maxCoolerHeightMM": 165,
+      "radiatorSupport": [
+        {
+          "position": "front",
+          "maxMM": 360
+        },
+        {
+          "position": "top",
+          "maxMM": 360
+        }
+      ],
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": null,
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "be-quiet-pure-base-500dx",
+      "category": "case",
+      "brand": "be quiet!",
+      "name": "be quiet! Pure Base 500DX",
+      "tier": "mid",
+      "specsVerified": false,
+      "refPriceTHB": 3590,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=be%20quiet!%20Pure%20Base%20500DX",
+      "caseType": "mid-tower",
+      "formFactorsSupported": [
+        "ATX",
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": 369,
+      "maxCoolerHeightMM": 190,
+      "radiatorSupport": [
+        {
+          "position": "front",
+          "maxMM": 360
+        },
+        {
+          "position": "top",
+          "maxMM": 240
+        }
+      ],
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": {
+        "depth": 463,
+        "width": 232,
+        "height": 450
+      },
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "hyte-y60",
+      "category": "case",
+      "brand": "HYTE",
+      "name": "HYTE Y60",
+      "tier": "high",
+      "specsVerified": false,
+      "refPriceTHB": 6990,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=HYTE%20Y60",
+      "caseType": "mid-tower",
+      "formFactorsSupported": [
+        "ATX",
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": 375,
+      "maxCoolerHeightMM": 160,
+      "radiatorSupport": null,
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": {
+        "depth": 456,
+        "width": 285,
+        "height": 462
+      },
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "phanteks-eclipse-g360a",
+      "category": "case",
+      "brand": "Phanteks",
+      "name": "Phanteks Eclipse G360A",
+      "tier": "mid",
+      "specsVerified": false,
+      "refPriceTHB": 2990,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Phanteks%20Eclipse%20G360A",
+      "caseType": "mid-tower",
+      "formFactorsSupported": [
+        "ATX",
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": 400,
+      "maxCoolerHeightMM": 162,
+      "radiatorSupport": null,
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": null,
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "phanteks-nv7",
+      "category": "case",
+      "brand": "Phanteks",
+      "name": "Phanteks NV7",
+      "tier": "flagship",
+      "specsVerified": false,
+      "refPriceTHB": 7490,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Phanteks%20NV7",
+      "caseType": "full-tower",
+      "formFactorsSupported": [
+        "E-ATX",
+        "ATX",
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": null,
+      "maxCoolerHeightMM": null,
+      "radiatorSupport": null,
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": null,
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "montech-air-903-max",
+      "category": "case",
+      "brand": "Montech",
+      "name": "Montech AIR 903 MAX",
+      "tier": "mid",
+      "specsVerified": false,
+      "refPriceTHB": 2590,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Montech%20AIR%20903%20MAX",
+      "caseType": "mid-tower",
+      "formFactorsSupported": [
+        "E-ATX",
+        "ATX",
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": 400,
+      "maxCoolerHeightMM": 180,
+      "radiatorSupport": null,
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": null,
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "montech-sky-two",
+      "category": "case",
+      "brand": "Montech",
+      "name": "Montech SKY TWO",
+      "tier": "mid",
+      "specsVerified": false,
+      "refPriceTHB": 3290,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Montech%20SKY%20TWO",
+      "caseType": "mid-tower",
+      "formFactorsSupported": [
+        "ATX",
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": 410,
+      "maxCoolerHeightMM": 175,
+      "radiatorSupport": null,
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": null,
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "deepcool-ch560",
+      "category": "case",
+      "brand": "DeepCool",
+      "name": "DeepCool CH560",
+      "tier": "mid",
+      "specsVerified": false,
+      "refPriceTHB": 2990,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=DeepCool%20CH560",
+      "caseType": "mid-tower",
+      "formFactorsSupported": [
+        "E-ATX",
+        "ATX",
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": 380,
+      "maxCoolerHeightMM": 175,
+      "radiatorSupport": [
+        {
+          "position": "front",
+          "maxMM": 360
+        },
+        {
+          "position": "top",
+          "maxMM": 360
+        }
+      ],
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": null,
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "deepcool-cc560",
+      "category": "case",
+      "brand": "DeepCool",
+      "name": "DeepCool CC560",
+      "tier": "budget",
+      "specsVerified": false,
+      "refPriceTHB": 1690,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=DeepCool%20CC560",
+      "caseType": "mid-tower",
+      "formFactorsSupported": [
+        "ATX",
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": 370,
+      "maxCoolerHeightMM": 163,
+      "radiatorSupport": [
+        {
+          "position": "front",
+          "maxMM": 360
+        },
+        {
+          "position": "top",
+          "maxMM": 240
+        }
+      ],
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": {
+        "depth": 416,
+        "width": 210,
+        "height": 477
+      },
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "deepcool-ch370",
+      "category": "case",
+      "brand": "DeepCool",
+      "name": "DeepCool CH370",
+      "tier": "budget",
+      "specsVerified": false,
+      "refPriceTHB": 1890,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=DeepCool%20CH370",
+      "caseType": "matx",
+      "formFactorsSupported": [
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": 320,
+      "maxCoolerHeightMM": 167,
+      "radiatorSupport": null,
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": null,
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "jonsbo-d31-mesh",
+      "category": "case",
+      "brand": "Jonsbo",
+      "name": "Jonsbo D31 MESH",
+      "tier": "budget",
+      "specsVerified": false,
+      "refPriceTHB": 1990,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Jonsbo%20D31%20MESH",
+      "caseType": "matx",
+      "formFactorsSupported": [
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": 400,
+      "maxCoolerHeightMM": 168,
+      "radiatorSupport": null,
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": null,
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    },
+    {
+      "id": "asus-prime-ap201",
+      "category": "case",
+      "brand": "ASUS",
+      "name": "ASUS Prime AP201",
+      "tier": "mid",
+      "specsVerified": false,
+      "refPriceTHB": 2690,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=ASUS%20Prime%20AP201",
+      "caseType": "matx",
+      "formFactorsSupported": [
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": 338,
+      "maxCoolerHeightMM": 170,
+      "radiatorSupport": null,
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": null,
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "mesh"
+    },
+    {
+      "id": "thermaltake-versa-h18",
+      "category": "case",
+      "brand": "Thermaltake",
+      "name": "Thermaltake Versa H18",
+      "tier": "budget",
+      "specsVerified": false,
+      "refPriceTHB": 1190,
+      "priceUpdated": "2026-11-11",
+      "searchUrl": "https://www.google.com/search?tbm=shop&gl=th&q=Thermaltake%20Versa%20H18",
+      "caseType": "matx",
+      "formFactorsSupported": [
+        "mATX",
+        "ITX"
+      ],
+      "maxGPULengthMM": 350,
+      "maxCoolerHeightMM": 155,
+      "radiatorSupport": null,
+      "fanMounts": null,
+      "drivebays": null,
+      "dimensionsMM": null,
+      "psuFormFactors": [
+        "ATX"
+      ],
+      "sidePanel": "glass"
+    }
+  ]
+}
