@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rigsmith: 3D PC builder with compatibility checks</title>
+  <meta name="description" content="Pick real PC parts with THB reference prices, get live compatibility checks, then build the machine in 3D part by part or let it assemble itself.">
+  <meta name="theme-color" content="#0B0D10">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/landing.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./vendor/three/three.module.min.js",
+        "three/addons/": "./vendor/three/addons/"
+      }
+    }
+  </script>
+  <script type="module" src="js/ui/shell.js"></script>
+  <script type="module" src="js/landing.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="loader" id="loader" role="status" aria-live="polite" aria-busy="true">
+    <div class="loader__box">
+      <span class="wordmark"><span class="wordmark__mark" aria-hidden="true"></span><span data-app-name>Rigsmith</span></span>
+      <div class="loader__row"><span id="loader-step">Loading</span><span>3D</span></div>
+      <div class="loader__bar"><div class="loader__fill" id="loader-fill"></div></div>
+    </div>
+  </div>
+
+  <header id="site-header" data-page="home"></header>
+
+  <main id="main">
+    <section class="hero container" aria-labelledby="hero-title">
+      <div class="hero__copy">
+        <p class="label">3D PC builder · Reference prices in THB</p>
+        <h1 id="hero-title">Plan the build. Check every fit. Assemble it in&nbsp;3D.</h1>
+        <p class="lead">Pick from real parts and see straight away whether they work together: socket, memory type, board size, GPU length, cooler height, radiator mounts and power. Then build the machine by hand, cable by cable, or watch it assemble itself.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="builder.html">Start building <span class="btn__arrow" aria-hidden="true">→</span></a>
+          <a class="btn" href="builder.html?mode=auto">Auto-build a PC</a>
+        </div>
+        <dl class="hero__facts">
+          <div><dt class="label">Checks</dt><dd class="mono">Socket · RAM · Form factor · Clearance · PSU headroom · Connectors</dd></div>
+          <div><dt class="label">Prices</dt><dd class="mono">Reference price, not live</dd></div>
+        </dl>
+      </div>
+
+      <div class="hero__stage" id="hero-stage" data-mode="loading">
+        <canvas id="hero-canvas" class="hero__canvas" role="img"
+          aria-label="3D preview of a mid-tower PC with a glass side panel, an ATX motherboard, a 360 mm liquid cooler at the front, a triple-fan graphics card and a rear exhaust fan."></canvas>
+
+        <span class="hero__frame brackets" aria-hidden="true"></span>
+
+        <figure class="hero__fallback" aria-labelledby="hero-fallback-reason">
+          <svg viewBox="0 0 460 480" role="img" aria-label="Line drawing of a mid-tower PC case with its main parts.">
+            <g fill="none" stroke="#353B45" stroke-width="2">
+              <rect x="20" y="20" width="420" height="440" rx="4"/>
+              <rect x="40" y="380" width="340" height="62"/>
+              <rect x="60" y="44" width="230" height="290" stroke="#8A93A0"/>
+              <rect x="64" y="52" width="28" height="150"/>
+              <rect x="100" y="52" width="104" height="28"/>
+              <circle cx="164" cy="132" r="32" stroke="#8A93A0"/>
+              <rect x="212" y="58" width="6" height="124"/><rect x="221" y="58" width="6" height="124"/>
+              <rect x="230" y="58" width="6" height="124"/><rect x="239" y="58" width="6" height="124"/>
+              <rect x="40" y="200" width="286" height="52" stroke="#8A93A0"/>
+              <rect x="390" y="64" width="34" height="370"/>
+              <circle cx="370" cy="120" r="50"/><circle cx="370" cy="242" r="50"/><circle cx="370" cy="364" r="50"/>
+              <path d="M196 120 C 260 100, 300 60, 380 60"/>
+            </g>
+            <circle cx="410" cy="34" r="5" fill="#FF5A1F"/>
+          </svg>
+          <figcaption class="mono muted" id="hero-fallback-reason"></figcaption>
+        </figure>
+
+        <span class="hero__tag label">Live preview</span>
+        <span class="hero__meta mono">Demo build · procedural model · 1 unit = 1 cm</span>
+        <span class="hero__readout mono" id="hero-readout" aria-hidden="true"></span>
+      </div>
+    </section>
+
+    <div class="container"><div class="ticks" aria-hidden="true"></div></div>
+
+    <section class="modes container" aria-labelledby="modes-title">
+      <h2 id="modes-title" class="visually-hidden">Three ways to build</h2>
+
+      <article class="mode panel">
+        <div class="mode__head"><span class="mono muted">01</span><span class="label">Hands-on</span></div>
+        <h3>Build by hand</h3>
+        <p>Start from an empty case and fit each part the way you would on a desk: PSU, motherboard, CPU, cooler, memory, storage, graphics card, fans. Then run every cable from the PSU to its port and route it behind the tray.</p>
+        <ul class="mode__list mono">
+          <li>Install order enforced</li>
+          <li>Undo and redo on every step</li>
+          <li>Cable management score</li>
+        </ul>
+      </article>
+
+      <article class="mode panel">
+        <div class="mode__head"><span class="mono muted">02</span><span class="label">Automatic</span></div>
+        <h3>Auto-build</h3>
+        <p>Give a budget in baht, the main use and the case size. A compatible set of parts is picked with the reason for each choice, and the PC assembles itself on screen in the same order as a real build.</p>
+        <ul class="mode__list mono">
+          <li>Gaming, creator, office, AI</li>
+          <li>Playback at 1×, 2× or skip</li>
+          <li>Save the assembly as video</li>
+        </ul>
+      </article>
+
+      <article class="mode panel">
+        <div class="mode__head"><span class="mono muted">03</span><span class="label">Side by side</span></div>
+        <h3>Compare builds</h3>
+        <p>Put up to three builds next to each other: parts, total price, estimated performance for each workload, power draw and size. Swap a single part to see what it changes before you spend anything.</p>
+        <ul class="mode__list mono">
+          <li>Price per performance</li>
+          <li>Shareable build link</li>
+          <li>CSV and print export</li>
+        </ul>
+      </article>
+    </section>
+  </main>
+
+  <footer id="site-footer"></footer>
+  <noscript><p class="container muted">This site needs JavaScript for the builder and the 3D preview.</p></noscript>
+</body>
+</html>
