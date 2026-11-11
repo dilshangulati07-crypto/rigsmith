@@ -1,6 +1,7 @@
 // 3D view panel: starts the viewer, keeps it in sync with the build, and runs the tools
 // (side panel, camera presets, quality, screenshot, power, fan profile, lighting, exploded
-// view), FPS readout, empty state and hover. "Build by hand" mode lives in hand-panel.js.
+// view), FPS readout, empty state and hover. "Build by hand" mode lives in hand-panel.js,
+// the "Auto-build" cinematic in cinematic-panel.js.
 // Loaded on demand the first time the panel is on screen, so the parts list never waits for three.js.
 import * as THREE from 'three';
 import { createViewer, isWebGL2Available } from '../scene/renderer.js';
@@ -14,6 +15,7 @@ import { CONFIG } from '../config.js';
 import { assemblyProgress } from '../state.js';
 import { html, render } from './dom.js';
 import { mountHandPanel } from './hand-panel.js';
+import { mountCinematicPanel } from './cinematic-panel.js';
 
 const DRAWN = 'Every part is drawn at the size in the data. Where the data has no size (PSU length, graphics card height, radiator thickness) a typical size is used; hover a part to see which.';
 
@@ -45,6 +47,7 @@ export async function mountViewerPanel(el, app) {
       <div class="vgroup vgroup--mode" role="group" aria-label="3D mode">
         <button class="vbtn" type="button" data-v="mode" data-mode="viewer" aria-pressed="true">Viewer</button>
         <button class="vbtn" type="button" data-v="mode" data-mode="hand" aria-pressed="false" aria-keyshortcuts="K">Build by hand</button>
+        <button class="vbtn" type="button" data-v="mode" data-mode="auto" aria-pressed="false">Auto-build</button>
       </div>
       <span class="viewer__spacer"></span>
       <button class="vbtn viewer__opt" type="button" data-v="quality">Quality: High</button>
@@ -82,6 +85,7 @@ export async function mountViewerPanel(el, app) {
       <p class="viewer__lighting-note muted" data-ref="light-note"></p>
     </div>
     <div class="hand" data-ref="hand" hidden></div>
+    <div class="auto" data-ref="auto" hidden></div>
     <div class="viewer__notes">
       <p data-ref="notes"></p>
       <p class="muted">${DRAWN} Positions follow the real case and board sizes; internal layouts are approximate.</p>
@@ -158,6 +162,7 @@ export async function mountViewerPanel(el, app) {
       fx?.refresh();
       updateLighting();
       hand?.onLayout();
+      auto?.onLayout();
     },
   });
 
@@ -174,25 +179,58 @@ export async function mountViewerPanel(el, app) {
   }
   fx = createEffects({ viewer, scene: bscene, reducedMotion, onStatus: showPower });
 
-  // ---- mode: viewer or build by hand
+  // ---- mode: viewer, build by hand, or the auto-build cinematic (not kept across reloads)
   let hand = null;
+  let auto = null;
+  const modeNow = () => (auto?.active ? 'auto' : hand?.active ? 'hand' : 'viewer');
   function setMode(mode, { animate = true } = {}) {
-    if (!hand || (mode === 'hand') === hand.active) return;
+    if (!hand || mode === modeNow()) return false;
+    if (mode === 'auto' && !bscene.build?.case) {
+      app.toast('Choose a case first: Auto-build installs the parts into it.', 'warn');
+      return false;
+    }
+    if (hand.active) hand.leave();
+    if (auto?.active) auto.leave();
     el.dataset.mode = mode;
     for (const b of el.querySelectorAll('[data-v="mode"]')) b.setAttribute('aria-pressed', String(b.dataset.mode === mode));
-    assemblyProgress.setMode(mode);
-    if (mode === 'hand') {
+    assemblyProgress.setMode(mode === 'hand' ? 'hand' : 'viewer');
+    if (mode === 'hand' || mode === 'auto') {
       setExplode(0);
       toggleLighting(false);
+      showTarget(null);
       app.enter3D?.();
-      hand.enter({ animate });
+    }
+    if (mode === 'hand') hand.enter({ animate });
+    else if (mode === 'auto') {
+      auto ??= mountCinematicPanel(ref('auto'), el.querySelector('.viewer__stage'), {
+        app, viewer, bscene, rig, fx, hand, reducedMotion,
+        isShown: () => el.getClientRects().length > 0,
+        onExit: () => setMode('viewer'),
+        onOpenHand: (finalState) => {
+          setMode('hand');
+          assemblyProgress.fill(finalState);
+          app.toast('Opened in Build by hand with every part and cable in. Reset case starts it empty.');
+        },
+        onEditParts: () => {
+          setMode('viewer');
+          app.setCategory(app.ui.category, { focusBrowser: true });
+        },
+        onScreenshot: () => screenshot(),
+      });
+      const r = auto.enter();
+      if (!r.ok) {
+        app.toast(r.reason, 'warn');
+        setMode('viewer');
+        return false;
+      }
+      requestAnimationFrame(() => el.scrollIntoView({ block: 'start', behavior: reducedMotion ? 'auto' : 'smooth' }));
     } else {
-      hand.leave();
-      el.querySelector('[data-v="panel"]').setAttribute('aria-pressed', 'true');
+      setPanel(true);
       rig.goTo('angle');
     }
+    return true;
   }
-  const building = () => hand?.active === true;
+  const building = () => hand?.active === true || auto?.active === true;
 
   function updateStatus(layout) {
     const build = app.store.build;
@@ -302,7 +340,7 @@ export async function mountViewerPanel(el, app) {
   canvas.addEventListener('pointermove', (e) => {
     const r = canvas.getBoundingClientRect();
     pointer = { x: ((e.clientX - r.left) / r.width) * 2 - 1, y: -((e.clientY - r.top) / r.height) * 2 + 1 };
-    if (!pickQueued && e.pointerType === 'mouse') {
+    if (!pickQueued && e.pointerType === 'mouse' && !auto?.active) {
       pickQueued = true;
       requestAnimationFrame(() => {
         pickQueued = false;
@@ -313,7 +351,7 @@ export async function mountViewerPanel(el, app) {
   canvas.addEventListener('pointerleave', () => { pointer = null; hoverFrom3D(null); });
   canvas.addEventListener('pointerdown', (e) => { down = { x: e.clientX, y: e.clientY, t: performance.now() }; });
   canvas.addEventListener('pointerup', (e) => {
-    if (hand?.cabling) return; // clicks select cables and ports in the cable step
+    if (hand?.cabling || auto?.active) return; // cable step: clicks pick ports; cinematic: no picking
     if (!down || Math.hypot(e.clientX - down.x, e.clientY - down.y) > 5 || performance.now() - down.t > 500) return;
     const r = canvas.getBoundingClientRect();
     const hit = pickAt({ x: ((e.clientX - r.left) / r.width) * 2 - 1, y: -((e.clientY - r.top) / r.height) * 2 + 1 });
@@ -345,6 +383,7 @@ export async function mountViewerPanel(el, app) {
     tip.style.top = `${Math.max(8, Math.min(r.height - 72, y + 14))}px`;
   }
   function showTarget(target, part, follow = false) {
+    if (auto?.active) target = null; // nothing extra in the cinematic (or its video)
     lastTarget = target;
     const shown = bscene.highlight(target);
     const tip = ref('hover');
@@ -360,10 +399,13 @@ export async function mountViewerPanel(el, app) {
   // ---- frame loop and FPS readout
   let fpsClock = 0;
   viewer.start((dt) => {
-    rig.update(dt);
-    bscene.update(dt);
-    fx.update(dt);
+    // The cinematic's speed (and pause) applies to the camera, the side panel and the boot too.
+    const k = auto?.timeScale ?? 1;
+    rig.update(dt * k);
+    bscene.update(dt * k);
+    fx.update(dt * k);
     hand?.update(dt);
+    auto?.update(dt);
     fpsClock += dt;
     if (fpsClock >= 0.5) {
       fpsClock = 0;
@@ -385,7 +427,7 @@ export async function mountViewerPanel(el, app) {
   hand = mountHandPanel(ref('hand'), { app, viewer, bscene, rig, fx, reducedMotion, isShown: () => el.getClientRects().length > 0 });
   if (assemblyProgress.mode === 'hand') setMode('hand', { animate: false });
   // ?debug3d exposes the viewer for checking draw calls and GPU memory in the console.
-  if (new URLSearchParams(location.search).has('debug3d')) window.rigsmith3d = { viewer, scene: bscene, fx, hand, setMode, app, rig };
+  if (new URLSearchParams(location.search).has('debug3d')) window.rigsmith3d = { viewer, scene: bscene, fx, hand, setMode, app, rig, get auto() { return auto; } };
   ref('loading').hidden = true;
   el.dataset.state = 'ready';
 
@@ -398,12 +440,20 @@ export async function mountViewerPanel(el, app) {
     },
     toggleSidePanel: () => { if (!building()) setPanel(!bscene.sidePanel); },
     togglePower: () => {
+      if (auto?.active) return;
       if (building() && !hand.canPower()) app.toast('Connect the required cables first: the cable step lists what is missing.', 'warn');
       else fx.togglePower();
     },
     toggleExplode: () => { if (!building()) setExplode(bscene.explode > 0 ? 0 : 100); },
-    toggleMode: () => setMode(building() ? 'viewer' : 'hand'),
-    nextCamera: () => rig.next(),
+    toggleMode: () => { if (!auto?.active) setMode(building() ? 'viewer' : 'hand'); },
+    nextCamera: () => { if (!auto?.active) rig.next(); },
+    /** Play the Auto-build cinematic of the current build (once the scene has it). */
+    async startAuto() {
+      bscene.sync(app.store.build);
+      while (bscene.busy) await new Promise((r) => requestAnimationFrame(r));
+      if (auto?.active) { auto.test.player.replay(); return true; }
+      return setMode('auto');
+    },
     screenshot,
   };
 }

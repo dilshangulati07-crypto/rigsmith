@@ -70,11 +70,13 @@ export function createEffects({ viewer, scene, reducedMotion = false, onStatus }
     onStatus?.({ power, profile, rpm: fans && power !== 'off' ? Math.round(rpmOf(fans) * k() / 10) * 10 : 0 });
   }
 
-  function setPower(on) {
-    if (on && power !== 'off') return;
+  /** `instant`: straight to running, no boot sequence (jumping in the Auto-build timeline). */
+  function setPower(on, { instant = false } = {}) {
     if (!on && power === 'off') return;
-    power = on ? (reducedMotion ? 'on' : 'booting') : 'off';
-    bootT = on && reducedMotion ? BOOT_SECONDS : 0;
+    if (on && (power === 'on' || (power === 'booting' && !instant))) return;
+    const quick = instant || reducedMotion;
+    power = on ? (quick ? 'on' : 'booting') : 'off';
+    bootT = on && quick ? BOOT_SECONDS : 0;
     status();
   }
 

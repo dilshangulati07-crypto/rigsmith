@@ -5,6 +5,7 @@
 // Every piece is already placed by build-scene at its layout pose for the whole build and
 // only hidden by the mask, so a seated piece is simply shown again: the hand-built PC is
 // the viewer's PC. Proxies and ghosts are clones that share geometry and materials.
+// The Auto-build cinematic (cinematic.js) drives the same seat() with `from: 'tray'`.
 import * as THREE from 'three';
 import { mat } from './materials.js';
 import { place } from './build-scene.js';
@@ -31,6 +32,7 @@ const THUMB_DIR = {
 const FOCUS_DIR = { fans: [0.55, 0.4, 0.9], radiator: [0.55, 0.45, 0.9], psu: [0.3, 0.2, 1] };
 
 const easeOut = (t) => 1 - (1 - t) ** 3;
+const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 const v3 = (a) => new THREE.Vector3(a[0], a[1], a[2]);
 
 /** Clone without copying userData (three.js deep-copies it as JSON, which models can't survive). */
@@ -291,6 +293,21 @@ export function createHandBuild({ viewer, bscene, rig, reducedMotion = false, so
   }
 
   // ---- tweens (seat, settle, return to tray)
+  // abort() bumps the epoch: running seats drop their proxy and return false without installing.
+  let epoch = 0;
+  function abort() {
+    epoch++;
+    tweens.forEach((t) => t.resolve());
+    tweens = [];
+  }
+
+  /** Root-space position that puts a proxy's centre just under the bottom edge of the view (the tray), at the depth of `pos`. */
+  function trayPos(pos, c0, quat) {
+    const off = c0.clone().applyQuaternion(quat);
+    const depth = root.localToWorld(pos.clone().add(off)).project(viewer.camera).z;
+    return root.worldToLocal(new THREE.Vector3(0, -1.25, depth).unproject(viewer.camera)).sub(off);
+  }
+
   function tween(obj, to, dur, ease = easeOut) {
     return new Promise((resolve) => {
       if (reducedMotion || dur <= 0) {
@@ -307,26 +324,46 @@ export function createHandBuild({ viewer, bscene, rig, reducedMotion = false, so
   /**
    * Ease the dragged proxy (or a new one, for keyboard placing) into `pieceKey`'s spot with a
    * small settle and a click, call `onSeated` (which installs it), then remove the proxy.
+   * `from: 'tray'` starts a new proxy small at the tray (under the view) and flies it in over
+   * `flyS` seconds. Resolves true once seated, false if abort() cut it short.
    */
-  async function seat(pieceKey, { onSeated } = {}) {
+  async function seat(pieceKey, { onSeated, from = null, flyS = 0.5 } = {}) {
+    const e = epoch;
     let proxy = drag?.proxy;
     drag = null;
     const p = plan.pieces.get(pieceKey);
     const pose = p.category === 'prep' ? { pos: new THREE.Vector3(), quat: new THREE.Quaternion() } : rootPose(bscene.pieceObject(pieceKey));
     const approach = v3(p.explode).normalize();
+    const gone = () => {
+      if (e === epoch) return false;
+      dropClone(proxy);
+      return true;
+    };
     if (!proxy) {
       proxy = cloneOf(pieceKey);
-      proxy.position.copy(pose.pos).addScaledVector(approach, Math.max(10, p.dist + 6));
       proxy.quaternion.copy(pose.quat);
-      root.add(proxy);
-      await tween(proxy, { pos: pose.pos.clone().addScaledVector(approach, HOVER) }, 0.35);
+      const hover = pose.pos.clone().addScaledVector(approach, HOVER);
+      if (from === 'tray') {
+        proxy.position.copy(trayPos(hover, localBox(proxy).getCenter(new THREE.Vector3()), pose.quat));
+        proxy.scale.setScalar(0.4);
+        root.add(proxy);
+        await tween(proxy, { pos: hover, scale: 1 }, flyS, easeInOut);
+      } else {
+        proxy.position.copy(pose.pos).addScaledVector(approach, Math.max(10, p.dist + 6));
+        root.add(proxy);
+        await tween(proxy, { pos: hover }, 0.35);
+      }
+      if (gone()) return false;
     }
     await tween(proxy, { pos: pose.pos.clone().addScaledVector(approach, -0.12), quat: pose.quat }, SEAT_S);
+    if (gone()) return false;
     sound.play('click');
     await tween(proxy, { pos: pose.pos }, SETTLE_S, (t) => Math.sin((t * Math.PI) / 2));
+    if (gone()) return false;
     onSeated?.(pieceKey);
     dropClone(proxy);
     viewer.invalidateShadows();
+    return true;
   }
 
   /** Send the dragged proxy back to the tray (bottom of the view) and remove it. */
@@ -335,11 +372,7 @@ export function createHandBuild({ viewer, bscene, rig, reducedMotion = false, so
     drag = null;
     if (!d) return;
     sound.play('return');
-    const w = new THREE.Vector3();
-    d.proxy.getWorldPosition(w);
-    const depth = w.project(viewer.camera).z;
-    const out = root.worldToLocal(new THREE.Vector3(0, -1.25, depth).unproject(viewer.camera));
-    await tween(d.proxy, { pos: out.sub(d.c0.clone().applyQuaternion(d.proxy.quaternion)), scale: 0.4 }, 0.32);
+    await tween(d.proxy, { pos: trayPos(d.proxy.position, d.c0, d.proxy.quaternion), scale: 0.4 }, 0.32);
     dropClone(d.proxy);
   }
 
@@ -384,17 +417,18 @@ export function createHandBuild({ viewer, bscene, rig, reducedMotion = false, so
     }
     return b;
   }
-  function focusKeys(keys, stage) {
+  function focusKeys(keys, stage, opts) {
     // Standoffs and I/O shield: the whole case, so the rear cut-out and the tray both show.
     const b = stage === 'prep' ? new THREE.Box3().setFromObject(bscene.modelOf('case') ?? root) : boxOfKeys(keys);
     if (b.isEmpty()) return;
     const sphere = b.getBoundingSphere(new THREE.Sphere());
-    rig.focus(sphere.center, Math.max(12, sphere.radius * (stage === 'prep' ? 0.85 : 1.25)), FOCUS_DIR[stage] ?? [0.3, 0.25, 1]);
+    rig.focus(sphere.center, Math.max(12, sphere.radius * (stage === 'prep' ? 0.85 : 1.25)), FOCUS_DIR[stage] ?? [0.3, 0.25, 1], opts);
   }
-  function focusStage(id) {
+  /** Ease the camera to a stage's work area. `opts` go to rig.focus ({ animate, dur }). */
+  function focusStage(id, opts) {
     if (!plan || !id) return;
     const keys = plan.groups.filter((g) => g.stage === id).flatMap((g) => g.pieces);
-    focusKeys(keys, id);
+    focusKeys(keys, id, opts);
   }
 
   // ---- mechanisms: socket lever, M.2 covers, slot covers
@@ -536,8 +570,7 @@ export function createHandBuild({ viewer, bscene, rig, reducedMotion = false, so
       active = false;
       cancelDrag();
       clearHint();
-      tweens.forEach((t) => t.resolve());
-      tweens = [];
+      abort();
       resetMech();
       bscene.setMask(null);
       bscene.setSidePanel(true);
@@ -554,6 +587,7 @@ export function createHandBuild({ viewer, bscene, rig, reducedMotion = false, so
     endDrag,
     cancelDrag,
     seat,
+    abort,
     discard,
     get dragging() { return !!drag; },
     get animating() { return tweens.length > 0; },

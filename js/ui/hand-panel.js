@@ -415,6 +415,8 @@ export function mountHandPanel(el, { app, viewer, bscene, rig, fx, reducedMotion
 
   return {
     hb,
+    /** Click sound (shared with the Auto-build cinematic, so one mute covers both). */
+    sound,
     /** @param {{animate?: boolean}} opts animate = false when restoring after a reload */
     enter({ animate = true } = {}) {
       if (active) return;

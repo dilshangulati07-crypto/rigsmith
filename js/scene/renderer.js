@@ -159,6 +159,7 @@ export function createViewer(canvas, opts = {}) {
   let rafId = 0;
   let last = 0;
   let onFrame = null;
+  let afterRender = null; // runs right after each frame is drawn, while the canvas still holds it
   const fps = { value: 0, frames: 0, acc: 0, checked: false, warmup: 1 }; // warmup in seconds
 
   function tick(now) {
@@ -168,6 +169,7 @@ export function createViewer(canvas, opts = {}) {
     onFrame?.(dt, now / 1000);
     controls?.update();
     render();
+    afterRender?.();
     trackFps(dt);
   }
 
@@ -274,6 +276,8 @@ export function createViewer(canvas, opts = {}) {
     get fps() { return fps.value; },
     get running() { return running; },
     render, start, stop, setQuality, dispose,
+    /** Call `fn` after every frame of the loop (copying the canvas for a video, a crossfade); null removes it. */
+    setAfterRender: (fn) => { afterRender = fn; },
     /** With staticShadows: re-render the shadow map on the next frame. */
     invalidateShadows: () => { renderer.shadowMap.needsUpdate = true; },
     /** Render one frame and return it as a PNG blob (must stay in the same task as render). */

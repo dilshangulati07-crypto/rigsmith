@@ -470,6 +470,76 @@ select.input { padding-right: 6px; }
 .viewer__notes p + p { margin-top: 4px; }
 .viewer__notes p:first-child:not(:empty) { color: var(--warn); }
 
+/* ---------- Auto-build cinematic ---------- */
+.viewer[data-mode="auto"] .viewer__tools--view,
+.viewer[data-mode="auto"] .viewer__tools--fx,
+.viewer[data-mode="auto"] .viewer__lighting,
+.viewer[data-mode="auto"] .viewer__hover { display: none; }
+.col--parts > .viewer[data-mode="auto"] { --viewer-h: max(320px, calc(100vh - var(--topbar-h) - 260px)); }
+.auto { padding: 0 10px var(--s-3); }
+.auto[hidden] { display: none; }
+.auto__bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.auto__ctrl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.auto__play { min-width: 72px; }
+/* Timeline: one segment per step, filled as it plays; click to jump. */
+/* Desktop: wraps to a second row rather than cutting every label short. */
+.tl { display: flex; flex-wrap: wrap; gap: 3px; margin: 10px 0 0; padding: 0; list-style: none; min-width: 0; }
+.tl__item { flex: 1 1 64px; min-width: 0; }
+.tl__seg {
+  position: relative; display: block; width: 100%; height: 26px; padding: 0;
+  background: var(--panel-2); border: 1px solid var(--line); border-radius: 3px;
+  overflow: hidden; cursor: pointer; color: var(--muted);
+}
+.tl__seg:hover:not(:disabled) { border-color: var(--line-strong); color: var(--text); }
+.tl__seg:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.tl__seg:disabled { cursor: not-allowed; }
+.tl__fill { position: absolute; inset: 0 auto 0 0; width: 0; background: color-mix(in srgb, var(--ok) 22%, var(--panel-2)); }
+.tl__seg[data-state="done"] { border-color: color-mix(in srgb, var(--ok) 45%, var(--line)); color: var(--text); }
+.tl__seg[data-state="current"] { border-color: var(--accent); color: var(--text); }
+.tl__label {
+  position: relative; display: block; padding: 0 3px;
+  font-family: var(--font-head); font-weight: 600; font-size: 11.5px; line-height: 24px;
+  letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.auto__rec { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 10px; padding: 8px 10px; background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-sm); }
+.auto__rec[hidden] { display: none; }
+.auto__recbar { flex: 1 1 160px; height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; }
+.auto__recbar span { display: block; height: 100%; background: var(--accent); }
+.auto__rectext { margin: 0; font-size: 12px; color: var(--text); }
+.auto__done { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-top: 10px; padding: 10px 12px; border: 1px solid var(--line); border-left: 2px solid var(--ok); border-radius: var(--r-sm); }
+.auto__done[hidden] { display: none; }
+.auto__done-text { flex: 1 1 260px; margin: 0; font-size: 13.5px; line-height: 1.45; }
+.auto__done-text .label { margin-right: 6px; color: var(--ok); }
+.auto__done-text .mono { margin: 0 4px; }
+.auto__done-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.auto__note { margin: 8px 0 0; font-size: 12px; line-height: 1.45; }
+.auto__note:empty { display: none; }
+/* Over the canvas: crossfade layer, step caption, recording mark. Never takes the pointer. */
+.auto-ov { position: absolute; inset: 0; pointer-events: none; }
+.auto-ov[hidden] { display: none; }
+.auto-ov__fade { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; --bg: #0b0d10; }
+.auto-ov__cap {
+  position: absolute; left: 16px; right: 16px; bottom: 14px;
+  display: grid; justify-items: start; gap: 2px;
+}
+.auto-ov__step { margin: 0; padding: 2px 8px; font-size: 11.5px; color: var(--muted); background: color-mix(in srgb, var(--bg) 82%, transparent); border-radius: 3px; }
+.auto-ov__label {
+  margin: 0; max-width: 100%; padding: 4px 10px;
+  font-size: 15px; font-weight: 500; line-height: 1.35; color: var(--text);
+  background: color-mix(in srgb, var(--panel) 92%, transparent);
+  border: 1px solid var(--line); border-left: 2px solid var(--accent); border-radius: var(--r-sm);
+}
+.auto-ov__label:empty { display: none; }
+.auto-ov__rec { position: absolute; top: 34px; right: 16px; margin: 0; font-size: 11.5px; color: var(--text); text-transform: uppercase; }
+.auto-ov__rec::before { content: ''; display: inline-block; width: 7px; height: 7px; margin: 0 6px 1px 0; border-radius: 50%; background: var(--error); }
+@media (max-width: 640px) {
+  .tl__label { display: none; }
+  .tl { flex-wrap: nowrap; gap: 2px; }
+  .tl__item { flex: 1 1 0; }
+  .auto-ov__label { font-size: 13px; }
+  .auto__done-actions .btn { flex: 1 1 auto; }
+}
+
 /* ---------- Build by hand ---------- */
 .viewer[data-mode="hand"] [data-v="panel"],
 .viewer[data-mode="hand"] .viewer__tools--fx,

@@ -11,6 +11,7 @@ export const CAMERA_PRESETS = Object.freeze([
   { id: 'inside', label: 'Inside', dir: [0.24, 0.14, 1], inside: true },
 ]);
 
+const UP = new THREE.Vector3(0, 1, 0);
 const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 
 /**
@@ -26,6 +27,7 @@ export function createCameraRig(viewer, { reducedMotion = false, onPresetChange 
   let current = 'angle';
   let frame = null; // { center, radius, inside, min, max }
   let tween = null;
+  let locked = false; // the Auto-build cinematic owns the camera: no orbiting by hand
 
   controls.addEventListener('start', () => {
     tween = null;
@@ -60,7 +62,7 @@ export function createCameraRig(viewer, { reducedMotion = false, onPresetChange 
     return r / Math.sin(Math.min(v, h) / 2);
   }
 
-  function goTo(id, { animate = !reducedMotion } = {}) {
+  function goTo(id, { animate = !reducedMotion, dur = 0.75 } = {}) {
     const preset = CAMERA_PRESETS.find((p) => p.id === id) ?? CAMERA_PRESETS[0];
     if (!frame) return;
     current = preset.id;
@@ -75,7 +77,7 @@ export function createCameraRig(viewer, { reducedMotion = false, onPresetChange 
       controls.update();
       return;
     }
-    tween = { t: 0, dur: 0.75, p0: camera.position.clone(), t0: controls.target.clone(), p1: pos, t1: target };
+    tween = { t: 0, dur, p0: camera.position.clone(), t0: controls.target.clone(), p1: pos, t1: target };
     controls.enabled = false;
   }
 
@@ -83,7 +85,7 @@ export function createCameraRig(viewer, { reducedMotion = false, onPresetChange 
    * Ease to look at a region (build-by-hand: the area being worked on). Leaves preset mode.
    * @param {THREE.Vector3} center  @param {number} radius  @param {number[]} dir view direction
    */
-  function focus(center, radius, dir = [0.35, 0.3, 1], { animate = !reducedMotion } = {}) {
+  function focus(center, radius, dir = [0.35, 0.3, 1], { animate = !reducedMotion, dur = 0.8 } = {}) {
     if (current) {
       current = null;
       onPresetChange?.(null);
@@ -99,7 +101,7 @@ export function createCameraRig(viewer, { reducedMotion = false, onPresetChange 
       controls.update();
       return;
     }
-    tween = { t: 0, dur: 0.8, p0: camera.position.clone(), t0: controls.target.clone(), p1: pos, t1: target };
+    tween = { t: 0, dur, p0: camera.position.clone(), t0: controls.target.clone(), p1: pos, t1: target };
     controls.enabled = false;
   }
 
@@ -111,7 +113,7 @@ export function createCameraRig(viewer, { reducedMotion = false, onPresetChange 
       controls.target.lerpVectors(tween.t0, tween.t1, k);
       if (tween.t >= 1) {
         tween = null;
-        controls.enabled = true;
+        controls.enabled = !locked;
       }
     }
     if (frame) controls.target.clamp(frame.min, frame.max);
@@ -125,6 +127,21 @@ export function createCameraRig(viewer, { reducedMotion = false, onPresetChange 
     /** Re-frame the current preset (e.g. after the case changes size). */
     refresh: (opts) => { if (current) goTo(current, opts); },
     get preset() { return current; },
+    /** Lock out orbiting by hand (eased moves still run). */
+    lock(on) {
+      locked = !!on;
+      controls.enabled = !locked && !tween;
+    },
+    /** Turn the camera `angle` radians around the vertical axis through the target. */
+    orbit(angle) {
+      if (!angle) return;
+      const off = camera.position.clone().sub(controls.target).applyAxisAngle(UP, angle);
+      camera.position.copy(controls.target).add(off);
+      if (current) {
+        current = null;
+        onPresetChange?.(null);
+      }
+    },
     /** True while easing to a preset or a focus point. */
     get moving() { return !!tween; },
     next() {

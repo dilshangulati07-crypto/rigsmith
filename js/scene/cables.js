@@ -4,6 +4,7 @@
 // sleeved (striped) main cables. Also the glowing port markers and the waypoint handles.
 // Geometry is rebuilt only for a cable whose route changed and disposed when it goes;
 // materials, the stripe texture and the marker/handle geometry are made once.
+// reveal() draws a cable only up to a fraction of its length (the Auto-build cinematic).
 import * as THREE from 'three';
 import { mat } from './materials.js';
 import { NO_PICK_LAYER } from './case.js';
@@ -134,7 +135,7 @@ export function createCables({ viewer, root }) {
   };
   let style = { kind: 'black', color: '#ff5a1f' };
 
-  const cables = new Map(); // id -> { sig, mesh, heads: [Mesh, Mesh], spec }
+  const cables = new Map(); // id -> { sig, mesh, heads: [Mesh, Mesh], spec, segs }
   let selectedId = null;
 
   function bodyMat(spec) {
@@ -188,7 +189,7 @@ export function createCables({ viewer, root }) {
       mesh.userData.cableId = c.id;
       const heads = [head(spec, c.A), head(spec, c.B)];
       group.add(mesh, ...heads);
-      cables.set(c.id, { sig, mesh, heads, spec });
+      cables.set(c.id, { sig, mesh, heads, spec, segs: c.samples.length - 1 });
       paint(c.id);
     }
     for (const id of [...cables.keys()]) if (!keep.has(id)) drop(id);
@@ -321,6 +322,19 @@ export function createCables({ viewer, root }) {
       pulse += dt;
       const s = 1 + 0.18 * Math.sin(pulse * 5);
       markers.forEach((m) => { if (m.visible) m.children[0].scale.setScalar(m.userData.marker?.state === 'target' ? 1 : s); });
+    },
+    /**
+     * Draw cable `id` from its first end up to fraction `t` of its length (0 hides it, 1 is
+     * whole). The index buffer runs along the cable, PROFILE quads per sample step.
+     */
+    reveal(id, t) {
+      const c = cables.get(id);
+      if (!c) return;
+      const k = Math.round(Math.min(1, Math.max(0, t)) * c.segs);
+      c.mesh.visible = k > 0;
+      c.mesh.geometry.setDrawRange(0, k >= c.segs ? Infinity : k * PROFILE * 6);
+      c.heads[0].visible = k > 0;
+      c.heads[1].visible = k >= c.segs;
     },
     get count() { return cables.size; },
     clear() {

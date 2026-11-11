@@ -279,6 +279,12 @@ export class AssemblyProgress extends EventTarget {
     return true;
   }
 
+  /** Everything in at once, as one undoable step (the finished Auto-build opened in Build by hand). */
+  fill({ installed, cables, closed }) {
+    this.#commit(snap([...installed], copyCables(cables), !!closed && Object.keys(cables).length > 0), 'fill');
+    return true;
+  }
+
   setClosed(closed) {
     if (!!closed === this.#now.closed) return false;
     this.#commit(snap(this.#now.installed, this.#now.cables, !!closed), 'close');

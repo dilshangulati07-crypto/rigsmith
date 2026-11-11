@@ -16,6 +16,7 @@ const SIZE_NOTES = { full: 'Mid or full tower', compact: 'mATX or ITX case' };
 export function mountAutofill(dialog, app) {
   const opts = app.ui.autofill;
   let result = null;
+  let watchFirst = false; // opened from the landing page's "Auto-build a PC"
 
   dialog.addEventListener('click', (e) => {
     if (e.target === dialog) return dialog.close();
@@ -28,9 +29,10 @@ export function mountAutofill(dialog, app) {
       dialog.querySelector('input[name="budget"]').value = opts.budget;
     }
     if (a === 'back') showForm();
-    if (a === 'apply' && result?.ok) {
+    if ((a === 'apply' || a === 'watch') && result?.ok) {
       app.applyBuild(result.build, `Auto-fill: ${USES[result.use].label}, ${formatTHB(result.budget)}`);
       dialog.close();
+      if (a === 'watch') app.autoBuild();
     }
   });
 
@@ -143,15 +145,18 @@ export function mountAutofill(dialog, app) {
         ${r.reasons.upgrades ? html`<p class="sum__small">${r.reasons.upgrades}</p>` : ''}
         <footer class="modal__foot">
           <button class="btn btn--ghost" type="button" data-action="back">Change inputs</button>
-          <button class="btn btn--primary" type="button" data-action="apply">Use this build</button>
+          <button class="btn ${watchFirst ? '' : 'btn--primary'}" type="button" data-action="apply">Use this build</button>
+          <button class="btn ${watchFirst ? 'btn--primary' : ''}" type="button" data-action="watch">Watch it build</button>
         </footer>
-        <p class="sum__small">Using it replaces the parts in your current build. Save first if you want to keep them.</p>
+        <p class="sum__small">Both replace the parts in your current build. Save first if you want to keep them. Watch it build plays the assembly in the 3D view, in the real install order.</p>
       </div>`);
-    dialog.querySelector('[data-action="apply"]').focus();
+    dialog.querySelector(`[data-action="${watchFirst ? 'watch' : 'apply'}"]`).focus();
   }
 
   return {
-    open() {
+    /** @param {{watch?: boolean}} o watch: lead with "Watch it build" */
+    open({ watch = false } = {}) {
+      watchFirst = watch;
       showForm();
       dialog.setAttribute('aria-labelledby', 'af-title');
       if (!dialog.open) dialog.showModal();

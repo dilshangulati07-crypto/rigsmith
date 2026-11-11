@@ -153,6 +153,8 @@ app.toast = (msg, level = 'ok') => {
 // ---------------------------------------------------------------- panels
 let catList; let browser; let detail; let summary; let autofill; let builds;
 let viewer = null; // 3D panel API once loaded (js/ui/viewer-panel.js)
+let viewerLoaded;   // resolves with the 3D panel API (null if it could not start)
+const viewerReady = new Promise((r) => { viewerLoaded = r; });
 
 const narrow = matchMedia('(max-width: 1023px)');
 
@@ -177,6 +179,17 @@ app.enter3D = () => {
   else setView('3d');
 };
 
+/** Play the Auto-build cinematic of the current build in the 3D view. */
+app.autoBuild = async () => {
+  app.enter3D();
+  const v = await viewerReady;
+  if (!v) {
+    app.toast('The 3D view is not available on this device, so Auto-build cannot play.', 'warn');
+    return false;
+  }
+  return v.startAuto();
+};
+
 function toggle3D() {
   if (narrow.matches) setTab(app.ui.tab === '3d' ? 'parts' : '3d');
   else setView(app.ui.view === '3d' ? 'parts' : '3d');
@@ -197,7 +210,9 @@ function watchViewer() {
       viewer = await mountViewerPanel(el, app);
       viewer?.sync(app.store.build);
       markHover(hover3d);
+      viewerLoaded(viewer);
     } catch (err) {
+      viewerLoaded(null);
       console.warn('Rigsmith: the 3D view could not load.', err);
       el.querySelector('.viewer__loading-step').textContent = 'The 3D view could not load. The list under “Your build” describes the same parts.';
     }
@@ -364,7 +379,11 @@ async function init() {
   loader.dataset.done = 'true';
   loader.setAttribute('aria-busy', 'false');
   if (missing.length) app.toast(`${missing.length} saved part(s) are no longer in the catalogue and were left out.`, 'warn');
-  if (new URLSearchParams(location.search).get('mode') === 'auto') autofill.open();
+  // Landing page "Auto-build a PC": Auto-fill first, then "Watch it build".
+  if (new URLSearchParams(location.search).get('mode') === 'auto') {
+    history.replaceState(null, '', location.pathname + location.search.replace(/([?&])mode=auto&?/, '$1').replace(/[?&]$/, '') + location.hash);
+    autofill.open({ watch: true });
+  }
 }
 
 init();
