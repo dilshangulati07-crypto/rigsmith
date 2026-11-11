@@ -225,7 +225,8 @@ try {
     ok(!(await evaluate('__a.ui().test.recording')) && !(await evaluate('__a.ui().test.video')), 'Cancel recording stops it, no video');
     await evaluate(`__a.btn('record').click()`);
     await waitFor('__a.ui().test.recording', 'recording');
-    await sleep(800);
+    // The first chunk can take a while under SwiftShader; wait for it rather than a fixed time.
+    await waitFor(`/MB$/.test(document.querySelector('.auto [data-a="rectext"]')?.textContent ?? '')`, 'recording progress', 10000).catch(() => {});
     const prog = await evaluate(`document.querySelector('.auto [data-a="rectext"]')?.textContent ?? ''`);
     ok(/^Recording · \d+% · 0:\d\d · \d+\.\d MB$/.test(prog) && await evaluate(`!document.querySelector('.auto-ov__rec').hidden`), `recording progress: "${prog}"`);
     await waitFor('!!__a.ui().test.video', 'the finished video', 400000);

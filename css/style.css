@@ -553,6 +553,182 @@ kbd, .kbd {
 .page-head { padding: var(--s-7) 0 var(--s-5); }
 .notice { padding: var(--s-5); max-width: 640px; }
 
+/* ---------- Shared components (builder, compare) ---------- */
+[hidden] { display: none !important; }
+
+.btn--icon-sm { width: 32px; padding: 0; }
+.btn--danger { --btn-bg: transparent; --btn-border: transparent; --btn-text: var(--error); }
+.btn--danger:hover { --btn-border: color-mix(in srgb, var(--error) 50%, transparent); }
+
+.linkbtn {
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12.5px;
+  text-decoration: underline;
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.linkbtn:hover { color: var(--text); text-decoration-color: var(--accent); }
+.linkbtn--danger:hover { color: var(--error); text-decoration-color: var(--error); }
+
+.field { display: grid; gap: 4px; min-width: 0; margin: 0; padding: 0; border: 0; }
+.field--grow { flex: 1; }
+.field__label {
+  padding: 0;
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.input {
+  width: 100%;
+  height: 36px;
+  padding: 0 10px;
+  background: var(--bg);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+}
+.input::placeholder { color: var(--muted); }
+.input:hover { border-color: var(--muted); }
+.input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
+select.input { padding-right: 6px; }
+.check { display: inline-flex; align-items: center; gap: var(--s-2); font-size: 14px; cursor: pointer; }
+.check input { width: 16px; height: 16px; accent-color: var(--accent); margin: 0; }
+.input--lg { height: 46px; font-size: 20px; }
+
+.bars { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.bars .gauge__head { font-size: 13px; }
+.gauge--marked .gauge__track::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: calc(var(--mark) * 1%);
+  width: 2px;
+  z-index: 1;
+  background: var(--text);
+}
+
+.callout {
+  padding: var(--s-3);
+  background: var(--panel-2);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  font-size: 14px;
+}
+.callout p:last-child { margin: 0; }
+.callout .label { margin: 0 0 4px; }
+.callout--warn { border-color: color-mix(in srgb, var(--warn) 45%, transparent); }
+.callout--warn .label { color: var(--warn); }
+
+/* ---------- Modals ---------- */
+.modal {
+  padding: 0;
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--line-strong);
+  width: min(680px, calc(100vw - 32px));
+  max-height: 90dvh;
+  border-radius: var(--r-lg);
+  overflow-y: auto;
+}
+.modal::backdrop { background: rgb(5 6 8 / .66); }
+.modal--sm { width: min(440px, calc(100vw - 32px)); }
+.modal__inner { padding: var(--s-5); }
+.modal__head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--s-3); margin-bottom: var(--s-3); }
+.modal__head h2 { font-size: 30px; margin: 0; }
+.modal__head .label { margin: 0 0 4px; }
+.modal__foot { display: flex; justify-content: flex-end; gap: var(--s-2); flex-wrap: wrap; margin-top: var(--s-5); }
+.modal .field { margin-bottom: var(--s-4); }
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: var(--s-5);
+  z-index: 300;
+  max-width: min(520px, calc(100vw - 32px));
+  padding: 10px var(--s-4);
+  background: var(--panel-2);
+  border: 1px solid var(--line-strong);
+  border-left: 2px solid var(--ok);
+  border-radius: var(--r-sm);
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 8px);
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.toast[data-show="true"] { opacity: 1; transform: translate(-50%, 0); }
+.toast[data-level="error"] { border-left-color: var(--error); }
+.toast[data-level="warn"] { border-left-color: var(--warn); }
+
+.modal--wide { width: min(1120px, calc(100vw - 32px)); }
+
+/* Disclosure menu: <details class="menu"><summary class="btn">…</summary><div class="menu__list">buttons</div></details> */
+.menu { position: relative; }
+.menu > summary { list-style: none; }
+.menu > summary::-webkit-details-marker { display: none; }
+.menu > summary::after { content: ''; width: 6px; height: 6px; margin: -3px 0 0 2px; border: solid currentColor; border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); }
+.menu[open] > summary::after { margin-top: 3px; transform: rotate(-135deg); }
+.menu__list {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 60;
+  display: grid;
+  min-width: 200px;
+  padding: 4px;
+  background: var(--panel-2);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+}
+.menu__list button, .menu__list a {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  background: none;
+  border: 0;
+  border-radius: 4px;
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.menu__list button:hover, .menu__list a:hover { background: var(--panel); }
+
+/* 3D thumbnail of a whole build (js/ui/build-thumb.js): rendered once, cached as an image. */
+.thumb {
+  --bracket: 10px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  background-color: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+}
+.thumb img { width: 100%; height: 100%; object-fit: cover; }
+.thumb__msg { margin: 0; padding: 0 var(--s-3); font-size: 11px; color: var(--muted); text-align: center; }
+.thumb[data-state="loading"] .thumb__msg::after { content: ''; display: block; width: 48px; height: 1px; margin: 8px auto 0; background: var(--accent); animation: thumb-scan 1.2s var(--ease) infinite alternate; }
+@keyframes thumb-scan { from { transform: translateX(-24px); } to { transform: translateX(24px); } }
+
+@media (max-width: 640px) {
+  .modal__inner { padding: var(--s-4); }
+  .modal__foot .btn { flex: 1; }
+}
+
 /* ---------- Motion preferences ---------- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

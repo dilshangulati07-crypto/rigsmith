@@ -4,12 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Compare · Rigsmith</title>
+  <meta name="description" content="Up to three PC builds side by side: parts, reference prices, estimated performance per workload, price per performance, power draw, PSU headroom and case size.">
   <meta name="theme-color" content="#0B0D10">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/compare.css">
+  <link rel="stylesheet" href="css/print.css">
   <script type="importmap">
     {
       "imports": {
@@ -19,21 +22,34 @@
     }
   </script>
   <script type="module" src="js/ui/shell.js"></script>
+  <script type="module" src="js/compare.js"></script>
 </head>
-<body>
+<body class="page-compare">
   <a class="skip-link" href="#main">Skip to content</a>
   <header id="site-header" data-page="compare"></header>
-  <main id="main" class="container">
-    <div class="page-head">
-      <p class="label">Up to three builds side by side</p>
-      <h1>Compare</h1>
+  <main id="main" class="compare">
+    <div class="compare__head">
+      <div>
+        <p class="label">Up to three builds side by side</p>
+        <h1>Compare</h1>
+      </div>
+      <div class="compare__actions">
+        <button class="btn btn--sm" type="button" data-cmd="copy-link" data-copy-text="Copy link"><span data-copy-label>Copy link</span></button>
+        <button class="btn btn--sm" type="button" data-cmd="print-all">Print spec sheets</button>
+        <span class="visually-hidden" id="copy-status" role="status" aria-live="polite"></span>
+      </div>
     </div>
-    <div class="panel notice">
-      <span class="tag tag--warn tag--dot">In progress</span>
-      <p style="margin-top:12px">Not built yet. This page will compare up to three builds: parts, reference price, estimated performance per workload, power draw and size.</p>
-      <a class="btn btn--sm" href="index.html">Back to home</a>
+    <p class="compare__intro">Prices are reference prices, not live. Performance is an estimate from specs, where 100 is the strongest parts in the catalogue. Use “Swap this part” on any column to see what one change does; the builder's own build is never changed here.</p>
+    <div id="cmp-msg" role="status" aria-live="polite"></div>
+    <p class="muted mono" id="cmp-loading">Loading parts catalogue…</p>
+    <div class="cmp" id="cmp" role="table" aria-label="Builds compared side by side" hidden>
+      <div class="cmp__head" role="rowgroup"></div>
+      <div class="cmp__body" role="rowgroup"></div>
     </div>
+    <p class="muted" id="cmp-empty" hidden>No builds to compare yet. Add one with the picker above, or start one in the <a href="builder.html">builder</a>.</p>
   </main>
+  <dialog class="modal modal--wide" id="swap-dialog"></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite" data-show="false"></div>
   <footer id="site-footer"></footer>
 </body>
 </html>

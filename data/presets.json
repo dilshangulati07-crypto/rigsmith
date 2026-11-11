@@ -1,0 +1,141 @@
+{
+  "note": "Preset builds made only from parts in data/parts. tools/test-presets.mjs checks that every id exists and that every preset has zero compatibility errors. focus = the workloads shown on the preset card.",
+  "presets": [
+    {
+      "id": "budget-1080p",
+      "name": "Budget 1080p",
+      "for": "First gaming PC on a tight budget: esports and current games at 1080p on medium to high settings, with room to add a second memory kit or a faster card later.",
+      "focus": ["gaming1080", "gaming1440", "general"],
+      "parts": {
+        "cpu": "intel-core-i5-12400f",
+        "motherboard": "gigabyte-h610m-s2h-ddr4",
+        "ram": ["kingston-fury-beast-ddr4-16gb-2x8gb-3200mt-s-cl16"],
+        "gpu": "gigabyte-geforce-rtx-4060-windforce-oc-8g",
+        "storage": ["crucial-p3-plus-1tb"],
+        "psu": "corsair-cx650",
+        "case": "deepcool-ch370",
+        "cooler": "thermalright-assassin-x-120-refined-se",
+        "fans": []
+      }
+    },
+    {
+      "id": "mid-1440p",
+      "name": "Mid gaming 1440p",
+      "for": "Players moving up to a 1440p monitor who want high settings without paying for a flagship card. AM5, so the CPU can be upgraded on the same board.",
+      "focus": ["gaming1440", "gaming1080", "gaming4k"],
+      "parts": {
+        "cpu": "amd-ryzen-5-7600",
+        "motherboard": "asus-tuf-gaming-b650-plus-wifi",
+        "ram": ["corsair-vengeance-ddr5-32gb-2x16gb-6000mt-s-cl30"],
+        "gpu": "sapphire-pulse-amd-radeon-rx-9070-16gb",
+        "storage": ["samsung-990-evo-plus-2tb"],
+        "psu": "corsair-rm750e",
+        "case": "lian-li-lancool-207",
+        "cooler": "thermalright-peerless-assassin-120-se",
+        "fans": []
+      }
+    },
+    {
+      "id": "high-1440p",
+      "name": "High-end 1440p",
+      "for": "High-refresh 1440p gaming, where the CPU matters as much as the card. The 3D V-Cache CPU keeps frame times steady in CPU-heavy games.",
+      "focus": ["gaming1440", "gaming1080", "gaming4k"],
+      "parts": {
+        "cpu": "amd-ryzen-7-9800x3d",
+        "motherboard": "asus-tuf-gaming-b850-plus-wifi",
+        "ram": ["g-skill-flare-x5-ddr5-32gb-2x16gb-6000mt-s-cl30"],
+        "gpu": "asus-prime-geforce-rtx-5070-ti-oc-edition",
+        "storage": ["samsung-990-pro-2tb"],
+        "psu": "corsair-rm850e",
+        "case": "lian-li-lancool-216",
+        "cooler": "arctic-liquid-freezer-iii-360",
+        "fans": []
+      }
+    },
+    {
+      "id": "4k-flagship",
+      "name": "4K flagship",
+      "for": "4K at high settings with ray tracing, for someone who wants the fastest gaming parts in the catalogue and accepts the price and the power draw.",
+      "focus": ["gaming4k", "gaming1440", "ai"],
+      "parts": {
+        "cpu": "amd-ryzen-7-9800x3d",
+        "motherboard": "asus-rog-strix-x870e-e-gaming-wifi",
+        "ram": ["g-skill-trident-z5-rgb-ddr5-32gb-2x16gb-6000mt-s-cl30"],
+        "gpu": "nvidia-geforce-rtx-5090-founders-edition",
+        "storage": ["samsung-990-pro-4tb"],
+        "psu": "corsair-hx1200i",
+        "case": "lian-li-o11-dynamic-evo",
+        "cooler": "lian-li-galahad-ii-trinity-360",
+        "fans": ["lian-li-uni-fan-sl120-v2-3-pack"]
+      }
+    },
+    {
+      "id": "compact-itx",
+      "name": "Compact ITX",
+      "for": "A small PC for a desk or a TV stand that still plays at 1440p. 65 W CPU, a low-profile cooler and an SFX power supply in a case of about 18 litres.",
+      "focus": ["gaming1440", "gaming1080", "general"],
+      "parts": {
+        "cpu": "amd-ryzen-7-7700",
+        "motherboard": "asus-rog-strix-b650e-i-gaming-wifi",
+        "ram": ["g-skill-flare-x5-ddr5-32gb-2x16gb-6000mt-s-cl30"],
+        "gpu": "nvidia-geforce-rtx-4070-super-founders-edition",
+        "storage": ["samsung-990-pro-2tb"],
+        "psu": "corsair-sf750",
+        "case": "cooler-master-masterbox-nr200p",
+        "cooler": "noctua-nh-l12s",
+        "fans": []
+      }
+    },
+    {
+      "id": "creator",
+      "name": "Creator workstation",
+      "for": "Video editors, 3D artists and developers who render, compile and export all day: 16 cores, 64 GB of memory, a 16 GB card and separate drives for projects and cache.",
+      "focus": ["video", "ai", "general"],
+      "parts": {
+        "cpu": "amd-ryzen-9-9950x",
+        "motherboard": "asus-tuf-gaming-x870-plus-wifi",
+        "ram": ["corsair-vengeance-ddr5-64gb-2x32gb-6000mt-s-cl30"],
+        "gpu": "asus-tuf-gaming-geforce-rtx-4070-ti-super-oc-edition",
+        "storage": ["samsung-990-pro-2tb", "samsung-990-pro-4tb"],
+        "psu": "corsair-rm850x-2024",
+        "case": "corsair-5000d-airflow",
+        "cooler": "noctua-nh-d15-g2",
+        "fans": []
+      }
+    },
+    {
+      "id": "ai-compute",
+      "name": "AI / compute box",
+      "for": "Running local language models and training small ones. 24 GB of VRAM on CUDA is the main spend; 64 GB of system memory holds datasets and models that spill out of the card.",
+      "focus": ["ai", "video", "gaming4k"],
+      "parts": {
+        "cpu": "amd-ryzen-9-9900x",
+        "motherboard": "asus-tuf-gaming-x870-plus-wifi",
+        "ram": ["corsair-vengeance-ddr5-64gb-2x32gb-6000mt-s-cl30"],
+        "gpu": "nvidia-geforce-rtx-4090-founders-edition",
+        "storage": ["samsung-990-pro-4tb"],
+        "psu": "corsair-rm1000x-2024",
+        "case": "lian-li-lancool-216",
+        "cooler": "arctic-liquid-freezer-iii-360",
+        "fans": []
+      }
+    },
+    {
+      "id": "silent-office",
+      "name": "Silent office",
+      "for": "Office work, browsing, video calls and light photo editing, kept quiet. No graphics card: the Ryzen 7 7700's built-in graphics run the display, and the 65 W chip stays cool under a large, slow-turning tower cooler.",
+      "focus": ["general", "video", "gaming1080"],
+      "parts": {
+        "cpu": "amd-ryzen-7-7700",
+        "motherboard": "msi-pro-a620m-e",
+        "ram": ["kingston-fury-beast-ddr5-32gb-2x16gb-5600mt-s-cl36"],
+        "gpu": null,
+        "storage": ["samsung-990-evo-plus-1tb"],
+        "psu": "corsair-rm750e",
+        "case": "fractal-design-pop-air",
+        "cooler": "noctua-nh-u12s-redux",
+        "fans": ["noctua-nf-p12-redux-1700-pwm"]
+      }
+    }
+  ]
+}

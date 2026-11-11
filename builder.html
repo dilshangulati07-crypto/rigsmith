@@ -12,6 +12,8 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/builder.css">
+  <link rel="stylesheet" href="css/presets.css">
+  <link rel="stylesheet" href="css/print.css">
   <script type="importmap">
     {
       "imports": {
@@ -43,9 +45,20 @@
       </div>
       <div class="builder__actions">
         <button class="btn btn--primary btn--sm" type="button" data-cmd="autofill" aria-keyshortcuts="A">Auto-fill</button>
+        <button class="btn btn--sm" type="button" data-cmd="presets" aria-keyshortcuts="R">Presets</button>
         <button class="btn btn--sm" type="button" data-cmd="builds" aria-keyshortcuts="B">Builds</button>
+        <button class="btn btn--sm" type="button" data-cmd="copy-link" aria-keyshortcuts="L" data-copy-text="Copy link"><span data-copy-label>Copy link</span></button>
+        <details class="menu">
+          <summary class="btn btn--sm">Export</summary>
+          <div class="menu__list">
+            <button type="button" data-cmd="csv">Parts list (CSV)</button>
+            <button type="button" data-cmd="print">Print spec sheet</button>
+            <button type="button" data-cmd="compare">Open in Compare</button>
+          </div>
+        </details>
         <button class="btn btn--sm btn--ghost" type="button" data-cmd="clear">Clear</button>
         <button class="btn btn--sm btn--ghost btn--icon-sm" type="button" data-cmd="shortcuts" aria-keyshortcuts="?" aria-label="Keyboard shortcuts"><span aria-hidden="true">?</span></button>
+        <span class="visually-hidden" id="copy-status" role="status" aria-live="polite"></span>
       </div>
     </div>
 
@@ -91,6 +104,7 @@
   <dialog class="drawer" id="part-drawer"></dialog>
   <dialog class="modal" id="autofill-dialog"></dialog>
   <dialog class="modal" id="builds-dialog"></dialog>
+  <dialog class="modal modal--wide" id="presets-dialog"></dialog>
   <dialog class="modal modal--sm" id="shortcuts-dialog" aria-labelledby="sc-title">
     <div class="modal__inner">
       <header class="modal__head">
@@ -104,6 +118,8 @@
           <tr><th scope="row">Jump to category</th><td><kbd>1</kbd>–<kbd>9</kbd></td></tr>
           <tr><th scope="row">Auto-fill</th><td><kbd>A</kbd></td></tr>
           <tr><th scope="row">Saved builds</th><td><kbd>B</kbd></td></tr>
+          <tr><th scope="row">Preset builds</th><td><kbd>R</kbd></td></tr>
+          <tr><th scope="row">Copy a link to this build</th><td><kbd>L</kbd></td></tr>
           <tr><th scope="row">Parts / 3D view</th><td><kbd>V</kbd></td></tr>
           <tr><th scope="row">3D: side panel on / off</th><td><kbd>G</kbd></td></tr>
           <tr><th scope="row">3D: next camera view</th><td><kbd>C</kbd></td></tr>

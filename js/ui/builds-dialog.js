@@ -76,7 +76,7 @@ export function mountBuildsDialog(dialog, app) {
   function draw(focusKey) {
     const list = app.saved.list();
     const cur = app.ui.current;
-    const defaultName = cur?.name ?? `Build ${list.length + 1}`;
+    const defaultName = cur?.name ?? app.ui.suggestedName ?? `Build ${list.length + 1}`;
     // Loading replaces the open build; ask twice only if that would lose unsaved parts.
     const loadRisk = app.ui.dirty && allParts(app.store.build).length > 0;
     render(dialog, html`

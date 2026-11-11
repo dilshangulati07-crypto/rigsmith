@@ -13,6 +13,8 @@ import { mountPartDetail } from './ui/part-detail.js';
 import { mountSummary } from './ui/summary.js';
 import { mountAutofill } from './ui/autofill-dialog.js';
 import { mountBuildsDialog } from './ui/builds-dialog.js';
+import { mountPresetsDialog } from './ui/presets-dialog.js';
+import { mountBuilderShare } from './ui/builder-share.js';
 
 const $ = (s) => document.querySelector(s);
 const UI_KEY = 'rigsmith.ui.v1';
@@ -23,7 +25,7 @@ function loadUiPrefs() {
 }
 function saveUiPrefs(ui) {
   try {
-    localStorage.setItem(UI_KEY, JSON.stringify({ category: ui.category, autofill: ui.autofill, current: ui.current, dirty: ui.dirty, preview: ui.preview }));
+    localStorage.setItem(UI_KEY, JSON.stringify({ category: ui.category, autofill: ui.autofill, current: ui.current, dirty: ui.dirty, preview: ui.preview, suggestedName: ui.suggestedName }));
   } catch { /* storage blocked: preferences just don't persist */ }
 }
 
@@ -43,6 +45,7 @@ const app = {
     autofill: { budget: 40000, use: 'gaming', size: 'full', ...prefs.autofill },
     current: prefs.current ?? null,
     dirty: prefs.dirty ?? false,
+    suggestedName: prefs.suggestedName ?? null, // name of the preset or shared link the build came from
   },
 };
 
@@ -119,6 +122,7 @@ app.loadSaved = (id) => {
   app.store.save();
   app.ui.current = { id: entry.id, name: entry.name };
   app.ui.dirty = false;
+  app.ui.suggestedName = null;
   renderNow();
   app.toast(`Loaded “${entry.name}”.${missing.length ? ` ${missing.length} part(s) are no longer in the catalogue and were left out.` : ''}`);
 };
@@ -135,7 +139,7 @@ app.saveCurrent = (name, asNew) => {
 
 app.refreshTitle = () => {
   const cur = app.ui.current;
-  $('#build-name').textContent = cur ? cur.name : 'Untitled build';
+  $('#build-name').textContent = cur ? cur.name : app.ui.suggestedName ?? 'Untitled build';
   $('#build-state').textContent = cur ? (app.ui.dirty ? 'Unsaved changes' : 'Saved') : allParts(app.store.build).length ? 'Not saved' : '';
   saveUiPrefs(app.ui);
 };
@@ -151,7 +155,7 @@ app.toast = (msg, level = 'ok') => {
 };
 
 // ---------------------------------------------------------------- panels
-let catList; let browser; let detail; let summary; let autofill; let builds;
+let catList; let browser; let detail; let summary; let autofill; let builds; let presets; let share;
 let viewer = null; // 3D panel API once loaded (js/ui/viewer-panel.js)
 let viewerLoaded;   // resolves with the 3D panel API (null if it could not start)
 const viewerReady = new Promise((r) => { viewerLoaded = r; });
@@ -299,6 +303,8 @@ function onKey(e) {
   else if (/^[1-9]$/.test(e.key) && CATEGORIES[Number(e.key) - 1]) app.setCategory(CATEGORIES[Number(e.key) - 1].id);
   else if (e.key === 'a' || e.key === 'A') autofill.open();
   else if (e.key === 'b' || e.key === 'B') builds.open();
+  else if (e.key === 'r' || e.key === 'R') presets.open();
+  else if (e.key === 'l' || e.key === 'L') share.copyLink();
   else if (e.key === 'v' || e.key === 'V') toggle3D();
   else if ((e.key === 'g' || e.key === 'G') && viewerShown()) viewer.toggleSidePanel();
   else if ((e.key === 'c' || e.key === 'C') && viewerShown()) viewer.nextCamera();
@@ -331,6 +337,10 @@ async function init() {
   detail = mountPartDetail($('#part-drawer'), app);
   autofill = mountAutofill($('#autofill-dialog'), app);
   builds = mountBuildsDialog($('#builds-dialog'), app);
+  presets = mountPresetsDialog($('#presets-dialog'), app);
+  share = mountBuilderShare(app);
+  // A share link or a preset link replaces the build before anything renders.
+  const fromLink = await share.restore();
 
   app.store.addEventListener('change', (e) => {
     if (e.detail.action !== 'load') app.ui.dirty = true;
@@ -343,6 +353,7 @@ async function init() {
     const cmd = b.dataset.cmd;
     if (cmd === 'autofill') autofill.open();
     if (cmd === 'builds') builds.open();
+    if (cmd === 'presets') presets.open();
     if (cmd === 'shortcuts') $('#shortcuts-dialog').showModal();
     if (cmd === 'preview') setPreview(!app.ui.preview);
     if (cmd === 'close-dialog') b.closest('dialog').close();
@@ -355,6 +366,7 @@ async function init() {
         app.store.clear();
         app.ui.current = null;
         app.ui.dirty = false;
+        app.ui.suggestedName = null;
         app.toast('Build cleared.');
       } else {
         b.textContent = 'Confirm clear';
@@ -379,6 +391,8 @@ async function init() {
   loader.dataset.done = 'true';
   loader.setAttribute('aria-busy', 'false');
   if (missing.length) app.toast(`${missing.length} saved part(s) are no longer in the catalogue and were left out.`, 'warn');
+  // Preset link with "Watch it build": play the cinematic once the page is up.
+  if (fromLink.play) app.autoBuild();
   // Landing page "Auto-build a PC": Auto-fill first, then "Watch it build".
   if (new URLSearchParams(location.search).get('mode') === 'auto') {
     history.replaceState(null, '', location.pathname + location.search.replace(/([?&])mode=auto&?/, '$1').replace(/[?&]$/, '') + location.hash);
