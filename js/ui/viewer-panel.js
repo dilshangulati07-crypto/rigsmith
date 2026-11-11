@@ -1,10 +1,11 @@
 // 3D view panel: starts the viewer, keeps it in sync with the build, and runs the tools
-// (side panel, camera presets, quality, screenshot, power, fan profile, lighting, exploded
-// view), FPS readout, empty state and hover. "Build by hand" mode lives in hand-panel.js,
+// (side panel, camera presets, quality, screenshot, photo mode, power, fan profile, lighting,
+// exploded view), FPS readout, empty state and hover. "Build by hand" mode lives in hand-panel.js,
 // the "Auto-build" cinematic in cinematic-panel.js.
 // Loaded on demand the first time the panel is on screen, so the parts list never waits for three.js.
 import * as THREE from 'three';
-import { createViewer, isWebGL2Available } from '../scene/renderer.js';
+import { createViewer, isWebGL2Available, QUALITIES, QUALITY_LABEL } from '../scene/renderer.js';
+import { setMaterialQuality } from '../scene/materials.js';
 import { createStage } from '../scene/stage.js';
 import { createBuildScene } from '../scene/build-scene.js';
 import { createCameraRig, CAMERA_PRESETS } from '../scene/camera-rig.js';
@@ -16,6 +17,7 @@ import { assemblyProgress } from '../state.js';
 import { html, render } from './dom.js';
 import { mountHandPanel } from './hand-panel.js';
 import { mountCinematicPanel } from './cinematic-panel.js';
+import { mountPhotoPanel } from './photo-panel.js';
 
 const DRAWN = 'Every part is drawn at the size in the data. Where the data has no size (PSU length, graphics card height, radiator thickness) a typical size is used; hover a part to see which.';
 
@@ -42,6 +44,7 @@ export async function mountViewerPanel(el, app) {
         <p class="viewer__loading-step mono" data-ref="step">Loading the 3D engine</p>
       </div>
       <div class="viewer__hover" data-ref="hover" aria-live="polite" hidden></div>
+      <div class="photo" data-ref="photo" hidden></div>
     </div>
     <div class="viewer__tools viewer__tools--mode">
       <div class="vgroup vgroup--mode" role="group" aria-label="3D mode">
@@ -52,6 +55,7 @@ export async function mountViewerPanel(el, app) {
       <span class="viewer__spacer"></span>
       <button class="vbtn viewer__opt" type="button" data-v="quality">Quality: High</button>
       <button class="vbtn viewer__opt" type="button" data-v="shot" aria-keyshortcuts="P">Screenshot</button>
+      <button class="vbtn viewer__opt" type="button" data-v="photo" aria-keyshortcuts="F">Photo mode</button>
     </div>
     <div class="viewer__tools viewer__tools--view">
       <button class="vbtn" type="button" data-v="panel" aria-pressed="true" aria-keyshortcuts="G">Side panel</button>
@@ -116,6 +120,7 @@ export async function mountViewerPanel(el, app) {
   }
 
   // ---- viewer, stage, scene
+  let photo = null;
   step('Starting the renderer', 0.35);
   let ready = false;
   let lastCaseSig = '';
@@ -129,7 +134,8 @@ export async function mountViewerPanel(el, app) {
       controls: true,
       autoPause: true,
       staticShadows: true,
-      onQualityChange: () => updateQualityUi(),
+      vignette: 0.32,
+      onQualityChange: () => { applyQuality(); updateQualityUi(); photo?.refresh(); },
       onResize: () => { if (ready && rig.preset) rig.refresh({ animate: false }); },
     });
   } catch (err) {
@@ -137,7 +143,13 @@ export async function mountViewerPanel(el, app) {
     fail('The 3D renderer could not start on this device.');
     return null;
   }
-  const stage = createStage(viewer.scene, { shadowMapSize: 2048 });
+  const stage = createStage(viewer.scene, { shadowMapSize: 2048, viewer });
+  // Stage extras and glass follow the quality level (Ultra: contact shadow, reflection, real glass).
+  function applyQuality() {
+    setMaterialQuality(viewer.quality);
+    stage.setQuality(viewer.quality);
+  }
+  applyQuality();
   rig = createCameraRig(viewer, { reducedMotion, onPresetChange: markPreset });
 
   bscene = createBuildScene({
@@ -252,7 +264,15 @@ export async function mountViewerPanel(el, app) {
     for (const b of el.querySelectorAll('[data-v="cam"]')) b.setAttribute('aria-pressed', String(b.dataset.cam === id));
   }
   function updateQualityUi() {
-    el.querySelector('[data-v="quality"]').textContent = `Quality: ${viewer.quality === 'high' ? 'High' : 'Low'}`;
+    el.querySelector('[data-v="quality"]').textContent = `Quality: ${QUALITY_LABEL[viewer.quality]}`;
+    el.dataset.quality = viewer.quality;
+  }
+  // Photo mode works on the finished build, so it leaves Build by hand / Auto-build first.
+  function togglePhoto() {
+    if (!photo) return;
+    if (!photo.active && modeNow() !== 'viewer') setMode('viewer');
+    if (!photo.active) { toggleLighting(false); showTarget(null); }
+    photo.toggle();
   }
   function setPanel(on) {
     bscene.setSidePanel(on);
@@ -313,8 +333,9 @@ export async function mountViewerPanel(el, app) {
     if (v === 'mode') setMode(b.dataset.mode);
     if (v === 'panel') setPanel(!bscene.sidePanel);
     if (v === 'cam') rig.goTo(b.dataset.cam);
-    if (v === 'quality') viewer.setQuality(viewer.quality === 'high' ? 'low' : 'high', { manual: true });
+    if (v === 'quality') viewer.setQuality(QUALITIES[(QUALITIES.indexOf(viewer.quality) + 1) % QUALITIES.length], { manual: true });
     if (v === 'shot') screenshot();
+    if (v === 'photo') togglePhoto();
     if (v === 'choose-case') app.setCategory('case', { focusBrowser: true });
     if (v === 'power') fx.togglePower();
     if (v === 'profile') fx.setProfile(b.dataset.profile);
@@ -340,7 +361,7 @@ export async function mountViewerPanel(el, app) {
   canvas.addEventListener('pointermove', (e) => {
     const r = canvas.getBoundingClientRect();
     pointer = { x: ((e.clientX - r.left) / r.width) * 2 - 1, y: -((e.clientY - r.top) / r.height) * 2 + 1 };
-    if (!pickQueued && e.pointerType === 'mouse' && !auto?.active) {
+    if (!pickQueued && e.pointerType === 'mouse' && !auto?.active && !photo?.active) {
       pickQueued = true;
       requestAnimationFrame(() => {
         pickQueued = false;
@@ -354,7 +375,9 @@ export async function mountViewerPanel(el, app) {
     if (hand?.cabling || auto?.active) return; // cable step: clicks pick ports; cinematic: no picking
     if (!down || Math.hypot(e.clientX - down.x, e.clientY - down.y) > 5 || performance.now() - down.t > 500) return;
     const r = canvas.getBoundingClientRect();
-    const hit = pickAt({ x: ((e.clientX - r.left) / r.width) * 2 - 1, y: -((e.clientY - r.top) / r.height) * 2 + 1 });
+    const at = { x: ((e.clientX - r.left) / r.width) * 2 - 1, y: -((e.clientY - r.top) / r.height) * 2 + 1 };
+    if (photo?.active) { photo.focusAt(ndc.set(at.x, at.y)); return; } // photo mode: a click sets the focus
+    const hit = pickAt(at);
     if (hit) app.openDetail(hit.part);
   });
   function pickAt(p) {
@@ -410,7 +433,7 @@ export async function mountViewerPanel(el, app) {
     if (fpsClock >= 0.5) {
       fpsClock = 0;
       const fps = viewer.fps;
-      ref('fps').textContent = `${fps ? Math.round(fps) : '--'} FPS · ${viewer.quality === 'high' ? 'High' : 'Low'}${viewer.qualityAuto ? ' (auto)' : ''}`;
+      ref('fps').textContent = `${fps ? Math.round(fps) : '--'} FPS · ${QUALITY_LABEL[viewer.quality]}${viewer.qualityAuto ? ' (auto)' : ''}`;
     }
   });
 
@@ -425,9 +448,10 @@ export async function mountViewerPanel(el, app) {
   fx.refresh();
   updateLighting();
   hand = mountHandPanel(ref('hand'), { app, viewer, bscene, rig, fx, reducedMotion, isShown: () => el.getClientRects().length > 0 });
+  photo = mountPhotoPanel(ref('photo'), { root: el, app, viewer, stage, bscene, rig });
   if (assemblyProgress.mode === 'hand') setMode('hand', { animate: false });
   // ?debug3d exposes the viewer for checking draw calls and GPU memory in the console.
-  if (new URLSearchParams(location.search).has('debug3d')) window.rigsmith3d = { viewer, scene: bscene, fx, hand, setMode, app, rig, get auto() { return auto; } };
+  if (new URLSearchParams(location.search).has('debug3d')) window.rigsmith3d = { viewer, scene: bscene, fx, hand, setMode, app, rig, stage, get photo() { return photo; }, get auto() { return auto; } };
   ref('loading').hidden = true;
   el.dataset.state = 'ready';
 
@@ -455,5 +479,6 @@ export async function mountViewerPanel(el, app) {
       return setMode('auto');
     },
     screenshot,
+    togglePhoto,
   };
 }

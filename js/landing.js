@@ -53,7 +53,7 @@ async function init() {
     clearTimeout(safety);
 
     function updateReadout() {
-      const q = hero.viewer.quality === 'high' ? 'HQ' : 'LQ';
+      const q = hero.viewer.quality === 'low' ? 'LQ' : 'HQ';
       const fps = hero.viewer.fps ? `${Math.round(hero.viewer.fps)} FPS` : '-- FPS';
       readout.textContent = reducedMotion ? `${q} · STATIC` : `${q} · ${fps}`;
     }

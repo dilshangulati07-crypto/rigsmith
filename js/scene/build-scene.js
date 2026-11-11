@@ -173,7 +173,12 @@ export function createBuildScene({ viewer, anisotropy = 4, reducedMotion = false
     group.name = name;
     for (const pts of routes) {
       const curve = new THREE.CatmullRomCurve3(pts.map((p) => v3(p)));
-      const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 48, radius, 10, false), material);
+      const geo = new THREE.TubeGeometry(curve, 48, radius, 10, false);
+      // Tile the sleeve weave by real length (the default UV runs 0..1 along any tube).
+      const uv = geo.attributes.uv;
+      const reps = curve.getLength() / 1.2;
+      for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * reps, uv.getY(i) * 3);
+      const tube = new THREE.Mesh(geo, material);
       tube.castShadow = true;
       group.add(tube);
     }
@@ -187,7 +192,7 @@ export function createBuildScene({ viewer, anisotropy = 4, reducedMotion = false
     const pts = layout.psu?.bundle;
     const routes = pts ? [[0, 0], [0.9, 0.2], [-0.9, -0.1]].map(([dy, dz]) => pts.map((p, i) => [p[0], p[1] + (i ? dy : dy * 0.5), p[2] + (i > 1 ? dz : 0)])) : [];
     cableSet('psu-cables', psu, routes, build.psu?.modular === 'full' ? 0.45 : 0.6, mat('sleeve'));
-    cableSet('aio-tubes', slotOf('cooler'), layout.cooler?.tubes ?? [], 0.55, mat('rubber'));
+    cableSet('aio-tubes', slotOf('cooler'), layout.cooler?.tubes ?? [], 0.55, mat('tubeBraid'));
   }
 
   // ---- exploded view: parts move along their layout direction; cables hide while apart

@@ -53,9 +53,14 @@ function findChrome() {
 const chromePath = findChrome();
 if (!chromePath) { console.log('No Chrome found: set CHROME=<path to chrome>.'); process.exit(1); }
 const profile = await mkdtemp(join(tmpdir(), 'rigsmith-chrome-'));
+// Tests use the software renderer (same result on every machine). RIGSMITH_GPU=1 uses the
+// real GPU with the frame-rate cap off, for tools/bench-quality.mjs.
+const gpuFlags = process.env.RIGSMITH_GPU
+  ? ['--enable-gpu', '--ignore-gpu-blocklist', '--disable-gpu-vsync', '--disable-frame-rate-limit']
+  : ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'];
 const chrome = spawn(chromePath, [
   '--headless=new', '--remote-debugging-port=0', `--user-data-dir=${profile}`, '--no-first-run', '--no-default-browser-check',
-  '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--window-size=1280,900', '--autoplay-policy=no-user-gesture-required', 'about:blank',
+  ...gpuFlags, '--window-size=1280,900', '--autoplay-policy=no-user-gesture-required', 'about:blank',
 ], { stdio: 'ignore' });
 
 let port = null;

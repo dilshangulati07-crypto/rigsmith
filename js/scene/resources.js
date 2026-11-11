@@ -30,6 +30,19 @@ export function disposeTree(root) {
   });
 }
 
+// ---------------------------------------------------------------- detail layers
+// Fine geometry sits on its own camera layer so a quality level can leave it out without
+// rebuilding any model: layer 2 is drawn at High and Ultra, layer 3 at Ultra only.
+// (Layer 0 = everything else, layer 1 = drawn but never ray-cast.) Detail is not ray-cast.
+export const DETAIL_HIGH = 2;
+export const DETAIL_ULTRA = 3;
+
+/** Put `obj` (and its children) on a detail layer. @param {1|2} level 1 = High+, 2 = Ultra */
+export function detail(obj, level = 1) {
+  if (obj) obj.traverse((o) => o.layers.set(level >= 2 ? DETAIL_ULTRA : DETAIL_HIGH));
+  return obj;
+}
+
 // ---------------------------------------------------------------- shared primitives
 const UNIT_BOX = share(new THREE.BoxGeometry(1, 1, 1));
 const cylCache = new Map();
@@ -72,6 +85,31 @@ export function instancedBoxes(parent, list, material, { cast = true } = {}) {
   const q = new THREE.Quaternion();
   list.forEach(([x0, x1, y0, y1, z0, z1], i) => {
     m.compose(new THREE.Vector3((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2), q, new THREE.Vector3(Math.abs(x1 - x0), Math.abs(y1 - y0), Math.abs(z1 - z0)));
+    mesh.setMatrixAt(i, m);
+  });
+  mesh.castShadow = cast;
+  mesh.receiveShadow = true;
+  mesh.computeBoundingSphere();
+  parent.add(mesh);
+  return mesh;
+}
+
+/**
+ * Many copies of one geometry with one material in a single draw call.
+ * @param {THREE.BufferGeometry} geometry shared geometry
+ * @param {Array<{p: number[], r?: number[], s?: number[]|number}>} list position, Euler rotation, scale
+ */
+export function instanced(parent, geometry, list, material, { cast = true } = {}) {
+  if (!list.length) return null;
+  const mesh = new THREE.InstancedMesh(geometry, material, list.length);
+  const m = new THREE.Matrix4();
+  const q = new THREE.Quaternion();
+  const e = new THREE.Euler();
+  const sc = new THREE.Vector3();
+  list.forEach(({ p, r, s = 1 }, i) => {
+    q.setFromEuler(r ? e.set(r[0], r[1], r[2]) : e.set(0, 0, 0));
+    if (typeof s === 'number') sc.setScalar(s); else sc.set(s[0], s[1], s[2]);
+    m.compose(new THREE.Vector3(p[0], p[1], p[2]), q, sc);
     mesh.setMatrixAt(i, m);
   });
   mesh.castShadow = cast;

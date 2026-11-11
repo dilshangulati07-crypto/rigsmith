@@ -7,6 +7,8 @@
 // reveal() draws a cable only up to a fraction of its length (the Auto-build cinematic).
 import * as THREE from 'three';
 import { mat } from './materials.js';
+import { weave, wireWeave } from './textures.js';
+import { DETAIL_HIGH } from './resources.js';
 import { NO_PICK_LAYER } from './case.js';
 import { CABLE_SPECS } from './cable-plan.js';
 
@@ -125,11 +127,20 @@ export function createCables({ viewer, root }) {
   stripe.wrapT = THREE.RepeatWrapping;
   stripe.colorSpace = THREE.SRGBColorSpace;
   stripe.anisotropy = 4;
+  // Sleeve weave as a bump map. Flat power cables repeat a ridged version once per wire
+  // across their width, so a 24-pin reads as twelve wires side by side.
+  const bump = (wires) => {
+    const t = (wires > 1 ? wireWeave() : weave()).clone();
+    t.repeat.set(wires > 1 ? wires : 3, 2);
+    t.needsUpdate = true;
+    return t;
+  };
+  const body = (o) => new THREE.MeshStandardMaterial({ roughness: 0.7, metalness: 0, bumpMap: bump(1), bumpScale: 1.1, ...o });
   const mats = {
-    black: new THREE.MeshStandardMaterial({ color: 0x15171b, roughness: 0.62, metalness: 0 }),
-    white: new THREE.MeshStandardMaterial({ color: 0xe6e8ec, roughness: 0.55, metalness: 0 }),
-    custom: new THREE.MeshStandardMaterial({ color: 0xff5a1f, roughness: 0.55, metalness: 0 }),
-    sleeved: new THREE.MeshStandardMaterial({ map: stripe, roughness: 0.8, metalness: 0 }),
+    black: body({ color: 0x15171b }),
+    white: body({ color: 0xe6e8ec, roughness: 0.6 }),
+    custom: body({ color: 0xff5a1f, roughness: 0.6 }),
+    sleeved: body({ map: stripe, roughness: 0.8 }),
     headWhite: new THREE.MeshStandardMaterial({ color: 0xf2f3f5, roughness: 0.45, metalness: 0 }),
     selected: new THREE.MeshStandardMaterial({ color: 0xff5a1f, emissive: 0xff5a1f, emissiveIntensity: 0.35, roughness: 0.5, metalness: 0 }),
   };
@@ -138,18 +149,29 @@ export function createCables({ viewer, root }) {
   const cables = new Map(); // id -> { sig, mesh, heads: [Mesh, Mesh], spec, segs }
   let selectedId = null;
 
+  // One variant of each style per wire count, made on first use and kept in step with it.
+  const variants = new Map();
   function bodyMat(spec) {
-    if (style.kind === 'white') return mats.white;
-    if (style.kind === 'custom') return mats.custom;
-    if (style.kind === 'sleeved' && spec.main) return mats.sleeved;
-    return mats.black;
+    const kind = style.kind === 'white' || style.kind === 'custom' ? style.kind : style.kind === 'sleeved' && spec.main ? 'sleeved' : 'black';
+    const wires = spec.wires ?? 1;
+    if (wires <= 1) return mats[kind];
+    const key = `${kind}|${wires}`;
+    if (!variants.has(key)) {
+      const m = mats[kind].clone();
+      m.bumpMap = bump(wires);
+      m.bumpScale = 1.6;
+      variants.set(key, m);
+    }
+    const m = variants.get(key);
+    m.color.copy(mats[kind].color);
+    return m;
   }
   const headMat = () => (style.kind === 'white' ? mats.headWhite : mat('plastic'));
   function paint(id) {
     const c = cables.get(id);
     if (!c) return;
     c.mesh.material = id === selectedId ? mats.selected : bodyMat(c.spec);
-    for (const h of c.heads) h.material = headMat();
+    for (const h of c.heads) { h.material = headMat(); for (const k of h.children) k.material = h.material; }
   }
 
   // Plug head on a port: long side along the socket, sitting on top of it.
@@ -167,6 +189,14 @@ export function createCables({ viewer, root }) {
     m.scale.set(long, short, depth);
     m.position.copy(v3(port.p)).addScaledVector(d, depth / 2 - 0.15);
     m.castShadow = true;
+    // Latch on one long side of the housing (sizes are fractions of the housing: it is a scaled cube).
+    if (spec.main) {
+      const latch = new THREE.Mesh(UNIT_BOX, m.material);
+      latch.scale.set(Math.min(0.5, 0.9 / long), 0.22, 0.75);
+      latch.position.set(0, 0.5 + 0.11, 0.05);
+      latch.layers.set(DETAIL_HIGH);
+      m.add(latch);
+    }
     return m;
   }
 
@@ -352,7 +382,10 @@ export function createCables({ viewer, root }) {
       ringGeo.dispose();
       handleGeo.dispose();
       stripe.dispose();
-      for (const m of Object.values({ ...mats, ...markerMats, ...handleMats })) m.dispose();
+      for (const m of [...Object.values({ ...mats, ...markerMats, ...handleMats }), ...variants.values()]) {
+        if (m.bumpMap) m.bumpMap.dispose();
+        m.dispose();
+      }
     },
   };
 }

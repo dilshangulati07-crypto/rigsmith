@@ -5,7 +5,7 @@
 // from the board), +Z = cooler side. PCB centre plane at z = 0.
 import * as THREE from 'three';
 import { mat, ledMaterial } from '../materials.js';
-import { boxMM, instancedBoxes } from '../resources.js';
+import { boxMM, instancedBoxes, instanced, cylinderZ, detail } from '../resources.js';
 import { makeFan } from '../fan-model.js';
 import { gpuDims, gpuPowerSockets } from '../layout-board.js';
 import { PCIE_PITCH } from '../board-layout.js';
@@ -22,6 +22,15 @@ export function buildGPU(part) {
   boxMM(g, 5.1, 14.0, 0.0, 0.55, -0.06, 0.06, mat('gold'), { cast: false });
   boxMM(g, 0.2, L - 0.15, 0.55, H, -0.45, -0.14, mat('frameAlu'));
   boxMM(g, 0.6, L - 0.6, H - 1.2, H - 1.05, -0.46, -0.45, mat('aluLight'), { cast: false });
+
+  // Backplate vents and a recessed panel line; heatpipes showing along the top edge.
+  const vents = [];
+  for (let x = L * 0.62; x + 0.35 < L - 0.8; x += 0.7) vents.push([x, x + 0.35, H * 0.25, H * 0.75, -0.462, -0.45]);
+  vents.push([0.6, L - 0.6, H * 0.12, H * 0.12 + 0.06, -0.462, -0.45]);
+  detail(instancedBoxes(g, vents, mat('chip'), { cast: false }), 1);
+  const pipes = [];
+  for (let i = 0; i < 3; i++) pipes.push({ p: [L * 0.5, H - 0.75 - i * 0.02, 0.5 + i * 0.75], r: [0, Math.PI / 2, 0], s: [1, 1, Math.max(4, L * 0.55)] });
+  detail(instanced(g, cylinderZ(0.3, 1, 10), pipes, mat('nickel')), 1);
 
   // Fin stack (seen through the fan openings) and the shroud's edges.
   const fins = [];
@@ -50,6 +59,18 @@ export function buildGPU(part) {
   plate.castShadow = true;
   plate.receiveShadow = true;
   g.add(plate);
+
+  // Panel lines on the shroud between the fans, and screws around each opening.
+  const lines = [];
+  for (let i = 0; i + 1 < centres.length; i++) {
+    const x = (centres[i] + centres[i + 1]) / 2;
+    lines.push([x - 0.04, x + 0.04, 0.7, H - 0.15, zc, zc + 0.012]);
+  }
+  lines.push([0.3, L - 0.3, H - 0.62, H - 0.56, zc, zc + 0.012]);
+  detail(instancedBoxes(g, lines, mat('chip'), { cast: false }), 1);
+  const screws = [];
+  for (const x of centres) for (const [dx, dy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) screws.push({ p: [x + dx * (d / 2 + 0.05) * 0.78, yc + dy * (d / 2 + 0.05) * 0.78, zc + 0.02] });
+  detail(instanced(g, cylinderZ(0.14, 0.05, 8), screws, mat('steelBright'), { cast: false }), 2);
 
   const rotors = [];
   for (const x of centres) {

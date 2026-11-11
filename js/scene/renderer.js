@@ -1,14 +1,18 @@
-// Shared viewer: renderer, image-based lighting, bloom, resize, render loop, quality levels,
-// optional orbit controls and pause-when-hidden.
+// Shared viewer: renderer, image-based lighting (environment.js), post-processing (post.js),
+// resize, render loop, quality levels, optional orbit controls and pause-when-hidden.
+// Quality: 'low' renders straight to the canvas with no shadows; 'high' adds shadows, studio
+// lighting, bloom and the first detail layer; 'ultra' adds ambient occlusion, SMAA and the
+// finest detail layer (chosen by hand, never automatically).
 // Units: 1 unit = 1 cm. Physically based lights, so point light intensity is in candela.
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { CONFIG } from '../config.js';
+import { createEnvironment } from './environment.js';
+import { createPost } from './post.js';
+import { DETAIL_HIGH, DETAIL_ULTRA } from './resources.js';
+
+export const QUALITIES = Object.freeze(['low', 'high', 'ultra']);
+export const QUALITY_LABEL = Object.freeze({ low: 'Low', high: 'High', ultra: 'Ultra' });
 
 /** three.js r163+ needs WebGL 2. Safe to call before three.js is loaded. */
 export function isWebGL2Available() {
@@ -45,10 +49,10 @@ export function compensateToneMapping(hex) {
   return out;
 }
 
-/** 'high' | 'low'. `?quality=low` in the URL forces a level for testing. */
+/** 'high' | 'low' for this device. `?quality=low|high|ultra` in the URL forces a level for testing. */
 export function detectQuality() {
   const forced = new URLSearchParams(location.search).get('quality');
-  if (forced === 'low' || forced === 'high') return forced;
+  if (QUALITIES.includes(forced)) return forced;
   const cores = navigator.hardwareConcurrency || 4;
   const memory = navigator.deviceMemory || 8;
   const smallTouch = matchMedia('(pointer: coarse)').matches && Math.min(screen.width, screen.height) < 500;
@@ -59,7 +63,7 @@ export function detectQuality() {
 /**
  * @param {HTMLCanvasElement} canvas
  * @param {{
- *   quality?: 'high'|'low', fov?: number, onQualityChange?: Function, onResize?: Function,
+ *   quality?: 'low'|'high'|'ultra', fov?: number, vignette?: number, onQualityChange?: Function, onResize?: Function,
  *   controls?: boolean,      // OrbitControls with damping (limits are set by the caller)
  *   autoPause?: boolean,     // stop the loop while the canvas is off screen or the tab is hidden
  *   staticShadows?: boolean, // render the shadow map only after invalidateShadows()
@@ -77,19 +81,15 @@ export function createViewer(canvas, opts = {}) {
   if (opts.staticShadows) renderer.shadowMap.autoUpdate = false;
 
   const scene = new THREE.Scene();
-  // Clear colour is tone-mapped only through the composer (high quality), so the
+  // Clear colour is tone-mapped only through the composer (High and Ultra), so the
   // background needs compensation there; fog is always tone-mapped.
   const bgRaw = new THREE.Color(CONFIG.scene.background);
-  const bgToned = compensateToneMapping(CONFIG.scene.background);
+  let bgToned = compensateToneMapping(CONFIG.scene.background);
   scene.background = bgToned.clone();
 
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  const room = new RoomEnvironment();
-  const envRT = pmrem.fromScene(room, 0.04);
-  room.dispose();
-  pmrem.dispose();
-  scene.environment = envRT.texture;
-  scene.environmentIntensity = 0.75;
+  // When the studio lighting arrives while the loop is stopped, draw one frame with it.
+  let ready = false;
+  const env = createEnvironment(renderer, scene, { onChange: () => { if (ready && !running) render(); } });
 
   const camera = new THREE.PerspectiveCamera(opts.fov ?? 30, 1, 1, 2000);
   camera.layers.enable(1); // layer 1: drawn but never ray-cast (glass, floor, guides)
@@ -102,23 +102,24 @@ export function createViewer(canvas, opts = {}) {
     controls.screenSpacePanning = true;
   }
 
-  // Bloom pipeline. MSAA render target keeps edges clean through post-processing.
-  const composerTarget = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 });
-  const composer = new EffectComposer(renderer, composerTarget);
-  composer.addPass(new RenderPass(scene, camera));
-  // Threshold well above 1: only emissive LEDs bloom, never lit surfaces or metal highlights.
-  const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.7, 0.45, 1.5);
-  composer.addPass(bloom);
-  composer.addPass(new OutputPass());
+  const post = createPost(renderer, scene, camera, { vignette: opts.vignette ?? 0 });
+  const { bloom } = post;
 
   let width = 1;
   let height = 1;
 
   function applyQuality() {
-    const high = quality === 'high';
+    const high = quality !== 'low';
     const dpr = Math.min(window.devicePixelRatio || 1, high ? CONFIG.scene.maxPixelRatio : 1);
     renderer.setPixelRatio(dpr);
-    composer.setPixelRatio(dpr);
+    post.setPixelRatio(dpr);
+    post.setQuality(quality);
+    env.setLevel(quality);
+    // Detail layers: fine geometry that only the higher levels draw (see resources.js detail()).
+    camera.layers.disable(DETAIL_HIGH);
+    camera.layers.disable(DETAIL_ULTRA);
+    if (high) camera.layers.enable(DETAIL_HIGH);
+    if (quality === 'ultra') camera.layers.enable(DETAIL_ULTRA);
     scene.background.copy(high ? bgToned : bgRaw);
     if (renderer.shadowMap.enabled !== high) {
       renderer.shadowMap.enabled = high;
@@ -135,7 +136,7 @@ export function createViewer(canvas, opts = {}) {
     width = Math.max(1, Math.floor(w));
     height = Math.max(1, Math.floor(h));
     renderer.setSize(width, height, false);
-    composer.setSize(width, height);
+    post.setSize(width, height);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
     opts.onResize?.(width, height);
@@ -149,8 +150,15 @@ export function createViewer(canvas, opts = {}) {
   });
   ro.observe(canvas);
 
+  // Listeners run before a frame whose shadows changed (contact shadows re-render there).
+  const shadowListeners = new Set();
+  let shadowsDirty = true;
   function render() {
-    if (quality === 'high') composer.render();
+    if (shadowsDirty || renderer.shadowMap.autoUpdate) {
+      shadowsDirty = false;
+      for (const fn of shadowListeners) fn();
+    }
+    if (quality !== 'low') post.render();
     else renderer.render(scene, camera);
   }
 
@@ -235,7 +243,7 @@ export function createViewer(canvas, opts = {}) {
     document.addEventListener('visibilitychange', onVisibility);
   }
 
-  /** @param {'high'|'low'} q  @param {{manual?: boolean}} o  manual = the user chose it; stops auto changes */
+  /** @param {'low'|'high'|'ultra'} q  @param {{manual?: boolean}} o  manual = the user chose it; stops auto changes */
   function setQuality(q, { manual = false } = {}) {
     if (manual) {
       fps.checked = true;
@@ -244,8 +252,49 @@ export function createViewer(canvas, opts = {}) {
     if (q === quality) return;
     quality = q;
     applyQuality();
-    renderer.shadowMap.needsUpdate = true;
+    invalidateShadows();
     opts.onQualityChange?.(quality);
+  }
+
+  function invalidateShadows() {
+    renderer.shadowMap.needsUpdate = true;
+    shadowsDirty = true;
+  }
+
+  /** Background colour as it should appear on screen (CSS hex number). */
+  function setBackground(hex) {
+    bgRaw.set(hex);
+    bgToned = compensateToneMapping(hex);
+    scene.background.copy(quality !== 'low' ? bgToned : bgRaw);
+  }
+
+  /**
+   * Render one still at `scale` times the canvas's CSS size and return it as a PNG blob.
+   * The size is capped by what the GPU can allocate; the real pixel size comes back too.
+   */
+  async function captureScaled(scale) {
+    const gl = renderer.getContext();
+    const maxSide = Math.min(8192, gl.getParameter(gl.MAX_RENDERBUFFER_SIZE));
+    const maxPixels = 16e6;
+    const ratio = Math.min(scale, maxSide / width, maxSide / height, Math.sqrt(maxPixels / (width * height)));
+    const before = renderer.getPixelRatio();
+    const big = width * height * ratio * ratio > 6e6;
+    try {
+      if (big) post.setSamples(0);
+      renderer.setPixelRatio(ratio);
+      post.setPixelRatio(ratio);
+      resize(width, height);
+      invalidateShadows();
+      render();
+      const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
+      return { blob, width: Math.floor(width * ratio), height: Math.floor(height * ratio) };
+    } finally {
+      if (big) post.setSamples(4);
+      renderer.setPixelRatio(before);
+      post.setPixelRatio(before);
+      resize(width, height);
+      render();
+    }
   }
 
   function dispose() {
@@ -258,9 +307,8 @@ export function createViewer(canvas, opts = {}) {
       o.geometry?.dispose();
       if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => m.dispose());
     });
-    envRT.dispose();
-    composer.dispose();
-    composerTarget.dispose();
+    env.dispose();
+    post.dispose();
     renderer.dispose();
   }
 
@@ -268,6 +316,7 @@ export function createViewer(canvas, opts = {}) {
   width = rect.width || 1;
   height = rect.height || 1;
   applyQuality();
+  ready = true;
 
   return {
     renderer, scene, camera, bloom, controls,
@@ -275,11 +324,15 @@ export function createViewer(canvas, opts = {}) {
     get qualityAuto() { return qualityAuto; },
     get fps() { return fps.value; },
     get running() { return running; },
-    render, start, stop, setQuality, dispose,
+    render, start, stop, setQuality, dispose, post, setBackground, captureScaled,
+    /** Resolves when the studio lighting for the current quality is loaded (or fell back). */
+    get envReady() { return env.ready; },
+    /** Call `fn` before any frame whose shadows changed. Returns a function that removes it. */
+    onShadowUpdate(fn) { shadowListeners.add(fn); return () => shadowListeners.delete(fn); },
     /** Call `fn` after every frame of the loop (copying the canvas for a video, a crossfade); null removes it. */
     setAfterRender: (fn) => { afterRender = fn; },
     /** With staticShadows: re-render the shadow map on the next frame. */
-    invalidateShadows: () => { renderer.shadowMap.needsUpdate = true; },
+    invalidateShadows,
     /** Render one frame and return it as a PNG blob (must stay in the same task as render). */
     capture: () => {
       render();
@@ -292,7 +345,7 @@ export function createViewer(canvas, opts = {}) {
       return Promise.resolve();
     },
     /** Fog colour that matches the page background after tone mapping. */
-    fogColor: bgToned.clone(),
+    get fogColor() { return bgToned.clone(); },
     maxAnisotropy: renderer.capabilities.getMaxAnisotropy(),
   };
 }

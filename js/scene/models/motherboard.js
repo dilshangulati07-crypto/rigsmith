@@ -11,6 +11,7 @@ import { mat } from '../materials.js';
 import { boxMM, instancedBoxes, cylinderZ } from '../resources.js';
 import { boardLayout } from '../board-layout.js';
 import { PCB } from '../layout.js';
+import { boardFace, addBoardDetail } from './board-detail.js';
 
 export function buildMotherboard(part) {
   const L = boardLayout(part);
@@ -23,6 +24,13 @@ export function buildMotherboard(part) {
   const mechanisms = { lever: null, m2Covers: [] };
 
   on(0, L.w, 0, L.h, -PCB, 0, mat('pcb'));
+  // Printed front face: traces and silkscreen. The same image is the bump map, so both stand proud.
+  const faceTex = boardFace(L, part);
+  const face = new THREE.Mesh(new THREE.PlaneGeometry(L.w, L.h), new THREE.MeshStandardMaterial({ map: faceTex, bumpMap: faceTex, bumpScale: 0.6, metalness: 0.15, roughness: 0.5 }));
+  face.position.set(L.w / 2, -L.h / 2, 0.004);
+  face.receiveShadow = true;
+  face.name = 'pcb-face';
+  g.add(face);
 
   // Rear I/O: shroud on the board, port blocks, and the I/O plate that sits in the case cut-out.
   r(L.io, 0, 3.8, mat('plastic'));
@@ -68,7 +76,7 @@ export function buildMotherboard(part) {
     lever.position.set(su1 + 0.175, -(sv1 + 0.3), 0.425);
     boxMM(lever, -0.125, 0.125, 0, sv1 + 0.3 - sv0, -0.125, 0.125, mat('aluLight'));
   } else {
-    on(su0, su1, sv0, sv1, 0, 0.32, mat('aluLight'));
+    on(su0, su1, sv0, sv1, 0, 0.32, mat('steelBright'));
     on(su0 + 0.5, su1 - 0.5, sv0 + 0.6, sv1 - 0.6, 0.3, 0.34, mat('chip'), { cast: false });
     const bar = new THREE.Mesh(cylinderZ(0.07, s.h + 0.5, 8), mat('aluLight'));
     bar.rotation.x = Math.PI / 2;
@@ -97,7 +105,7 @@ export function buildMotherboard(part) {
   // PCIe slots: steel-armoured x16 slots on Gen 4+ boards, plain plastic otherwise.
   for (const p of L.pcie) {
     const armour = p.size === 'x16' && (p.gen ?? 0) >= 4;
-    on(p.u0, p.u0 + p.len, p.v - 0.37, p.v + 0.37, 0, 1.1, armour ? mat('aluLight') : mat('plastic'));
+    on(p.u0, p.u0 + p.len, p.v - 0.37, p.v + 0.37, 0, 1.1, armour ? mat('steelBright') : mat('plastic'));
     on(p.u0 + p.len, p.u0 + p.len + 0.6, p.v - 0.3, p.v + 0.3, 0, 1.2, mat('plasticGloss'));
   }
 
@@ -149,6 +157,8 @@ export function buildMotherboard(part) {
     bat.position.set(14.2, -(L.h - 2.8), 0.16);
     g.add(bat);
   }
+
+  addBoardDetail(g, L, part, mechanisms.m2Covers);
 
   // Anchors for the parts that plug into the board (board-local, cm).
   g.userData.anchors = {

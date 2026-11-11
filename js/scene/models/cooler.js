@@ -6,7 +6,7 @@
 // Head local: origin = socket centre on the board, +X = board u (case front), +Y = up the board, +Z = out.
 import * as THREE from 'three';
 import { mat, ledMaterial } from '../materials.js';
-import { boxMM, instancedBoxes, cylinderZ } from '../resources.js';
+import { boxMM, instancedBoxes, instanced, cylinderZ, detail } from '../resources.js';
 import { makeFan } from '../fan-model.js';
 import { IHS_TOP } from './cpu.js';
 import { AIO_HEAD_H } from '../layout-board.js';
@@ -14,9 +14,17 @@ import { radiatorSpec, RAD_THICK } from '../layout-fans.js';
 
 const DEFAULT_H = 15.5;
 
+// Cold plate (nickel-plated copper), the mounting bar across it, and its two spring screws.
 function base(g) {
-  boxMM(g, -2.0, 2.0, -2.0, 2.0, IHS_TOP, IHS_TOP + 0.7, mat('aluLight'));
-  boxMM(g, -4.6, 4.6, -0.6, 0.6, IHS_TOP + 0.2, IHS_TOP + 0.5, mat('heatsink'));
+  boxMM(g, -2.0, 2.0, -2.0, 2.0, IHS_TOP, IHS_TOP + 0.7, mat('nickel'));
+  boxMM(g, -4.6, 4.6, -0.6, 0.6, IHS_TOP + 0.2, IHS_TOP + 0.5, mat('steelBright'));
+  mountScrews(g, IHS_TOP + 0.5);
+}
+function mountScrews(g, z) {
+  const d = new THREE.Group();
+  instanced(d, cylinderZ(0.3, 0.9, 12), [-4.1, 4.1].map((x) => ({ p: [x, 0, z + 0.45] })), mat('heatsink'));
+  instanced(d, cylinderZ(0.38, 0.14, 12), [-4.1, 4.1].map((x) => ({ p: [x, 0, z + 0.95] })), mat('steelBright'));
+  g.add(detail(d, 1));
 }
 
 function fanFor(part, size, depth, led) {
@@ -40,13 +48,15 @@ function tower(g, part, h, led, rotors) {
     boxMM(g, a + shift, b + shift, -width / 2, width / 2, z1, h, mat('plasticGloss'));
   }
   instancedBoxes(g, fins, mat('aluLight'));
+  // Wire clips that hold each fan against the fins.
+  const clips = [];
   // Heatpipes: up from the base into each stack, capped above the top cover.
   const pipes = dual ? 6 : 4;
   for (let i = 0; i < pipes; i++) {
     const y = (i - (pipes - 1) / 2) * (width / (pipes + 1));
     const [a, b] = stacks[i % stacks.length];
     for (const x of [a + shift + 1.0, b + shift - 1.0]) {
-      const p = new THREE.Mesh(cylinderZ(0.3, h - IHS_TOP - 0.5, 12), mat('aluLight'));
+      const p = new THREE.Mesh(cylinderZ(0.3, h - IHS_TOP - 0.5, 12), mat('nickel'));
       p.position.set(x, y, (IHS_TOP + h - 0.5) / 2 + 0.25);
       p.castShadow = true;
       g.add(p);
@@ -62,7 +72,9 @@ function tower(g, part, h, led, rotors) {
     f.group.position.set(x + shift, 0, fz);
     g.add(f.group);
     rotors.push(f.rotor);
+    for (const y of [-fs / 2 - 0.08, fs / 2 + 0.02]) for (const dz of [-fs * 0.3, fs * 0.3]) clips.push([x + shift - 3.2, x + shift + 1.2, y, y + 0.06, fz + dz - 0.03, fz + dz + 0.03]);
   }
+  detail(instancedBoxes(g, clips, mat('steelBright'), { cast: false }), 1);
 }
 
 function lowProfile(g, part, h, led, rotors) {
@@ -83,7 +95,9 @@ function lowProfile(g, part, h, led, rotors) {
 function pump(part, led) {
   const g = new THREE.Group();
   g.name = 'pump';
-  boxMM(g, -4.6, 4.6, -0.7, 0.7, IHS_TOP, IHS_TOP + 0.35, mat('heatsink'));
+  boxMM(g, -4.6, 4.6, -0.7, 0.7, IHS_TOP, IHS_TOP + 0.35, mat('steelBright'));
+  boxMM(g, -2.4, 2.4, -2.4, 2.4, IHS_TOP - 0.02, IHS_TOP + 0.3, mat('copper'));
+  mountScrews(g, IHS_TOP + 0.35);
   const top = AIO_HEAD_H;
   const body = new THREE.Mesh(cylinderZ(3.3, top - IHS_TOP - 0.2, 48), mat('plasticGloss'));
   body.position.z = (IHS_TOP + top - 0.2) / 2;
@@ -102,6 +116,11 @@ function pump(part, led) {
     fit.rotation.y = Math.PI / 2;
     fit.position.set(3.1, y, top - 1.6);
     g.add(fit);
+    // Swivel fitting: a metal collar where the tube meets the pump.
+    const collar = new THREE.Mesh(cylinderZ(0.66, 0.5, 16), mat('steelBright'));
+    collar.rotation.y = Math.PI / 2;
+    collar.position.set(3.75, y, top - 1.6);
+    g.add(detail(collar, 1));
   }
   return g;
 }
@@ -113,10 +132,16 @@ function radiator(part, led, rotors) {
   const half = s.stack / 2;
   const zr0 = half - RAD_THICK;
   const tank = 1.85;
-  boxMM(g, -s.len / 2 + tank, s.len / 2 - tank, -s.width / 2 + 0.25, s.width / 2 - 0.25, zr0 + 0.1, half - 0.1, mat('heatsink'));
+  // Core: folded fins between flat tubes (a texture on the two faces), tanks at both ends.
+  boxMM(g, -s.len / 2 + tank, s.len / 2 - tank, -s.width / 2 + 0.25, s.width / 2 - 0.25, zr0 + 0.1, half - 0.1, mat('radiatorCore'));
   const tubes = [];
   for (let y = -s.width / 2 + 0.6; y < s.width / 2 - 0.5; y += 0.75) tubes.push([-s.len / 2 + tank, s.len / 2 - tank, y, y + 0.18, zr0 + 0.05, half - 0.05]);
-  instancedBoxes(g, tubes, mat('frameAlu'), { cast: false });
+  detail(instancedBoxes(g, tubes, mat('frameAlu'), { cast: false }), 2);
+  // Tube fittings on one tank and the fill-port screw.
+  const fit = new THREE.Group();
+  instanced(fit, cylinderZ(0.62, 1.1, 16), [-1.1, 1.1].map((y) => ({ p: [-s.len / 2 + tank / 2, y, half + 0.45] })), mat('steelBright'));
+  instanced(fit, cylinderZ(0.3, 0.1, 10), [{ p: [s.len / 2 - tank / 2, 0, half + 0.02] }], mat('steelBright'));
+  g.add(detail(fit, 1));
   for (const sgn of [-1, 1]) {
     boxMM(g, sgn * (s.len / 2 - tank), sgn * s.len / 2, -s.width / 2, s.width / 2, zr0, half, mat('plastic'));
     boxMM(g, -s.len / 2 + tank, s.len / 2 - tank, sgn * (s.width / 2 - 0.25), sgn * s.width / 2, zr0, half, mat('frameAlu'));

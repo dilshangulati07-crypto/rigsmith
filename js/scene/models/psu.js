@@ -4,7 +4,7 @@
 // Local axes: +X = inside face (toward the case front), -X = rear, -Y = fan side, +Z = label side.
 import * as THREE from 'three';
 import { mat, meshPanelMaterial } from '../materials.js';
-import { boxMM, instancedBoxes, labelTexture } from '../resources.js';
+import { boxMM, instancedBoxes, instanced, cylinderZ, labelTexture, detail } from '../resources.js';
 import { makeFan } from '../fan-model.js';
 import { psuDims, psuSockets } from '../layout.js';
 
@@ -48,6 +48,12 @@ export function buildPSU(part, { anisotropy = 4 } = {}) {
   } else {
     boxMM(g, x1, x1 + 0.3, -1.6, 1.6, -2, 2, mat('rubber'));
   }
+
+  // Case screws on the rear corners and the pin cavities of the modular sockets.
+  const sc = [];
+  for (const y of [y0 + 0.6, y1 - 0.6]) for (const z of [z0 + 0.6, z1 - 0.6]) sc.push({ p: [x0 - 0.03, y, z], r: [0, Math.PI / 2, 0] });
+  detail(instanced(g, cylinderZ(0.28, 0.08, 10), sc, mat('steelBright'), { cast: false }), 1);
+  if (face.modular) detail(instancedBoxes(g, face.sockets.map(({ y, z }) => [x1 + 0.12, x1 + 0.13, y - 0.42, y + 0.42, z - 0.72, z + 0.72]), mat('chip'), { cast: false }), 1);
 
   // Side label.
   const label = labelTexture([[part?.brand ?? '', 30], [`${part?.wattage ?? ''} W`, 46], [part?.efficiency ?? '', 18, 400, '"IBM Plex Mono", monospace']], { width: 320, height: 160 });

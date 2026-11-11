@@ -22,12 +22,12 @@ export const CABLE_GROUPS = Object.freeze([
 // Cable cross-section (cm, width x thickness; round when equal), plug head size and the
 // straight lead out of the socket. `main` cables take the sleeved style.
 export const CABLE_SPECS = Object.freeze({
-  atx24: { w: 3.6, t: 0.65, head: [5.2, 1.0, 1.6], lead: 2.6, main: true },
-  eps8: { w: 1.3, t: 0.6, head: [1.9, 0.9, 1.4], lead: 2.0, main: true },
-  eps4: { w: 0.7, t: 0.6, head: [1.0, 0.9, 1.4], lead: 2.0, main: true },
-  pcie: { w: 1.3, t: 0.6, head: [2.1, 0.9, 1.4], lead: 2.0, main: true },
-  hpwr: { w: 1.2, t: 0.5, head: [1.95, 0.75, 1.3], lead: 2.0, main: true },
-  sataPower: { w: 1.1, t: 0.16, head: [2.2, 0.55, 0.9], lead: 1.4 },
+  atx24: { w: 3.6, t: 0.65, head: [5.2, 1.0, 1.6], lead: 2.6, main: true, wires: 12 },
+  eps8: { w: 1.3, t: 0.6, head: [1.9, 0.9, 1.4], lead: 2.0, main: true, wires: 4 },
+  eps4: { w: 0.7, t: 0.6, head: [1.0, 0.9, 1.4], lead: 2.0, main: true, wires: 2 },
+  pcie: { w: 1.3, t: 0.6, head: [2.1, 0.9, 1.4], lead: 2.0, main: true, wires: 4 },
+  hpwr: { w: 1.2, t: 0.5, head: [1.95, 0.75, 1.3], lead: 2.0, main: true, wires: 6 },
+  sataPower: { w: 1.1, t: 0.16, head: [2.2, 0.55, 0.9], lead: 1.4, wires: 5 },
   sataData: { w: 0.7, t: 0.14, head: [1.0, 0.5, 0.8], lead: 1.4 },
   fpanel: { w: 0.42, t: 0.42, head: [1.3, 0.6, 0.9], lead: 1.4 },
   usb3: { w: 0.62, t: 0.62, head: [2.0, 0.85, 1.2], lead: 1.6 },
@@ -46,6 +46,8 @@ const NAMES = {
 };
 const GENERIC = { atx24: 'ATX 24-pin', eps: (i) => `CPU_PWR${i + 1}`, cpuFan: 'CPU_FAN', pump: 'AIO_PUMP', sysFan: (i) => `SYS_FAN${i + 1}`, argb: (i) => `ARGB_${i + 1}`, fpanel: 'F_PANEL', audio: 'HD_AUDIO', sata: (i) => `SATA${i + 1}` };
 const namesFor = (board) => NAMES[board?.brand] ?? GENERIC;
+/** Connector names as this board's maker prints them (also drawn on the 3D board). */
+export const silkNames = namesFor;
 
 const add = (a, b, k = 1) => a.map((v, i) => v + b[i] * k);
 const r2 = (v) => Math.round(v * 100) / 100;

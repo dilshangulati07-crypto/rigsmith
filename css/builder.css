@@ -887,3 +887,46 @@ details.issues-group .issues { margin-top: var(--s-2); }
   .af-row .label { grid-column: 1 / -1; }
   .af-row__why { grid-column: 1 / -1; }
 }
+
+/* ---------- Photo mode: the 3D stage fills the window, page UI hidden ---------- */
+html.is-photo { overflow: hidden; }
+.viewer[data-photo="true"] .viewer__stage { position: fixed; inset: 0; z-index: 250; height: auto; border: 0; }
+.viewer[data-photo="true"] :is(.viewer__hud, .viewer__frame, .viewer__hover, .viewer__msg) { display: none; }
+.photo { position: absolute; inset: auto 0 0 0; padding: var(--s-3); pointer-events: none; }
+.photo__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-4);
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--s-2) var(--s-3);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  pointer-events: auto;
+}
+.photo[data-bar="off"] .photo__bar { display: none; }
+.photo__group { display: flex; align-items: center; gap: var(--s-2); margin: 0; }
+.photo__group .label { margin: 0; font-size: 11.5px; }
+.photo__group select { height: 30px; padding: 0 8px; font-size: 13px; width: auto; }
+.photo__group .check { font-size: 13px; white-space: nowrap; }
+.photo__range input { width: 96px; accent-color: var(--accent); }
+.photo__spacer { flex: 1; }
+.photo__note { max-width: 1100px; margin: 6px auto 0; font-size: 11.5px; color: var(--muted); text-align: left; min-height: 1.4em; text-shadow: 0 1px 2px #000; }
+@media (max-width: 640px) {
+  .photo { padding: var(--s-2); }
+  .photo__bar { gap: var(--s-2); }
+  .photo__spacer { display: none; }
+  .photo__group .vbtn { padding-inline: 8px; }
+}
+
+/* High quality: the vignette is drawn here instead of as a render pass (Ultra renders it). */
+.viewer[data-quality="high"] .viewer__stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, .3) 100%);
+}
+.viewer[data-quality="high"] .viewer__stage > :not(canvas) { z-index: 1; }

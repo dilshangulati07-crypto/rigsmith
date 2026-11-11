@@ -37,6 +37,7 @@ export function createThumbnailer(viewer, { width = 160, height = 120, backgroun
    */
   function shoot(object, dir = [0.3, 0.3, 1]) {
     const { renderer } = viewer;
+    scene.environment = viewer.scene.environment; // follows the studio lighting once it has loaded
     renderer.getDrawingBufferSize(size);
     if (size.x < width || size.y < height) return null;
     scene.add(object);

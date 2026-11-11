@@ -1,8 +1,10 @@
-// Procedural fan: square frame, hub, pitched blades, optional LED ring.
+// Procedural fan: square frame with rubber corner pads and rear struts, hub with a label disc,
+// swept and pitched blades in slightly see-through plastic, optional LED ring.
 // Local +Z is the airflow (outflow) side. Rotate the returned group to orient it.
 import * as THREE from 'three';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { mat } from './materials.js';
-import { share } from './resources.js';
+import { share, detail } from './resources.js';
 
 const geoCache = new Map();
 
@@ -36,13 +38,45 @@ function frameGeometry(size, depth) {
 
 function bladeGeometry(size, depth) {
   return cached(`blade:${size}:${depth}`, () => {
-    const rIn = size * 0.14;
+    const rIn = size * 0.13;
     const rOut = size * 0.455;
-    const chord = size * 0.25;
-    const g = new THREE.BoxGeometry(rOut - rIn, chord, 0.1);
-    g.translate(rIn + (rOut - rIn) / 2, 0, 0);
-    g.rotateX(0.55); // blade pitch
+    const c = size * 0.27;
+    // Swept outline: narrow at the hub, wide and raked back at the tip.
+    const s = new THREE.Shape();
+    s.moveTo(rIn, -c * 0.3);
+    s.quadraticCurveTo(rIn + (rOut - rIn) * 0.55, -c * 0.62, rOut, -c * 0.2);
+    s.quadraticCurveTo(rOut * 1.01, c * 0.3, rOut * 0.93, c * 0.62);
+    s.quadraticCurveTo(rIn + (rOut - rIn) * 0.4, c * 0.5, rIn, c * 0.3);
+    const g = new THREE.ExtrudeGeometry(s, { depth: 0.09, bevelEnabled: false, curveSegments: 6 });
+    g.translate(0, 0, -0.045);
+    g.rotateX(0.5); // blade pitch
     return g;
+  });
+}
+
+// Four rubber pads on each face's corners, as one mesh.
+function padGeometry(size, depth) {
+  return cached(`pads:${size}:${depth}`, () => {
+    const parts = [];
+    const o = size / 2 - size * 0.065;
+    const w = size * 0.1;
+    for (const x of [-o, o]) for (const y of [-o, o]) for (const z of [-1, 1]) {
+      parts.push(new THREE.BoxGeometry(w, w, 0.12).translate(x, y, z * (depth / 2 + 0.03)));
+    }
+    return mergeGeometries(parts);
+  });
+}
+
+// Motor mount: four struts from the hub to the frame on the intake side.
+function strutGeometry(size, depth) {
+  return cached(`struts:${size}:${depth}`, () => {
+    const parts = [];
+    for (let i = 0; i < 4; i++) {
+      parts.push(new THREE.BoxGeometry(size * 0.36, size * 0.035, 0.22)
+        .translate(size * 0.3, 0, -depth / 2 + 0.13).rotateZ(Math.PI / 4 + (i * Math.PI) / 2 + 0.25));
+    }
+    parts.push(new THREE.CylinderGeometry(size * 0.15, size * 0.15, 0.22, 24).rotateX(Math.PI / 2).translate(0, 0, -depth / 2 + 0.13));
+    return mergeGeometries(parts);
   });
 }
 
@@ -63,6 +97,9 @@ export function makeFan(size = 12, depth = 2.5, opts = {}) {
     f.castShadow = true;
     f.receiveShadow = true;
     group.add(f);
+    // Corner pads and motor struts as one mesh (one draw call per fan).
+    const extras = cached(`extras:${size}:${depth}`, () => mergeGeometries([padGeometry(size, depth), strutGeometry(size, depth)]));
+    group.add(detail(new THREE.Mesh(extras, mat('rubber')), 1));
   }
 
   const rotor = new THREE.Group();
@@ -72,9 +109,13 @@ export function makeFan(size = 12, depth = 2.5, opts = {}) {
     mat('plasticGloss'),
   );
   rotor.add(hub);
+  const cap = new THREE.Mesh(cached(`cap:${size}`, () => new THREE.CircleGeometry(size * 0.1, 28)), mat('aluLight'));
+  cap.position.z = depth * 0.4 + 0.01;
+  rotor.add(detail(cap, 1));
   const bladeGeo = bladeGeometry(size, depth);
   for (let i = 0; i < blades; i++) {
-    const b = new THREE.Mesh(bladeGeo, mat('plasticGloss'));
+    const b = new THREE.Mesh(bladeGeo, mat('fanBlade'));
+    b.castShadow = true;
     b.rotation.z = (i / blades) * Math.PI * 2;
     rotor.add(b);
   }

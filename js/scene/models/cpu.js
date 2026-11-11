@@ -2,7 +2,7 @@
 // Local origin: socket centre on the board's front face; +X = board u, +Y = up the board, +Z = out.
 import * as THREE from 'three';
 import { mat } from '../materials.js';
-import { boxMM } from '../resources.js';
+import { boxMM, labelTexture, detail } from '../resources.js';
 import { socketSize } from '../board-layout.js';
 
 /** Height of the IHS top above the board (coolers sit on it). */
@@ -20,8 +20,13 @@ export function buildCPU(part) {
   // IHS: square on AMD, a narrower rectangle on Intel.
   const iw = s.w === s.h ? w * 0.86 : w * 0.82;
   const ih = s.w === s.h ? h * 0.86 : h * 0.72;
-  boxMM(g, -iw / 2, iw / 2, -ih / 2, ih / 2, z0 + 0.12, IHS_TOP, mat('aluLight'));
-  boxMM(g, -iw / 2 + 0.2, iw / 2 - 0.2, -ih / 2 + 0.2, ih / 2 - 0.2, IHS_TOP, IHS_TOP + 0.005, mat('heatsink'), { cast: false });
+  boxMM(g, -iw / 2, iw / 2, -ih / 2, ih / 2, z0 + 0.12, IHS_TOP, mat('nickel'));
+  // Laser-etched marking on the heat spreader, and the gold orientation triangle.
+  const etch = labelTexture([[part.brand ?? '', 34], [String(part.name ?? '').replace(part.brand ?? '', '').trim(), 26, 500]], { width: 256, height: 256, bg: '#b9b5ab', fg: '#6f6b62' });
+  const mark = new THREE.Mesh(new THREE.PlaneGeometry(iw - 0.5, ih - 0.5), new THREE.MeshStandardMaterial({ map: etch, metalness: 1, roughness: 0.3 }));
+  mark.position.z = IHS_TOP + 0.004;
+  g.add(detail(mark, 1));
+  boxMM(g, -w / 2 + 0.1, -w / 2 + 0.4, -h / 2 + 0.1, -h / 2 + 0.4, z0 + 0.12, z0 + 0.125, mat('gold'), { cast: false });
   g.userData.approx = [];
   return g;
 }

@@ -31,6 +31,7 @@ export function createBuildThumbs({ width = 400, height = 300 } = {}) {
   const center = new THREE.Vector3();
 
   async function render(build) {
+    await viewer.envReady; // every thumbnail under the same studio lighting
     bscene.sync(build);
     while (bscene.busy) await new Promise((r) => setTimeout(r, 16));
     const c = bscene.layout.case;

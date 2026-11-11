@@ -309,6 +309,7 @@ function onKey(e) {
   else if ((e.key === 'g' || e.key === 'G') && viewerShown()) viewer.toggleSidePanel();
   else if ((e.key === 'c' || e.key === 'C') && viewerShown()) viewer.nextCamera();
   else if ((e.key === 'p' || e.key === 'P') && viewerShown()) viewer.screenshot();
+  else if ((e.key === 'f' || e.key === 'F') && viewerShown()) viewer.togglePhoto();
   else if ((e.key === 'e' || e.key === 'E') && viewerShown()) viewer.toggleExplode();
   else if ((e.key === 'o' || e.key === 'O') && viewerShown()) viewer.togglePower();
   else if ((e.key === 'k' || e.key === 'K') && viewerShown()) viewer.toggleMode();

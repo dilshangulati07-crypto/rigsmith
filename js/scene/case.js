@@ -5,7 +5,7 @@
 // Axes as in layout.js. The group's origin is the centre of the case floor.
 import * as THREE from 'three';
 import { mat, meshPanelMaterial } from './materials.js';
-import { boxMM, cylinderZ } from './resources.js';
+import { boxMM, cylinderZ, instanced, instancedBoxes, detail } from './resources.js';
 import { STANDOFFS, BOARD_DIMS } from './board-layout.js';
 import { WALL, SIDE, FOOT, STANDOFF } from './layout.js';
 import { boardPoint } from './layout-math.js';
@@ -203,11 +203,51 @@ export function buildCase(part, cl, { anisotropy = 4 } = {}) {
   for (const x of [-D / 2 + t / 2, D / 2 - t / 2]) for (const y of [t / 2, H - t / 2]) boxMM(edges, x - t / 2, x + t / 2, y - t / 2, y + t / 2, -W / 2, W / 2, mat('frameAlu'));
   root.add(edges);
 
-  // ---- feet
+  // ---- feet: a plastic riser with a rubber pad under it
   const fx = Math.min(5, D * 0.12);
   for (const x of [-D / 2 + fx, D / 2 - fx]) {
-    for (const z of [-W / 2 + 2.5, W / 2 - 2.5]) boxMM(root, x - 3, x + 3, -FOOT, 0, z - 1.4, z + 1.4, mat('rubber'));
+    for (const z of [-W / 2 + 2.5, W / 2 - 2.5]) {
+      boxMM(root, x - 3, x + 3, -FOOT * 0.6, 0, z - 1.4, z + 1.4, mat('plastic'));
+      boxMM(root, x - 2.6, x + 2.6, -FOOT, -FOOT * 0.6, z - 1.1, z + 1.1, mat('rubber'));
+    }
   }
+
+  // ---- small hardware (High and Ultra)
+  const hw = new THREE.Group();
+  hw.name = 'case-hardware';
+  const sideways = [0, Math.PI / 2, 0];
+  // Thumbscrews holding both side panels at the rear, PSU screws around its opening.
+  const thumbs = [];
+  for (const z of [-W / 2 + 0.5, W / 2 - 0.5]) for (const y of [H * 0.2, H * 0.8]) thumbs.push({ p: [-D / 2 - 0.25, y, z], r: sideways });
+  instanced(hw, cylinderZ(0.45, 0.5, 14), thumbs, mat('steelBright'));
+  const screws = [];
+  if (cl.psuOpening) {
+    const o = cl.psuOpening;
+    for (const y of [o.y0 - 0.35, o.y1 + 0.35]) for (const z of [o.z0 + 0.6, o.z1 - 0.6]) screws.push({ p: [-D / 2 - 0.02, y, z], r: sideways });
+  }
+  if (cl.rearFan) {
+    const f = cl.rearFan;
+    const o = f.size / 2 - 0.75;
+    for (const dy of [-o, o]) for (const dz of [-o, o]) screws.push({ p: [-D / 2 - 0.02, f.y + dy, f.z + dz], r: sideways });
+  }
+  instanced(hw, cylinderZ(0.26, 0.08, 10), screws, mat('steelBright'), { cast: false });
+  // Slot-cover screws along the expansion bracket.
+  instanced(hw, cylinderZ(0.22, 0.08, 10), cl.slots.map((y) => ({ p: [-D / 2 + WALL + 0.02, y + 0.55, trayZ + 0.55], r: sideways })), mat('steelBright'), { cast: false });
+  // Cable tie points on the tray beside each grommet, and a dust filter frame under the PSU.
+  const ties = [];
+  for (const g of cl.grommets) for (const dy of [-2.2, 0, 2.2]) ties.push([g.x + 1.5, g.x + 2.3, g.y + dy - 0.12, g.y + dy + 0.12, trayZ, trayZ + 0.18]);
+  instancedBoxes(hw, ties, mat('caseInner'));
+  if (cl.shroud) {
+    const s = cl.shroud;
+    // Vent slots in the shroud top, and the shroud's cable badge strip.
+    const slots = [];
+    const xa = s.x0 + (s.x1 - s.x0) * 0.12;
+    const xb = s.x0 + (s.x1 - s.x0) * 0.5;
+    for (let x = xa; x < xb; x += 0.9) slots.push([x, x + 0.45, s.y1, s.y1 + 0.012, s.z0 + (s.z1 - s.z0) * 0.25, s.z1 - (s.z1 - s.z0) * 0.25]);
+    instancedBoxes(hw, slots, mat('chip'), { cast: false });
+    boxMM(hw, -D / 2 + 1.5, -D / 2 + 17, -0.12, 0, s.z0 + 1, s.z1 - 1, mat('plastic'), { cast: false });
+  }
+  root.add(detail(hw, 1));
 
   // ---- interior: tray, standoffs, grommets, shroud
   const trayBottom = cl.shroud ? cl.shroud.y1 : WALL;
