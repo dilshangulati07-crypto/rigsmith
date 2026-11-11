@@ -1,6 +1,6 @@
 // 3D view panel: starts the viewer, keeps it in sync with the build, and runs the tools
 // (side panel, camera presets, quality, screenshot, power, fan profile, lighting, exploded
-// view), FPS readout, empty state and hover.
+// view), FPS readout, empty state and hover. "Build by hand" mode lives in hand-panel.js.
 // Loaded on demand the first time the panel is on screen, so the parts list never waits for three.js.
 import * as THREE from 'three';
 import { createViewer, isWebGL2Available } from '../scene/renderer.js';
@@ -11,7 +11,9 @@ import { createEffects, FAN_PROFILES, RGB_MODES } from '../scene/effects.js';
 import { FOOT } from '../scene/layout.js';
 import { getCategory } from '../categories.js';
 import { CONFIG } from '../config.js';
+import { assemblyProgress } from '../state.js';
 import { html, render } from './dom.js';
+import { mountHandPanel } from './hand-panel.js';
 
 const DRAWN = 'Every part is drawn at the size in the data. Where the data has no size (PSU length, graphics card height, radiator thickness) a typical size is used; hover a part to see which.';
 
@@ -39,14 +41,20 @@ export async function mountViewerPanel(el, app) {
       </div>
       <div class="viewer__hover" data-ref="hover" aria-live="polite" hidden></div>
     </div>
-    <div class="viewer__tools">
+    <div class="viewer__tools viewer__tools--mode">
+      <div class="vgroup vgroup--mode" role="group" aria-label="3D mode">
+        <button class="vbtn" type="button" data-v="mode" data-mode="viewer" aria-pressed="true">Viewer</button>
+        <button class="vbtn" type="button" data-v="mode" data-mode="hand" aria-pressed="false" aria-keyshortcuts="K">Build by hand</button>
+      </div>
+      <span class="viewer__spacer"></span>
+      <button class="vbtn viewer__opt" type="button" data-v="quality">Quality: High</button>
+      <button class="vbtn viewer__opt" type="button" data-v="shot" aria-keyshortcuts="P">Screenshot</button>
+    </div>
+    <div class="viewer__tools viewer__tools--view">
       <button class="vbtn" type="button" data-v="panel" aria-pressed="true" aria-keyshortcuts="G">Side panel</button>
       <div class="vgroup" role="group" aria-label="Camera">
         ${CAMERA_PRESETS.map((p) => html`<button class="vbtn" type="button" data-v="cam" data-cam="${p.id}" aria-pressed="${String(p.id === 'angle')}">${p.label}</button>`)}
       </div>
-      <span class="viewer__spacer"></span>
-      <button class="vbtn" type="button" data-v="quality">Quality: High</button>
-      <button class="vbtn" type="button" data-v="shot" aria-keyshortcuts="P">Screenshot</button>
     </div>
     <div class="viewer__tools viewer__tools--fx">
       <button class="vbtn vbtn--power" type="button" data-v="power" aria-pressed="false" aria-keyshortcuts="O">Power on</button>
@@ -73,6 +81,7 @@ export async function mountViewerPanel(el, app) {
       </div>
       <p class="viewer__lighting-note muted" data-ref="light-note"></p>
     </div>
+    <div class="hand" data-ref="hand" hidden></div>
     <div class="viewer__notes">
       <p data-ref="notes"></p>
       <p class="muted">${DRAWN} Positions follow the real case and board sizes; internal layouts are approximate.</p>
@@ -148,6 +157,7 @@ export async function mountViewerPanel(el, app) {
       if (lastTarget) showTarget(lastTarget, lastTarget.id ? app.catalog.get(lastTarget.id) : null, ref('hover').classList.contains('is-docked') === false);
       fx?.refresh();
       updateLighting();
+      hand?.onLayout();
     },
   });
 
@@ -163,6 +173,26 @@ export async function mountViewerPanel(el, app) {
     for (const x of el.querySelectorAll('[data-v="profile"]')) x.setAttribute('aria-pressed', String(x.dataset.profile === profile));
   }
   fx = createEffects({ viewer, scene: bscene, reducedMotion, onStatus: showPower });
+
+  // ---- mode: viewer or build by hand
+  let hand = null;
+  function setMode(mode, { animate = true } = {}) {
+    if (!hand || (mode === 'hand') === hand.active) return;
+    el.dataset.mode = mode;
+    for (const b of el.querySelectorAll('[data-v="mode"]')) b.setAttribute('aria-pressed', String(b.dataset.mode === mode));
+    assemblyProgress.setMode(mode);
+    if (mode === 'hand') {
+      setExplode(0);
+      toggleLighting(false);
+      app.enter3D?.();
+      hand.enter({ animate });
+    } else {
+      hand.leave();
+      el.querySelector('[data-v="panel"]').setAttribute('aria-pressed', 'true');
+      rig.goTo('angle');
+    }
+  }
+  const building = () => hand?.active === true;
 
   function updateStatus(layout) {
     const build = app.store.build;
@@ -242,6 +272,7 @@ export async function mountViewerPanel(el, app) {
     const b = e.target.closest('[data-v]');
     if (!b || b.disabled) return;
     const v = b.dataset.v;
+    if (v === 'mode') setMode(b.dataset.mode);
     if (v === 'panel') setPanel(!bscene.sidePanel);
     if (v === 'cam') rig.goTo(b.dataset.cam);
     if (v === 'quality') viewer.setQuality(viewer.quality === 'high' ? 'low' : 'high', { manual: true });
@@ -331,6 +362,7 @@ export async function mountViewerPanel(el, app) {
     rig.update(dt);
     bscene.update(dt);
     fx.update(dt);
+    hand?.update(dt);
     fpsClock += dt;
     if (fpsClock >= 0.5) {
       fpsClock = 0;
@@ -349,8 +381,10 @@ export async function mountViewerPanel(el, app) {
   updateQualityUi();
   fx.refresh();
   updateLighting();
+  hand = mountHandPanel(ref('hand'), { app, viewer, bscene, rig, fx, reducedMotion, isShown: () => el.getClientRects().length > 0 });
+  if (assemblyProgress.mode === 'hand') setMode('hand', { animate: false });
   // ?debug3d exposes the viewer for checking draw calls and GPU memory in the console.
-  if (new URLSearchParams(location.search).has('debug3d')) window.rigsmith3d = { viewer, scene: bscene, fx };
+  if (new URLSearchParams(location.search).has('debug3d')) window.rigsmith3d = { viewer, scene: bscene, fx, hand, setMode, app };
   ref('loading').hidden = true;
   el.dataset.state = 'ready';
 
@@ -361,9 +395,13 @@ export async function mountViewerPanel(el, app) {
       const part = target?.id ? app.catalog.get(target.id) : null;
       showTarget(target, part);
     },
-    toggleSidePanel: () => setPanel(!bscene.sidePanel),
-    togglePower: () => fx.togglePower(),
-    toggleExplode: () => setExplode(bscene.explode > 0 ? 0 : 100),
+    toggleSidePanel: () => { if (!building()) setPanel(!bscene.sidePanel); },
+    togglePower: () => {
+      if (building()) app.toast('Connect the cables first: power comes after the cable step.', 'warn');
+      else fx.togglePower();
+    },
+    toggleExplode: () => { if (!building()) setExplode(bscene.explode > 0 ? 0 : 100); },
+    toggleMode: () => setMode(building() ? 'viewer' : 'hand'),
     nextCamera: () => rig.next(),
     screenshot,
   };

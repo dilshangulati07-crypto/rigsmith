@@ -2,9 +2,12 @@
 // a change rebuilds only the parts that changed and disposes the ones removed. Everything
 // else just moves to its new placement from layoutBuild(). Also runs the exploded view.
 // Fan speed and lighting live in effects.js.
+// Build-by-hand sets a visibility mask (setMask) so only installed pieces show; every piece
+// still sits at its layoutBuild() placement for the whole build.
 import * as THREE from 'three';
 import { layoutBuild, cross, FOOT } from './layout.js';
 import { createModel, MODELLED } from './parts.js';
+import { partSlots, pieceKey } from './assembly.js';
 import { buildGhostCase, NO_PICK_LAYER } from './case.js';
 import { disposeTree } from './resources.js';
 import { mat } from './materials.js';
@@ -16,7 +19,8 @@ const PANEL_EXPLODE = 22;   // extra cm the side panel moves out at 100 %
 const v3 = (a) => new THREE.Vector3(a[0], a[1], a[2]);
 const basis = new THREE.Matrix4();
 
-function place(obj, { p, ex, ey }) {
+/** Set an object's pose from a layout placement { p, ex, ey }. */
+export function place(obj, { p, ex, ey }) {
   basis.makeBasis(v3(ex), v3(ey), v3(cross(ex, ey)));
   obj.quaternion.setFromRotationMatrix(basis);
   obj.position.set(p[0], p[1], p[2]);
@@ -25,22 +29,6 @@ function place(obj, { p, ex, ey }) {
 function isShown(o) {
   for (; o; o = o.parent) if (!o.visible) return false;
   return true;
-}
-
-// Slots the build needs, keyed so a part keeps its model when other parts change.
-function wantedSlots(build) {
-  const out = [];
-  for (const category of MODELLED) {
-    const v = build[category];
-    if (Array.isArray(v)) {
-      const seen = {};
-      v.forEach((part, index) => {
-        seen[part.id] = (seen[part.id] ?? 0) + 1;
-        out.push({ key: `${category}:${part.id}:${seen[part.id]}`, category, part, index });
-      });
-    } else if (v) out.push({ key: `${category}:${v.id}`, category, part: v, index: 0 });
-  }
-  return out;
 }
 
 /**
@@ -54,11 +42,13 @@ export function createBuildScene({ viewer, anisotropy = 4, reducedMotion = false
 
   const slots = new Map(); // key -> { key, category, part, index, model }
   let layout = null;
+  let current = null; // the build `layout` was computed from
   let ghost = null;
   const cables = new Map(); // name -> { sig, group }
   let target = null;
   let explodeGoal = 0;
   let explodeT = 0;
+  let mask = null; // (key) => boolean while building by hand
 
   // ---- sync (serialised: a newer build waits for the current one, older ones are skipped)
   let pending = null;
@@ -82,7 +72,8 @@ export function createBuildScene({ viewer, anisotropy = 4, reducedMotion = false
 
   async function apply(build) {
     layout = layoutBuild(build);
-    const want = wantedSlots(build);
+    current = build;
+    const want = partSlots(build, MODELLED);
     const keys = new Set(want.map((w) => w.key));
     for (const [k, s] of slots) {
       if (!keys.has(k)) {
@@ -113,6 +104,7 @@ export function createBuildScene({ viewer, anisotropy = 4, reducedMotion = false
 
     placeAll();
     updateCables(build);
+    applyMask();
     applyExplode();
     refreshHighlight();
     viewer.invalidateShadows();
@@ -120,7 +112,9 @@ export function createBuildScene({ viewer, anisotropy = 4, reducedMotion = false
   }
 
   // Every placed object remembers its base pose and explode direction for applyExplode().
-  function put(obj, it) {
+  function put(obj, it, key) {
+    obj.userData.placed = !!it?.placement;
+    obj.userData.pieceKey = key;
     obj.visible = !!it?.placement;
     if (!it?.placement) return;
     place(obj, it.placement);
@@ -129,17 +123,41 @@ export function createBuildScene({ viewer, anisotropy = 4, reducedMotion = false
   }
   function placeAll() {
     for (const s of slots.values()) {
-      if (s.category === 'case') {
-        // Slot covers the graphics card's bracket replaces.
-        const covers = s.model.userData.slotCovers ?? [];
-        covers.forEach((c, i) => { c.visible = !layout.gpu?.covers.includes(i); });
-        continue;
-      }
+      if (s.category === 'case') continue; // standoffs and slot covers: applyMask()
       const items = layout.items.filter((it) => it.category === s.category && it.index === s.index);
       const units = s.model.userData.units;
-      if (units) units.forEach((u, i) => put(u, items.find((it) => it.unit === i)));
-      else put(s.model, items.find((it) => it.unit === null));
+      if (units) units.forEach((u, i) => put(u, items.find((it) => it.unit === i), pieceKey(s.key, i)));
+      else put(s.model, items.find((it) => it.unit === null), pieceKey(s.key, null));
     }
+  }
+
+  // ---- build-by-hand mask. Keys: piece keys (assembly.js), 'case:standoff:<ff>',
+  // 'case:slot-cover:<i>', 'board:io-shield', 'cables:psu', 'cables:aio'.
+  function applyMask() {
+    const show = mask ?? (() => true);
+    for (const s of slots.values()) {
+      const ud = s.model.userData;
+      if (s.category === 'case') {
+        (ud.standoffs ?? []).forEach((m) => { m.visible = !mask || m.userData.forms.some((ff) => show(`case:standoff:${ff}`)); });
+        if (mask) (ud.slotCovers ?? []).forEach((c, i) => { c.visible = show(`case:slot-cover:${i}`); });
+        continue;
+      }
+      const pieces = ud.units ?? [s.model];
+      for (const o of pieces) o.visible = !!o.userData.placed && show(o.userData.pieceKey);
+      if (s.category === 'motherboard') {
+        // Shield only: the I/O plate goes in before the board.
+        const shieldOnly = !s.model.visible && !!s.model.userData.placed && !!mask && show('board:io-shield');
+        if (shieldOnly) s.model.visible = true;
+        for (const c of s.model.children) c.visible = !shieldOnly || c.name === 'io-shield';
+      }
+    }
+    for (const [name, c] of cables) c.group.visible = explodeT < 0.02 && (!mask || show(name === 'psu-cables' ? 'cables:psu' : 'cables:aio'));
+    if (!mask) placeAllCovers();
+  }
+  // Viewer: hide the slot covers the graphics card's bracket replaces.
+  function placeAllCovers() {
+    const c = [...slots.values()].find((x) => x.category === 'case');
+    (c?.model.userData.slotCovers ?? []).forEach((m, i) => { m.visible = !layout?.gpu?.covers.includes(i); });
   }
 
   // Cables in case space: the PSU bundle (to the lowest grommet, behind the tray) and AIO tubes.
@@ -178,7 +196,7 @@ export function createBuildScene({ viewer, anisotropy = 4, reducedMotion = false
     root.traverse((o) => {
       if (o.userData.base) o.position.copy(o.userData.base).addScaledVector(o.userData.explode, e);
     });
-    for (const c of cables.values()) c.group.visible = explodeT < 0.02;
+    applyMask();
     applyPanel();
   }
 
@@ -280,7 +298,24 @@ export function createBuildScene({ viewer, anisotropy = 4, reducedMotion = false
     setSidePanel,
     get sidePanel() { return panelOn; },
     get layout() { return layout; },
+    get build() { return current; },
     get busy() { return busy || !!pending; },
+    /** Build-by-hand: show only what `fn(key)` allows (see applyMask); null shows everything. */
+    setMask(fn) {
+      mask = fn;
+      applyMask();
+      refreshHighlight();
+      viewer.invalidateShadows();
+    },
+    /** The object for a piece key (a unit or a whole model), placed at its layout pose. */
+    pieceObject(key) {
+      for (const s of slots.values()) {
+        for (const o of s.model.userData.units ?? [s.model]) if (o.userData.pieceKey === key) return o;
+      }
+      return null;
+    },
+    /** The model for a category (first one), e.g. the case or the motherboard. */
+    modelOf: (category) => [...slots.values()].find((s) => s.category === category)?.model ?? null,
     /** Highlight a part ({category, id}) or a whole category ({category}); null clears. Returns true if anything is shown. */
     highlight(t) {
       target = t;
@@ -293,7 +328,14 @@ export function createBuildScene({ viewer, anisotropy = 4, reducedMotion = false
     },
     has: (category) => [...slots.values()].some((s) => s.category === category),
     /** Exploded view amount, 0..1 (animates toward it). */
-    setExplode(v) { explodeGoal = Math.min(1, Math.max(0, v)); },
+    setExplode(v, { animate = true } = {}) {
+      explodeGoal = Math.min(1, Math.max(0, v));
+      if (!animate) {
+        explodeT = explodeGoal;
+        applyExplode();
+        viewer.invalidateShadows();
+      }
+    },
     get explode() { return explodeGoal; },
     /** Current models, for effects.js: [{ key, category, part, model }]. */
     get models() { return [...slots.values()]; },

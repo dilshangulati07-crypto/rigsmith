@@ -2,7 +2,7 @@
 // lives in js/state.js), routes actions between panels and re-renders on every change.
 import { loadCatalog } from './catalog.js';
 import { CATEGORIES, getCategory } from './categories.js';
-import { buildStore } from './state.js';
+import { buildStore, assemblyProgress } from './state.js';
 import { checkBuild, summarize } from './compat.js';
 import { priceBuild, formatTHB } from './pricing.js';
 import { SavedBuilds } from './saved-builds.js';
@@ -50,6 +50,15 @@ const app = {
 const adds = (cat) => cat.multiple && cat.pickMode === 'add';
 
 app.select = (part) => {
+  selectPart(part);
+  // A swap started from the build-by-hand tray goes straight back to the 3D build.
+  if (app.ui.returnTo3D) {
+    app.ui.returnTo3D = false;
+    app.enter3D();
+  }
+};
+
+function selectPart(part) {
   const cat = getCategory(part.category);
   const swap = app.ui.swap?.category === cat.id ? app.ui.swap : null;
   if (swap && swap.id === part.id) {
@@ -67,7 +76,7 @@ app.select = (part) => {
     const previous = app.store.add(part);
     app.toast(previous ? `Replaced ${previous.name} with ${part.name}.` : `Added ${part.name}.`);
   }
-};
+}
 
 app.remove = (category, id) => {
   const part = app.catalog.get(id);
@@ -161,6 +170,12 @@ function setPreview(on) {
   $('[data-cmd="preview"]').setAttribute('aria-pressed', String(on));
   saveUiPrefs(app.ui);
 }
+
+/** Show the large 3D view (desktop) or the 3D tab (narrow screens). */
+app.enter3D = () => {
+  if (narrow.matches) setTab('3d');
+  else setView('3d');
+};
 
 function toggle3D() {
   if (narrow.matches) setTab(app.ui.tab === '3d' ? 'parts' : '3d');
@@ -275,6 +290,7 @@ function onKey(e) {
   else if ((e.key === 'p' || e.key === 'P') && viewerShown()) viewer.screenshot();
   else if ((e.key === 'e' || e.key === 'E') && viewerShown()) viewer.toggleExplode();
   else if ((e.key === 'o' || e.key === 'O') && viewerShown()) viewer.togglePower();
+  else if ((e.key === 'k' || e.key === 'K') && viewerShown()) viewer.toggleMode();
   else if (e.key === '?') $('#shortcuts-dialog').showModal();
   else return;
 }
@@ -292,6 +308,7 @@ async function init() {
     return;
   }
   const { missing } = app.store.load(app.catalog);
+  assemblyProgress.load();
 
   catList = mountCategoryList($('#cat-list'), app);
   browser = mountPartBrowser($('#view-parts'), app);
@@ -340,6 +357,8 @@ async function init() {
 
   setView('parts');
   setPreview(app.ui.preview);
+  // Continue a build by hand where it was left: open the 3D view straight away.
+  if (assemblyProgress.mode === 'hand') app.enter3D();
   watchViewer();
   renderNow();
   loader.dataset.done = 'true';

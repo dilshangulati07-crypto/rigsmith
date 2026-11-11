@@ -4,6 +4,8 @@
 // power connectors, SATA ports and headers.
 // Local origin: the PCB's rear-top corner on its front face. +X = toward the case front,
 // -Y = down the board, +Z = out of the board toward the window.
+// Moving parts for the hands-on build (userData.mechanisms): the socket lever on its hinge and
+// the M.2 heatsink covers. The rear I/O plate is named "io-shield" (it goes in before the board).
 import * as THREE from 'three';
 import { mat } from '../materials.js';
 import { boxMM, instancedBoxes, cylinderZ } from '../resources.js';
@@ -15,15 +17,17 @@ export function buildMotherboard(part) {
   const g = new THREE.Group();
   g.name = 'motherboard';
   // Board-space box: u0..u1 across, v0..v1 down, z0..z1 out of the board.
-  const on = (u0, u1, v0, v1, z0, z1, m, opts) => boxMM(g, u0, u1, -v1, -v0, z0, z1, m, opts);
+  const onTo = (parent, u0, u1, v0, v1, z0, z1, m, opts) => boxMM(parent, u0, u1, -v1, -v0, z0, z1, m, opts);
+  const on = (...a) => onTo(g, ...a);
   const r = (rc, z0, z1, m, opts) => on(rc.u0, rc.u1, rc.v0, rc.v1, z0, z1, m, opts);
+  const mechanisms = { lever: null, m2Covers: [] };
 
   on(0, L.w, 0, L.h, -PCB, 0, mat('pcb'));
 
   // Rear I/O: shroud on the board, port blocks, and the I/O plate that sits in the case cut-out.
   r(L.io, 0, 3.8, mat('plastic'));
   on(L.io.u1 - 0.3, L.io.u1, L.io.v0, L.io.v1, 0, 3.85, mat('aluLight'));
-  on(-0.86, -0.78, L.io.v0 - 0.2, L.io.v1 + 0.2, -PCB, 4.3, mat('frameAlu'));
+  on(-0.86, -0.78, L.io.v0 - 0.2, L.io.v1 + 0.2, -PCB, 4.3, mat('frameAlu'), { name: 'io-shield' });
   const ports = [];
   const span = L.io.v1 - L.io.v0;
   for (let i = 0, v = L.io.v0 + 0.5; i < 6 && v + 1.6 < L.io.v1; i++, v += span / 6) {
@@ -55,17 +59,26 @@ export function buildMotherboard(part) {
   const su0 = s.u - s.w / 2; const su1 = s.u + s.w / 2;
   const sv0 = s.v - s.h / 2; const sv1 = s.v + s.h / 2;
   on(su0 - 0.4, su1 + 0.4, sv0 - 0.4, sv1 + 0.4, 0, 0.12, mat('chip'), { cast: false });
+  // Socket lever: a pivot at its hinge (the end nearer the board's bottom edge); rotating the
+  // pivot about local +X lifts the lever out of the board.
+  const lever = new THREE.Group();
+  lever.name = 'socket-lever';
   if (s.kind === 'pga') {
     on(su0, su1, sv0, sv1, 0, 0.55, mat('socketPga'));
-    on(su1 + 0.05, su1 + 0.3, sv0, sv1 + 0.3, 0.3, 0.55, mat('aluLight'));
+    lever.position.set(su1 + 0.175, -(sv1 + 0.3), 0.425);
+    boxMM(lever, -0.125, 0.125, 0, sv1 + 0.3 - sv0, -0.125, 0.125, mat('aluLight'));
   } else {
     on(su0, su1, sv0, sv1, 0, 0.32, mat('aluLight'));
     on(su0 + 0.5, su1 - 0.5, sv0 + 0.6, sv1 - 0.6, 0.3, 0.34, mat('chip'), { cast: false });
-    const lever = new THREE.Mesh(cylinderZ(0.07, s.h + 0.5, 8), mat('aluLight'));
-    lever.rotation.x = Math.PI / 2;
-    lever.position.set(su1 + 0.35, -s.v, 0.25);
-    g.add(lever);
+    const bar = new THREE.Mesh(cylinderZ(0.07, s.h + 0.5, 8), mat('aluLight'));
+    bar.rotation.x = Math.PI / 2;
+    bar.position.y = (s.h + 0.5) / 2;
+    bar.castShadow = true;
+    lever.position.set(su1 + 0.35, -(sv1 + 0.25), 0.25);
+    lever.add(bar);
   }
+  g.add(lever);
+  mechanisms.lever = lever;
   // Cooler mounting holes around the socket.
   const holes = [];
   const hr = s.kind === 'pga' || s.w === s.h ? 4.5 : 3.75;
@@ -89,22 +102,31 @@ export function buildMotherboard(part) {
   }
 
   // M.2: connector and screw post for every slot; heatsink cover where the board has one.
-  for (const m of L.m2) {
-    if (m.back) continue;
+  L.m2.forEach((m, slot) => {
+    if (m.back) return;
     on(m.u - 4.3, m.u - 3.8, m.v - 1.1, m.v + 1.1, 0, 0.45, mat('plastic'));
     on(m.u + 3.9, m.u + 4.2, m.v - 0.15, m.v + 0.15, 0, 0.3, mat('brass'));
     if (m.cover === 'own') {
-      on(m.u - 4.4, m.u + 4.4, m.v - 1.3, m.v + 1.3, 0.55, 1.0, mat('heatsink'));
-      for (const dv of [-0.65, 0, 0.65]) on(m.u - 4.2, m.u + 4.2, m.v + dv - 0.05, m.v + dv + 0.05, 1.0, 1.03, mat('aluLight'), { cast: false });
+      const cover = new THREE.Group();
+      cover.name = 'm2-cover';
+      onTo(cover, m.u - 4.4, m.u + 4.4, m.v - 1.3, m.v + 1.3, 0.55, 1.0, mat('heatsink'));
+      for (const dv of [-0.65, 0, 0.65]) onTo(cover, m.u - 4.2, m.u + 4.2, m.v + dv - 0.05, m.v + dv + 0.05, 1.0, 1.03, mat('aluLight'), { cast: false });
+      g.add(cover);
+      mechanisms.m2Covers.push({ slot, cover });
     }
-  }
+  });
 
   // Chipset heatsink. On ITX it doubles as the M.2 cover, so it sits above the drive.
   const c = L.chipset;
   if (L.ff === 'ITX') {
     on(c.u0 + 0.6, c.u0 + 1.4, c.v0 + 0.6, c.v1 - 0.6, 0, 0.55, mat('heatsink'));
-    r(c, 0.55, 1.2, mat('heatsink'));
-    on(c.u0, c.u1, c.v0, c.v0 + 0.12, 1.2, 1.25, mat('aluLight'), { cast: false });
+    const cover = new THREE.Group();
+    cover.name = 'm2-cover';
+    onTo(cover, c.u0, c.u1, c.v0, c.v1, 0.55, 1.2, mat('heatsink'));
+    onTo(cover, c.u0, c.u1, c.v0, c.v0 + 0.12, 1.2, 1.25, mat('aluLight'), { cast: false });
+    g.add(cover);
+    const slot = L.m2.findIndex((m) => m.cover === 'chipset');
+    if (slot >= 0) mechanisms.m2Covers.push({ slot, cover });
   } else {
     r(c, 0, 1.0, mat('heatsink'));
     on(c.u0, c.u1, c.v0, c.v0 + 0.12, 1.0, 1.05, mat('aluLight'), { cast: false });
@@ -138,5 +160,6 @@ export function buildMotherboard(part) {
     m2: L.m2.map((m) => [m.u, -m.v, m.back ? -PCB : 0]),
   };
   g.userData.layout = L;
+  g.userData.mechanisms = mechanisms;
   return g;
 }

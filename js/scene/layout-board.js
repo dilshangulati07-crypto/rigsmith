@@ -22,6 +22,15 @@ export const ramModules = (part) => part.modules ?? (Number(String(part.kit ?? '
 // Fill order: A2/B2 first on 4-slot boards (indices 1 and 3, index 0 = closest to the socket).
 const RAM_ORDER = { 4: [1, 3, 0, 2], 2: [0, 1], 1: [0] };
 
+/** Slot names in board order (index 0 = closest to the socket). */
+export const ramSlotNames = (count) => (count === 4 ? ['A1', 'A2', 'B1', 'B2'] : count === 2 ? ['A1', 'B1'] : ['A1']);
+
+/** Stick in RAM slot `s` (from boardLayout().ram). Stick local: +X along the module, +Y out of the board. */
+export const ramSlotPlacement = (f, s) => ({ p: boardPoint(f, s.u, (s.v0 + s.v1) / 2).map(r2), ex: f.V, ey: Z });
+
+/** Graphics card in PCIe slot `slot` (from boardLayout().pcie): bracket edge at the rear. */
+export const pcieSlotPlacement = (f, slot) => ({ p: boardPoint(f, -0.9, slot.v).map(r2), ex: f.U, ey: Z });
+
 export function layoutRAM(ramParts, f, bl, notes) {
   const order = RAM_ORDER[bl.ram.length] ?? bl.ram.map((_, i) => i);
   const out = [];
@@ -33,9 +42,7 @@ export function layoutRAM(ramParts, f, bl, notes) {
       const slot = order[next];
       if (slot === undefined) { extra++; continue; }
       next++;
-      const s = bl.ram[slot];
-      // Stick local: +X along the module, +Y out of the board, +Z across.
-      out.push({ partIndex, unit, slot, height: h, placement: { p: boardPoint(f, s.u, (s.v0 + s.v1) / 2).map(r2), ex: f.V, ey: Z }, explode: Z });
+      out.push({ partIndex, unit, slot, height: h, placement: ramSlotPlacement(f, bl.ram[slot]), explode: Z });
     }
   });
   if (extra) notes.push(`${extra} memory module${extra > 1 ? 's do' : ' does'} not fit the board's ${bl.ram.length} slots and ${extra > 1 ? 'are' : 'is'} not drawn.`);
@@ -66,7 +73,7 @@ export function layoutGPU(gpu, f, bl, cl, notes) {
     return null;
   }
   const dims = gpuDims(gpu);
-  const placement = { p: boardPoint(f, -0.9, x16.v).map(r2), ex: f.U, ey: Z };
+  const placement = pcieSlotPlacement(f, x16);
   const box = boxOfLocal(placement, [0, 0.5, -0.45], [dims.L, dims.H + 1.2, dims.T - 0.45]);
   const shell = shellOf(cl);
   const inside = [0, 1, 2].every((a) => box.min[a] >= shell.min[a] - 1.2 && box.max[a] <= shell.max[a] + 0.05);

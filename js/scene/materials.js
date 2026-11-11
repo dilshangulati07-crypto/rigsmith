@@ -4,6 +4,9 @@ import { share } from './resources.js';
 
 const cache = new Map();
 
+const ghost = (color) => new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.2, depthWrite: false, depthTest: false, toneMapped: false });
+const guide = (color) => new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.9, depthTest: false, toneMapped: false });
+
 const defs = {
   caseSteel: () => new THREE.MeshStandardMaterial({ color: 0x1b1e23, metalness: 0.55, roughness: 0.5 }),
   caseInner: () => new THREE.MeshStandardMaterial({ color: 0x16191e, metalness: 0.3, roughness: 0.7 }),
@@ -37,6 +40,13 @@ const defs = {
   ghostLine: () => new THREE.LineDashedMaterial({ color: 0x8a93a0, dashSize: 1.2, gapSize: 0.8, transparent: true, opacity: 0.55, toneMapped: false }),
   ghostLineFaint: () => new THREE.LineDashedMaterial({ color: 0x8a93a0, dashSize: 0.6, gapSize: 0.6, transparent: true, opacity: 0.28, toneMapped: false }),
   highlight: () => new THREE.LineBasicMaterial({ color: 0xff5a1f, depthTest: false, transparent: true, opacity: 0.95, toneMapped: false }),
+  // Build by hand: x-ray ghost of where a part goes (valid, wrong, hint) and its guide box.
+  ghostOk: () => ghost(0x3ddc97),
+  ghostBad: () => ghost(0xff4d4d),
+  ghostHint: () => ghost(0xff5a1f),
+  guideOk: () => guide(0x3ddc97),
+  guideBad: () => guide(0xff4d4d),
+  guideHint: () => guide(0xff5a1f),
   // Emissive LEDs: intensity above the bloom threshold so only these glow.
   ledWhite: () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xd8e4f2, emissiveIntensity: 3 }),
   // Orange has low luminance, so it needs more intensity than white to clear the bloom threshold.

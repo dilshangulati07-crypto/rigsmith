@@ -213,16 +213,20 @@ export function buildCase(part, cl, { anisotropy = 4 } = {}) {
   const trayBottom = cl.shroud ? cl.shroud.y1 : WALL;
   boxMM(root, -D / 2 + WALL, D / 2 - WALL, trayBottom, H - WALL, trayZ - 0.12, trayZ, mat('caseInner'));
 
-  const seen = [];
+  // Standoffs for every board size the case takes; each lists the sizes it serves (userData.forms).
+  const standoffs = [];
   for (const ff of cl.formFactors) {
     for (const [u, v] of STANDOFFS[ff] ?? []) {
       if (u > BOARD_DIMS[ff].w || v > BOARD_DIMS[ff].h) continue;
       const [x, y] = boardPoint(cl.frame, u, v);
-      if (seen.some(([a, b]) => Math.hypot(a - x, b - y) < 0.5)) continue;
-      seen.push([x, y]);
+      const same = standoffs.find((m) => Math.hypot(m.position.x - x, m.position.y - y) < 0.5);
+      if (same) { same.userData.forms.push(ff); continue; }
       const s = new THREE.Mesh(cylinderZ(0.28, STANDOFF, 6), mat('brass'));
+      s.name = 'standoff';
       s.position.set(x, y, trayZ + STANDOFF / 2);
+      s.userData.forms = [ff];
       root.add(s);
+      standoffs.push(s);
     }
   }
 
@@ -247,6 +251,7 @@ export function buildCase(part, cl, { anisotropy = 4 } = {}) {
   frontIO(root, cl);
 
   root.userData.slotCovers = covers;
+  root.userData.standoffs = standoffs;
   root.userData.sidePanel = side;
   return root;
 }

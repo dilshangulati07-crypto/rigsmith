@@ -79,6 +79,30 @@ export function createCameraRig(viewer, { reducedMotion = false, onPresetChange 
     controls.enabled = false;
   }
 
+  /**
+   * Ease to look at a region (build-by-hand: the area being worked on). Leaves preset mode.
+   * @param {THREE.Vector3} center  @param {number} radius  @param {number[]} dir view direction
+   */
+  function focus(center, radius, dir = [0.35, 0.3, 1], { animate = !reducedMotion } = {}) {
+    if (current) {
+      current = null;
+      onPresetChange?.(null);
+    }
+    const target = center.clone();
+    if (frame) target.clamp(frame.min, frame.max);
+    const pos = new THREE.Vector3(...dir).normalize().multiplyScalar(Math.max(fitDistance(Math.max(radius, 9)) * 0.9, controls.minDistance)).add(target);
+    pos.y = Math.max(pos.y, 4);
+    if (!animate) {
+      tween = null;
+      camera.position.copy(pos);
+      controls.target.copy(target);
+      controls.update();
+      return;
+    }
+    tween = { t: 0, dur: 0.8, p0: camera.position.clone(), t0: controls.target.clone(), p1: pos, t1: target };
+    controls.enabled = false;
+  }
+
   function update(dt) {
     if (tween) {
       tween.t = Math.min(1, tween.t + dt / tween.dur);
@@ -96,10 +120,13 @@ export function createCameraRig(viewer, { reducedMotion = false, onPresetChange 
   return {
     setFrame,
     goTo,
+    focus,
     update,
     /** Re-frame the current preset (e.g. after the case changes size). */
     refresh: (opts) => { if (current) goTo(current, opts); },
     get preset() { return current; },
+    /** True while easing to a preset or a focus point. */
+    get moving() { return !!tween; },
     next() {
       const i = CAMERA_PRESETS.findIndex((p) => p.id === current);
       goTo(CAMERA_PRESETS[(i + 1) % CAMERA_PRESETS.length].id);

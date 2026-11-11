@@ -283,6 +283,12 @@ function psuBundle(fit, cl, boardFront) {
 }
 
 // ---------------------------------------------------------------- storage
+/** M.2 2280 drive in board M.2 slot `slot` (from boardLayout().m2), front or back of the board. */
+export function m2Placement(f, slot) {
+  const p = boardPoint(f, slot.u, slot.v, slot.back ? -PCB - 0.2 : 0.35);
+  return { p: p.map(r2), ex: f.U, ey: slot.back ? f.V : neg(f.V) };
+}
+
 function layoutStorage(drives, cl, board, psu, fans, boardFront, notes, blockers = []) {
   const { D, W, H, trayZ } = cl;
   const out = [];
@@ -345,9 +351,7 @@ function layoutStorage(drives, cl, board, psu, fans, boardFront, notes, blockers
       const slot = board.layout.m2[m2Used];
       if (!slot) { m2Missing++; return; }
       m2Used++;
-      const f = board.frame;
-      const p = boardPoint(f, slot.u, slot.v, slot.back ? -PCB - 0.2 : 0.35);
-      out.push({ index, kind: 'm2', slot: m2Used - 1, back: !!slot.back, placement: { p: p.map(r2), ex: f.U, ey: slot.back ? f.V : neg(f.V) } });
+      out.push({ index, kind: 'm2', slot: m2Used - 1, back: !!slot.back, placement: m2Placement(board.frame, slot) });
       return;
     }
     const size = DRIVE_DIMS[ff];

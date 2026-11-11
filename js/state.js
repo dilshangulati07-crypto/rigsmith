@@ -174,3 +174,136 @@ export class BuildStore extends EventTarget {
 
 // The app's build. Tests create their own BuildStore instances.
 export const buildStore = new BuildStore();
+
+// ---------------------------------------------------------------- build-by-hand progress
+// Which pieces are in the case (keys from js/scene/assembly.js, in install order), with
+// undo/redo over every action (install, reset) and the 3D view mode. Saved to localStorage
+// so a reload continues where the user left off. Fires 'change' with detail { action }.
+const ASSEMBLY_KEY = 'rigsmith.assembly.v1';
+const HISTORY_LIMIT = 200;
+
+export class AssemblyProgress extends EventTarget {
+  #installed = [];
+  #undo = [];
+  #redo = [];
+  #mode = 'viewer';
+  #caseId = null;
+  #storage;
+  #key;
+
+  constructor({ storage = browserStorage(), storageKey = ASSEMBLY_KEY } = {}) {
+    super();
+    this.#storage = storage;
+    this.#key = storageKey;
+  }
+
+  get installed() { return [...this.#installed]; }
+  get mode() { return this.#mode; }
+  get caseId() { return this.#caseId; }
+  get canUndo() { return this.#undo.length > 0; }
+  get canRedo() { return this.#redo.length > 0; }
+
+  setMode(mode) {
+    if (mode !== 'viewer' && mode !== 'hand') return;
+    if (mode === this.#mode) return;
+    this.#mode = mode;
+    this.#emit('mode');
+  }
+
+  #commit(next, action) {
+    this.#undo.push(this.#installed);
+    if (this.#undo.length > HISTORY_LIMIT) this.#undo.shift();
+    this.#redo = [];
+    this.#installed = next;
+    this.#emit(action);
+  }
+
+  install(key) {
+    if (this.#installed.includes(key)) return false;
+    this.#commit([...this.#installed, key], 'install');
+    return true;
+  }
+
+  reset() {
+    if (!this.#installed.length) return false;
+    this.#commit([], 'reset');
+    return true;
+  }
+
+  undo() {
+    if (!this.#undo.length) return false;
+    this.#redo.push(this.#installed);
+    this.#installed = this.#undo.pop();
+    this.#emit('undo');
+    return true;
+  }
+
+  redo() {
+    if (!this.#redo.length) return false;
+    this.#undo.push(this.#installed);
+    this.#installed = this.#redo.pop();
+    this.#emit('redo');
+    return true;
+  }
+
+  /**
+   * Fit the progress to the current build: `keep(keys)` returns the keys that still apply.
+   * A different case starts over (with no history). Silent unless something changed.
+   */
+  sync(caseId, keep) {
+    if (caseId !== this.#caseId) {
+      const had = this.#installed.length || this.#undo.length;
+      this.#caseId = caseId;
+      this.#installed = [];
+      this.#undo = [];
+      this.#redo = [];
+      if (had) this.#emit('sync');
+      else this.save();
+      return;
+    }
+    const next = keep(this.#installed);
+    const fix = (list) => list.map(keep);
+    if (next.length === this.#installed.length) return;
+    this.#installed = next;
+    this.#undo = fix(this.#undo);
+    this.#redo = [];
+    this.#emit('sync');
+  }
+
+  save() {
+    if (!this.#storage) return false;
+    try {
+      this.#storage.setItem(this.#key, JSON.stringify({
+        version: 1, mode: this.#mode, caseId: this.#caseId, installed: this.#installed, undo: this.#undo, redo: this.#redo,
+      }));
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  load() {
+    let s;
+    try {
+      s = JSON.parse(this.#storage?.getItem(this.#key) ?? 'null');
+    } catch {
+      s = null;
+    }
+    if (!s || s.version !== 1) return false;
+    const list = (a) => (Array.isArray(a) ? a.filter((k) => typeof k === 'string') : []);
+    const lists = (a) => (Array.isArray(a) ? a.filter(Array.isArray).map(list).slice(-HISTORY_LIMIT) : []);
+    this.#mode = s.mode === 'hand' ? 'hand' : 'viewer';
+    this.#caseId = typeof s.caseId === 'string' ? s.caseId : null;
+    this.#installed = list(s.installed);
+    this.#undo = lists(s.undo);
+    this.#redo = lists(s.redo);
+    return true;
+  }
+
+  #emit(action) {
+    this.save();
+    this.dispatchEvent(new CustomEvent('change', { detail: { action, installed: this.installed } }));
+  }
+}
+
+export const assemblyProgress = new AssemblyProgress();
