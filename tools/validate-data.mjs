@@ -28,6 +28,7 @@ export const ENUMS = {
   chipMaker: ['NVIDIA', 'AMD', 'Intel'],
   caseType: ['full-tower', 'mid-tower', 'matx', 'itx'],
   sidePanel: ['glass', 'mesh', 'solid', 'acrylic'],
+  frontPanel: ['mesh', 'glass', 'solid'],
   radiatorPosition: ['front', 'top', 'side', 'bottom', 'rear'],
   specSourceType: ['official', 'retailer', 'review'],
 };
@@ -93,7 +94,7 @@ const OPTIONAL = {
   gpu: { chipMaker: 'enum:chipMaker', chip: 'string', launchYear: 'int', fans: 'int', thicknessMM: 'number' },
   psu: { formFactor: 'enum:psuFormFactor', atxVersion: 'string?' },
   // psuFormFactors null = the maker page gives only a PSU length, not a type.
-  case: { caseType: 'enum:caseType', psuFormFactors: 'enum:psuFormFactor[]?', sidePanel: 'enum:sidePanel' },
+  case: { caseType: 'enum:caseType', psuFormFactors: 'enum:psuFormFactor[]?', sidePanel: 'enum:sidePanel', frontPanel: 'enum:frontPanel?' },
   cooler: { fans: 'int', fanSizeMM: 'int', rgb: 'bool' },
   storage: { interface: 'string', pcieGen: 'int', readMBs: 'int', writeMBs: 'int', rpm: 'int' },
   fans: { airflowCFM: 'number?', staticPressureMMH2O: 'number?', noiseDBA: 'number?' },

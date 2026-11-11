@@ -243,7 +243,7 @@ function card({ p, r, inBuild, warn, unknown }, cat, type, swap) {
 
   const unverified = p.specsVerified === false;
   return html`
-    <li class="part" data-state="${state}">
+    <li class="part" data-state="${state}" data-part-cat="${p.category}" data-part-id="${p.id}">
       <div class="part__main">
         <h3 class="part__name"><button class="part__title" type="button" data-action="details" data-id="${p.id}" data-focus-key="det-${p.id}">${p.name}</button></h3>
         <p class="part__tags">

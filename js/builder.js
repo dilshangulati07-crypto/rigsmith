@@ -23,7 +23,7 @@ function loadUiPrefs() {
 }
 function saveUiPrefs(ui) {
   try {
-    localStorage.setItem(UI_KEY, JSON.stringify({ category: ui.category, autofill: ui.autofill, current: ui.current, dirty: ui.dirty }));
+    localStorage.setItem(UI_KEY, JSON.stringify({ category: ui.category, autofill: ui.autofill, current: ui.current, dirty: ui.dirty, preview: ui.preview }));
   } catch { /* storage blocked: preferences just don't persist */ }
 }
 
@@ -39,6 +39,7 @@ const app = {
     swap: null,
     tab: 'parts',
     view: 'parts',
+    preview: prefs.preview !== false, // desktop: 3D preview above the parts list
     autofill: { budget: 40000, use: 'gaming', size: 'full', ...prefs.autofill },
     current: prefs.current ?? null,
     dirty: prefs.dirty ?? false,
@@ -142,15 +143,85 @@ app.toast = (msg, level = 'ok') => {
 
 // ---------------------------------------------------------------- panels
 let catList; let browser; let detail; let summary; let autofill; let builds;
+let viewer = null; // 3D panel API once loaded (js/ui/viewer-panel.js)
 
+const narrow = matchMedia('(max-width: 1023px)');
+
+// Desktop: 'parts' (list, with the 3D preview above it unless turned off) or '3d' (large viewer).
+// Narrow screens use the '3d' tab instead; CSS decides what shows.
 function setView(view) {
   app.ui.view = view;
-  $('#view-parts').hidden = view !== 'parts';
-  $('#view-3d').hidden = view !== '3d';
+  $('#col-parts').dataset.view = view;
   for (const b of document.querySelectorAll('[data-view]')) b.setAttribute('aria-pressed', String(b.dataset.view === view));
 }
 
+function setPreview(on) {
+  app.ui.preview = on;
+  $('#col-parts').dataset.preview = on ? 'on' : 'off';
+  $('[data-cmd="preview"]').setAttribute('aria-pressed', String(on));
+  saveUiPrefs(app.ui);
+}
+
+function toggle3D() {
+  if (narrow.matches) setTab(app.ui.tab === '3d' ? 'parts' : '3d');
+  else setView(app.ui.view === '3d' ? 'parts' : '3d');
+}
+
+const viewerShown = () => !!viewer && $('#view-3d').getClientRects().length > 0;
+
+// Load three.js and the 3D panel the first time the panel is on screen.
+function watchViewer() {
+  const el = $('#view-3d');
+  let loading = false;
+  const io = new IntersectionObserver(async ([e]) => {
+    if (!e.isIntersecting || loading) return;
+    loading = true;
+    io.disconnect();
+    try {
+      const { mountViewerPanel } = await import('./ui/viewer-panel.js');
+      viewer = await mountViewerPanel(el, app);
+      viewer?.sync(app.store.build);
+      markHover(hover3d);
+    } catch (err) {
+      console.warn('Rigsmith: the 3D view could not load.', err);
+      el.querySelector('.viewer__loading-step').textContent = 'The 3D view could not load. The list under “Your build” describes the same parts.';
+    }
+  });
+  io.observe(el);
+}
+
+// ---- hover, both ways: list/card -> 3D highlight, 3D -> list/card outline
+let hover3d = null;
+function markHover(target) {
+  for (const n of document.querySelectorAll('.is-3d-hover')) n.classList.remove('is-3d-hover');
+  if (!target) return;
+  const cat = CSS.escape(target.category);
+  const sel = target.id
+    ? `[data-part-cat="${cat}"][data-part-id="${CSS.escape(target.id)}"], .cat[data-part-cat="${cat}"]`
+    : `[data-part-cat="${cat}"]`;
+  for (const n of document.querySelectorAll(sel)) n.classList.add('is-3d-hover');
+}
+app.onViewerHover = (target) => {
+  hover3d = target;
+  markHover(target);
+};
+
+function hoverTargetOf(node) {
+  const n = node?.closest?.('[data-part-cat]');
+  if (!n || n.closest('#view-3d')) return null;
+  return { el: n, category: n.dataset.partCat, id: n.dataset.partId || null };
+}
+let listHover = null;
+function onListHover(e) {
+  if (!viewer) return;
+  const t = hoverTargetOf(e.type === 'pointerout' || e.type === 'focusout' ? e.relatedTarget : e.target);
+  if (t?.el === listHover?.el) return;
+  listHover = t;
+  viewer.highlight(t ? { category: t.category, id: t.id } : null);
+}
+
 function setTab(tab) {
+  if (tab === '3d' && !narrow.matches) { setView('3d'); tab = 'parts'; }
   app.ui.tab = tab;
   $('#builder-grid').dataset.tab = tab;
   for (const b of document.querySelectorAll('[data-tab]')) b.setAttribute('aria-pressed', String(b.dataset.tab === tab));
@@ -172,6 +243,8 @@ function renderNow() {
   summary.render(build, issues);
   detail.refresh(build);
   setTab(app.ui.tab);
+  viewer?.sync(build);
+  markHover(hover3d);
 
   // Mobile bar: total and status at a glance.
   const s = summarize(issues);
@@ -184,7 +257,7 @@ function renderNow() {
 }
 
 // ---------------------------------------------------------------- keyboard
-const typing = (el) => el.closest('input, select, textarea, [contenteditable="true"]');
+const typing = (el) => el?.closest?.('input, select, textarea, [contenteditable="true"]');
 
 function onKey(e) {
   if (e.ctrlKey || e.metaKey || e.altKey || typing(e.target) || document.querySelector('dialog[open]')) return;
@@ -196,7 +269,10 @@ function onKey(e) {
   else if (/^[1-9]$/.test(e.key) && CATEGORIES[Number(e.key) - 1]) app.setCategory(CATEGORIES[Number(e.key) - 1].id);
   else if (e.key === 'a' || e.key === 'A') autofill.open();
   else if (e.key === 'b' || e.key === 'B') builds.open();
-  else if (e.key === 'v' || e.key === 'V') setView(app.ui.view === 'parts' ? '3d' : 'parts');
+  else if (e.key === 'v' || e.key === 'V') toggle3D();
+  else if ((e.key === 'g' || e.key === 'G') && viewerShown()) viewer.toggleSidePanel();
+  else if ((e.key === 'c' || e.key === 'C') && viewerShown()) viewer.nextCamera();
+  else if ((e.key === 'p' || e.key === 'P') && viewerShown()) viewer.screenshot();
   else if (e.key === '?') $('#shortcuts-dialog').showModal();
   else return;
 }
@@ -234,6 +310,7 @@ async function init() {
     if (cmd === 'autofill') autofill.open();
     if (cmd === 'builds') builds.open();
     if (cmd === 'shortcuts') $('#shortcuts-dialog').showModal();
+    if (cmd === 'preview') setPreview(!app.ui.preview);
     if (cmd === 'close-dialog') b.closest('dialog').close();
     if (cmd === 'clear') {
       if (!allParts(app.store.build).length) return;
@@ -255,8 +332,13 @@ async function init() {
   for (const b of document.querySelectorAll('[data-tab]')) b.addEventListener('click', () => setTab(b.dataset.tab));
   $('#shortcuts-dialog').addEventListener('click', (e) => { if (e.target === e.currentTarget) e.currentTarget.close(); });
   document.addEventListener('keydown', onKey);
+  for (const type of ['pointerover', 'pointerout', 'focusin', 'focusout']) document.addEventListener(type, onListHover);
+  // Leaving the narrow layout while on the 3D tab: show the large viewer instead.
+  narrow.addEventListener('change', () => { if (!narrow.matches && app.ui.tab === '3d') setTab('3d'); });
 
   setView('parts');
+  setPreview(app.ui.preview);
+  watchViewer();
   renderNow();
   loader.dataset.done = 'true';
   loader.setAttribute('aria-busy', 'false');

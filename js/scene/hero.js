@@ -2,27 +2,11 @@
 import * as THREE from 'three';
 import { createViewer } from './renderer.js';
 import { buildDemoPC } from './demo-pc.js';
+import { createStage } from './stage.js';
 
 const TARGET = new THREE.Vector3(0, 23, 0);
 // Camera direction: front-left of the case, looking through the glass side.
 const VIEW_DIR = new THREE.Vector3(0.58, 0.3, 0.76).normalize();
-
-// Dark matte floor that fades out radially, so there is no visible horizon.
-function floorMaterial() {
-  const c = document.createElement('canvas');
-  c.width = c.height = 256;
-  const g = c.getContext('2d');
-  const grad = g.createRadialGradient(128, 128, 0, 128, 128, 128);
-  grad.addColorStop(0, '#fff');
-  grad.addColorStop(0.35, '#bbb');
-  grad.addColorStop(1, '#000');
-  g.fillStyle = grad;
-  g.fillRect(0, 0, 256, 256);
-  return new THREE.MeshStandardMaterial({
-    color: 0x0f1115, metalness: 0, roughness: 0.9,
-    alphaMap: new THREE.CanvasTexture(c), transparent: true, depthWrite: false,
-  });
-}
 
 /**
  * @param {HTMLCanvasElement} canvas
@@ -53,29 +37,8 @@ export async function startHero(canvas, { reducedMotion, onProgress, onQualityCh
   onProgress?.('Building scene', 0.5);
   scene.fog = new THREE.Fog(viewer.fogColor, 220, 520);
 
-  const key = new THREE.DirectionalLight(0xfff4ea, 2.2);
-  key.position.set(60, 110, 80);
-  key.castShadow = true;
-  key.shadow.mapSize.set(1024, 1024);
-  key.shadow.camera.left = -45;
-  key.shadow.camera.right = 45;
-  key.shadow.camera.top = 45;
-  key.shadow.camera.bottom = -45;
-  key.shadow.camera.near = 40;
-  key.shadow.camera.far = 260;
-  key.shadow.bias = -0.0004;
-  key.shadow.normalBias = 0.02;
-  key.shadow.radius = 4;
-  scene.add(key);
-
-  const rim = new THREE.DirectionalLight(0xbcd0ff, 1.1);
-  rim.position.set(-80, 60, -70);
-  scene.add(rim);
-
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(320, 320), floorMaterial());
-  floor.rotation.x = -Math.PI / 2;
-  floor.receiveShadow = true;
-  scene.add(floor);
+  const stage = createStage(scene);
+  stage.fit(TARGET, 34);
 
   const pc = buildDemoPC({ anisotropy: Math.min(8, viewer.maxAnisotropy) });
   scene.add(pc.group);

@@ -1,6 +1,8 @@
-// Shared viewer: renderer, image-based lighting, bloom, resize, render loop, quality levels.
+// Shared viewer: renderer, image-based lighting, bloom, resize, render loop, quality levels,
+// optional orbit controls and pause-when-hidden.
 // Units: 1 unit = 1 cm. Physically based lights, so point light intensity is in candela.
 import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -56,16 +58,23 @@ export function detectQuality() {
 
 /**
  * @param {HTMLCanvasElement} canvas
- * @param {{quality?: 'high'|'low', fov?: number, onQualityChange?: Function}} opts
+ * @param {{
+ *   quality?: 'high'|'low', fov?: number, onQualityChange?: Function, onResize?: Function,
+ *   controls?: boolean,      // OrbitControls with damping (limits are set by the caller)
+ *   autoPause?: boolean,     // stop the loop while the canvas is off screen or the tab is hidden
+ *   staticShadows?: boolean, // render the shadow map only after invalidateShadows()
+ * }} opts
  */
 export function createViewer(canvas, opts = {}) {
   let quality = opts.quality || detectQuality();
+  let qualityAuto = false; // true once the frame-rate monitor has dropped quality
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  if (opts.staticShadows) renderer.shadowMap.autoUpdate = false;
 
   const scene = new THREE.Scene();
   // Clear colour is tone-mapped only through the composer (high quality), so the
@@ -83,13 +92,22 @@ export function createViewer(canvas, opts = {}) {
   scene.environmentIntensity = 0.75;
 
   const camera = new THREE.PerspectiveCamera(opts.fov ?? 30, 1, 1, 2000);
+  camera.layers.enable(1); // layer 1: drawn but never ray-cast (glass, floor, guides)
+
+  let controls = null;
+  if (opts.controls) {
+    controls = new OrbitControls(camera, canvas);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+    controls.screenSpacePanning = true;
+  }
 
   // Bloom pipeline. MSAA render target keeps edges clean through post-processing.
   const composerTarget = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 });
   const composer = new EffectComposer(renderer, composerTarget);
   composer.addPass(new RenderPass(scene, camera));
-  // High threshold: only emissive LEDs (intensity > 1) bloom, not lit surfaces.
-  const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.7, 0.45, 0.92);
+  // Threshold well above 1: only emissive LEDs bloom, never lit surfaces or metal highlights.
+  const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.7, 0.45, 1.5);
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
 
@@ -125,6 +143,7 @@ export function createViewer(canvas, opts = {}) {
 
   const ro = new ResizeObserver(([entry]) => {
     const box = entry.contentRect;
+    if (!box.width || !box.height) return; // hidden (display: none)
     resize(box.width, box.height);
     if (!running) render();
   });
@@ -147,6 +166,7 @@ export function createViewer(canvas, opts = {}) {
     const dt = Math.min((now - (last || now)) / 1000, 0.1);
     last = now;
     onFrame?.(dt, now / 1000);
+    controls?.update();
     render();
     trackFps(dt);
   }
@@ -162,34 +182,76 @@ export function createViewer(canvas, opts = {}) {
       fps.acc = 0;
       if (!fps.checked && quality === 'high' && !opts.quality) {
         fps.checked = true;
-        if (fps.value < CONFIG.scene.lowFpsThreshold) setQuality('low');
+        if (fps.value < CONFIG.scene.lowFpsThreshold) {
+          qualityAuto = true;
+          setQuality('low');
+        }
       }
     }
   }
 
-  function start(frameFn) {
-    if (frameFn) onFrame = frameFn;
-    if (running) return;
+  // `wanted`: the caller asked for the loop. `visible`: auto-pause says it may run.
+  let wanted = false;
+  let visible = true;
+
+  function run() {
+    if (running || !wanted || !visible) return;
     running = true;
     last = 0;
+    fps.frames = 0;
+    fps.acc = 0;
+    fps.warmup = Math.max(fps.warmup, 0.5);
     rafId = requestAnimationFrame(tick);
   }
 
-  function stop() {
+  function halt() {
     running = false;
     cancelAnimationFrame(rafId);
   }
 
-  function setQuality(q) {
+  function start(frameFn) {
+    if (frameFn) onFrame = frameFn;
+    wanted = true;
+    run();
+  }
+
+  function stop() {
+    wanted = false;
+    halt();
+  }
+
+  let io = null;
+  let onScreen = true;
+  const onVisibility = () => setVisible(!document.hidden && onScreen);
+  function setVisible(v) {
+    visible = v;
+    if (v) run(); else halt();
+  }
+  if (opts.autoPause) {
+    io = new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; onVisibility(); });
+    io.observe(canvas);
+    document.addEventListener('visibilitychange', onVisibility);
+  }
+
+  /** @param {'high'|'low'} q  @param {{manual?: boolean}} o  manual = the user chose it; stops auto changes */
+  function setQuality(q, { manual = false } = {}) {
+    if (manual) {
+      fps.checked = true;
+      qualityAuto = false;
+    }
     if (q === quality) return;
     quality = q;
     applyQuality();
+    renderer.shadowMap.needsUpdate = true;
     opts.onQualityChange?.(quality);
   }
 
   function dispose() {
     stop();
     ro.disconnect();
+    io?.disconnect();
+    document.removeEventListener('visibilitychange', onVisibility);
+    controls?.dispose();
     scene.traverse((o) => {
       o.geometry?.dispose();
       if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => m.dispose());
@@ -206,11 +268,19 @@ export function createViewer(canvas, opts = {}) {
   applyQuality();
 
   return {
-    renderer, scene, camera, bloom,
+    renderer, scene, camera, bloom, controls,
     get quality() { return quality; },
+    get qualityAuto() { return qualityAuto; },
     get fps() { return fps.value; },
     get running() { return running; },
     render, start, stop, setQuality, dispose,
+    /** With staticShadows: re-render the shadow map on the next frame. */
+    invalidateShadows: () => { renderer.shadowMap.needsUpdate = true; },
+    /** Render one frame and return it as a PNG blob (must stay in the same task as render). */
+    capture: () => {
+      render();
+      return new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
+    },
     /** Compile shaders up front so the first frames don't stutter. */
     compile: () => {
       if (renderer.extensions.has('KHR_parallel_shader_compile')) return renderer.compileAsync(scene, camera);

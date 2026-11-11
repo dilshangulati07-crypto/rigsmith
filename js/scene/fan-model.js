@@ -2,11 +2,12 @@
 // Local +Z is the airflow (outflow) side. Rotate the returned group to orient it.
 import * as THREE from 'three';
 import { mat } from './materials.js';
+import { share } from './resources.js';
 
 const geoCache = new Map();
 
 function cached(key, make) {
-  if (!geoCache.has(key)) geoCache.set(key, make());
+  if (!geoCache.has(key)) geoCache.set(key, share(make()));
   return geoCache.get(key);
 }
 
@@ -64,6 +65,7 @@ export function makeFan(size = 12, depth = 2.5, opts = {}) {
   }
 
   const rotor = new THREE.Group();
+  rotor.name = 'rotor';
   const hub = new THREE.Mesh(
     cached(`hub:${size}:${depth}`, () => new THREE.CylinderGeometry(size * 0.14, size * 0.14, depth * 0.8, 32).rotateX(Math.PI / 2)),
     mat('plasticGloss'),

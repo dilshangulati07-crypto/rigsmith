@@ -40,7 +40,7 @@ function row(cat, value, worst, app) {
   const needed = cat.essential || (cat.id === 'cooler' && app.store.get('cpu') && app.store.get('cpu').coolerIncluded !== true);
 
   return html`
-    <li class="cat" data-status="${status}" ${current ? html`data-current="true"` : ''}>
+    <li class="cat" data-status="${status}" data-part-cat="${cat.id}" data-part-id="${!cat.multiple && items[0] ? items[0].id : ''}" ${current ? html`data-current="true"` : ''}>
       <button class="cat__btn" type="button" data-action="category" data-cat="${cat.id}" data-focus-key="cat-${cat.id}"
         ${current ? html`aria-current="true"` : ''}>
         <span class="cat__head">
@@ -60,7 +60,7 @@ function row(cat, value, worst, app) {
 function item(cat, p, i, count) {
   const key = `${cat.id}-${p.id}-${i}`;
   return html`
-    <li class="cat__item">
+    <li class="cat__item" ${cat.multiple ? html`data-part-cat="${cat.id}" data-part-id="${p.id}"` : ''}>
       ${cat.multiple && count > 1 ? html`<span class="cat__item-name">${p.name}</span>` : ''}
       <span class="cat__actions">
         <button class="linkbtn" type="button" data-action="details" data-id="${p.id}" data-focus-key="d-${key}">Details<span class="visually-hidden"> of ${p.name}</span></button>

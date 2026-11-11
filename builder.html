@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Builder · Rigsmith</title>
-  <meta name="description" content="Pick PC parts with a live compatibility check, reference prices and a performance estimate.">
+  <meta name="description" content="Pick PC parts with a live compatibility check, reference prices, a performance estimate and a 3D view of the build.">
   <meta name="theme-color" content="#0B0D10">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -52,6 +52,7 @@
     <nav class="builder__tabs" aria-label="Builder sections">
       <button class="tabbtn" type="button" data-tab="build" aria-controls="col-build" aria-pressed="false">Build</button>
       <button class="tabbtn" type="button" data-tab="parts" aria-controls="col-parts" aria-pressed="true">Parts</button>
+      <button class="tabbtn" type="button" data-tab="3d" aria-controls="view-3d" aria-pressed="false">3D</button>
       <button class="tabbtn" type="button" data-tab="summary" aria-controls="col-summary" aria-pressed="false">Summary</button>
     </nav>
 
@@ -61,20 +62,18 @@
         <div id="cat-list"></div>
       </aside>
 
-      <section class="col col--parts" id="col-parts" aria-label="Parts">
-        <div class="viewswitch" role="group" aria-label="Centre view">
-          <button class="viewswitch__btn" type="button" data-view="parts" aria-pressed="true">Parts</button>
-          <button class="viewswitch__btn" type="button" data-view="3d" aria-pressed="false" aria-keyshortcuts="V">3D view</button>
-        </div>
-        <div id="view-parts" class="browser"></div>
-        <div id="view-3d" class="viewer brackets" hidden>
-          <div class="viewer__ticks ticks" aria-hidden="true"></div>
-          <div class="viewer__empty">
-            <p class="label">3D view</p>
-            <p>The 3D build view goes here in the next phase. Until then, the list under “Your build” describes the same machine part by part.</p>
+      <section class="col col--parts" id="col-parts" aria-label="Parts and 3D view" data-view="parts" data-preview="on">
+        <div class="centrebar">
+          <div class="viewswitch" role="group" aria-label="Centre view">
+            <button class="viewswitch__btn" type="button" data-view="parts" aria-pressed="true">Parts</button>
+            <button class="viewswitch__btn" type="button" data-view="3d" aria-pressed="false" aria-keyshortcuts="V">3D view</button>
           </div>
-          <span class="viewer__corner mono" aria-hidden="true">VIEW 00 · PENDING</span>
+          <button class="linkbtn centrebar__preview" type="button" data-cmd="preview" aria-pressed="true" aria-controls="view-3d">3D preview</button>
         </div>
+        <section id="view-3d" class="viewer" aria-label="3D view" data-state="idle">
+          <div class="viewer__stage"><div class="viewer__loading"><p class="label">3D view</p><p class="viewer__loading-step mono">Starts when this panel is on screen</p></div></div>
+        </section>
+        <div id="view-parts" class="browser"></div>
       </section>
 
       <aside class="col col--summary" id="col-summary" aria-label="Build summary">
@@ -106,6 +105,9 @@
           <tr><th scope="row">Auto-fill</th><td><kbd>A</kbd></td></tr>
           <tr><th scope="row">Saved builds</th><td><kbd>B</kbd></td></tr>
           <tr><th scope="row">Parts / 3D view</th><td><kbd>V</kbd></td></tr>
+          <tr><th scope="row">3D: side panel on / off</th><td><kbd>G</kbd></td></tr>
+          <tr><th scope="row">3D: next camera view</th><td><kbd>C</kbd></td></tr>
+          <tr><th scope="row">3D: screenshot (PNG)</th><td><kbd>P</kbd></td></tr>
           <tr><th scope="row">Close a dialog</th><td><kbd>Esc</kbd></td></tr>
           <tr><th scope="row">This list</th><td><kbd>?</kbd></td></tr>
         </tbody>

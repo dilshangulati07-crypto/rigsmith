@@ -1,0 +1,4 @@
+{
+  "note": "Part ids that have a models/<id>.glb file. Models use 1 unit = 1 cm and the same axes and origin as the procedural model for their type (see js/scene/layout.js). Fan models are a single fan with a node named rotor; case models may name their window panel side-panel.",
+  "models": []
+}

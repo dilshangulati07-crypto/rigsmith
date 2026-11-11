@@ -1,5 +1,6 @@
 // Shared PBR materials. Each one is created once and reused across meshes.
 import * as THREE from 'three';
+import { share } from './resources.js';
 
 const cache = new Map();
 
@@ -11,17 +12,35 @@ const defs = {
     color: 0x1c232b, metalness: 0, roughness: 0.03, ior: 1.5,
     transparent: true, opacity: 0.16, depthWrite: false, envMapIntensity: 1.6,
   }),
+  // Acrylic: slightly darker and less clear than tempered glass.
+  glassTint: () => new THREE.MeshPhysicalMaterial({
+    color: 0x20262e, metalness: 0, roughness: 0.12, ior: 1.49,
+    transparent: true, opacity: 0.3, depthWrite: false, envMapIntensity: 1.2,
+  }),
   glassPrint: () => new THREE.MeshStandardMaterial({ color: 0x07080a, metalness: 0, roughness: 0.2 }),
   pcb: () => new THREE.MeshStandardMaterial({ color: 0x1a1e24, metalness: 0.2, roughness: 0.6 }),
   heatsink: () => new THREE.MeshStandardMaterial({ color: 0x3a404a, metalness: 0.85, roughness: 0.36 }),
-  aluLight: () => new THREE.MeshStandardMaterial({ color: 0x8f969f, metalness: 1, roughness: 0.3 }),
+  aluLight: () => new THREE.MeshStandardMaterial({ color: 0x8f969f, metalness: 1, roughness: 0.36 }),
   plastic: () => new THREE.MeshStandardMaterial({ color: 0x0e1013, metalness: 0.05, roughness: 0.55 }),
   plasticGloss: () => new THREE.MeshStandardMaterial({ color: 0x15181c, metalness: 0.1, roughness: 0.25 }),
   rubber: () => new THREE.MeshStandardMaterial({ color: 0x0b0c0e, metalness: 0, roughness: 0.9 }),
   sleeve: () => new THREE.MeshStandardMaterial({ color: 0x121418, metalness: 0, roughness: 0.85 }),
+  psuBody: () => new THREE.MeshStandardMaterial({ color: 0x141619, metalness: 0.5, roughness: 0.62 }),
+  brass: () => new THREE.MeshStandardMaterial({ color: 0xb08a4a, metalness: 1, roughness: 0.38 }),
+  gold: () => new THREE.MeshStandardMaterial({ color: 0xd4a640, metalness: 1, roughness: 0.28 }),
+  socketPga: () => new THREE.MeshStandardMaterial({ color: 0xd9d2c0, metalness: 0, roughness: 0.6 }),
+  chip: () => new THREE.MeshStandardMaterial({ color: 0x0c0d0f, metalness: 0.2, roughness: 0.42 }),
+  ssdPcb: () => new THREE.MeshStandardMaterial({ color: 0x10261d, metalness: 0.2, roughness: 0.55 }),
+  driveShell: () => new THREE.MeshStandardMaterial({ color: 0x2a2e35, metalness: 0.75, roughness: 0.38 }),
+  hddAlu: () => new THREE.MeshStandardMaterial({ color: 0x6c727b, metalness: 1, roughness: 0.4 }),
+  // Lines: not tone-mapped so they match the CSS palette exactly.
+  ghostLine: () => new THREE.LineDashedMaterial({ color: 0x8a93a0, dashSize: 1.2, gapSize: 0.8, transparent: true, opacity: 0.55, toneMapped: false }),
+  ghostLineFaint: () => new THREE.LineDashedMaterial({ color: 0x8a93a0, dashSize: 0.6, gapSize: 0.6, transparent: true, opacity: 0.28, toneMapped: false }),
+  highlight: () => new THREE.LineBasicMaterial({ color: 0xff5a1f, depthTest: false, transparent: true, opacity: 0.95, toneMapped: false }),
   // Emissive LEDs: intensity above the bloom threshold so only these glow.
   ledWhite: () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xd8e4f2, emissiveIntensity: 3 }),
-  ledAccent: () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xff5a1f, emissiveIntensity: 4 }),
+  // Orange has low luminance, so it needs more intensity than white to clear the bloom threshold.
+  ledAccent: () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xff5a1f, emissiveIntensity: 6 }),
 };
 
 /** Get a shared material by name. */
@@ -29,7 +48,7 @@ export function mat(name) {
   if (!cache.has(name)) {
     const make = defs[name];
     if (!make) throw new Error(`Unknown material: ${name}`);
-    cache.set(name, make());
+    cache.set(name, share(make()));
   }
   return cache.get(name);
 }
@@ -54,11 +73,11 @@ export function perforationTexture(anisotropy = 4) {
   const tex = new THREE.CanvasTexture(c);
   tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
   tex.anisotropy = anisotropy;
-  cache.set('tex:perf', tex);
+  cache.set('tex:perf', share(tex));
   return tex;
 }
 
-/** Mesh panel material with holes, repeated so each tile is `pitch` cm. */
+/** Mesh panel material with holes, repeated so each tile is `pitch` cm. Owned by the caller (not shared). */
 export function meshPanelMaterial(widthCm, heightCm, pitch = 0.7, anisotropy = 4) {
   const tex = perforationTexture(anisotropy).clone();
   tex.repeat.set(widthCm / pitch, heightCm / pitch);
