@@ -134,18 +134,16 @@ export function buildMotherboard(part) {
 
   // Power connectors.
   r(L.atx24, 0, 1.6, mat('plastic'));
-  r(L.eps, 0, 1.3, mat('plastic'));
+  for (const e of L.eps) r(e, 0, 1.3, mat('plastic'));
 
-  // SATA ports on the front edge, headers along the bottom edge, CMOS battery.
+  // SATA ports on the front edge, headers (from boardLayout), CMOS battery.
   const small = [];
-  const sata = Math.ceil((part?.sataPorts ?? 4) / 2);
-  const sataV0 = L.ff === 'ITX' ? 15.0 : L.h - 9.5;
-  for (let i = 0; i < Math.min(sata, 3); i++) small.push([L.w - 1.0, L.w - 0.1, -(sataV0 + i * 1.3 + 1.0), -(sataV0 + i * 1.3), 0, 0.9]);
-  if (L.ff !== 'ITX') {
-    for (let u = 2.0; u + 1.3 < L.w - 2; u += (L.w - 4) / 6) small.push([u, u + 1.3, -(L.h - 0.2), -(L.h - 0.75), 0, 0.85]);
-  }
-  for (const u of [L.vrm[0].u1 + 0.4, L.w - 2.8]) small.push([u, u + 0.9, -0.95, -0.4, 0, 0.75]);
+  for (const p of L.sata) small.push([p.u - 0.45, p.u + 0.45, -(p.v + 0.5), -(p.v - 0.5), p.dz - 0.2, p.dz + 0.2]);
+  for (const hd of L.headers) small.push([hd.u - hd.du / 2, hd.u + hd.du / 2, -(hd.v + hd.dv / 2), -(hd.v - hd.dv / 2), 0, hd.kind === 'usb3' ? 0.9 : 0.75]);
   instancedBoxes(g, small, mat('plastic'));
+  const pins = [];
+  for (const hd of L.headers) pins.push([hd.u - hd.du / 2 + 0.1, hd.u + hd.du / 2 - 0.1, -(hd.v + hd.dv / 2 - 0.1), -(hd.v - hd.dv / 2 + 0.1), 0.75, 0.82]);
+  instancedBoxes(g, pins, mat('gold'), { cast: false });
   if (L.ff !== 'ITX') {
     const bat = new THREE.Mesh(cylinderZ(1.0, 0.32, 28), mat('aluLight'));
     bat.position.set(14.2, -(L.h - 2.8), 0.16);

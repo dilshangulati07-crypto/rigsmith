@@ -527,6 +527,82 @@ select.input { padding-right: 6px; }
 .hand[data-dragging="true"] .tray__part { cursor: grabbing; }
 .viewer[data-mode="hand"] .viewer__hover { display: none; }
 
+/* ---------- Build by hand: cables ---------- */
+.vbtn--accent { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
+.vbtn--accent:hover { color: var(--accent-ink); border-color: var(--accent); filter: brightness(1.08); }
+.vbtn--accent:focus-visible { outline-color: var(--text); }
+.hand[data-complete="true"] .tray { display: none; }
+.cab { margin-top: 10px; padding: var(--s-2) 10px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-sm); container-type: inline-size; }
+.cab[hidden] { display: none; }
+.cab__head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.cab__head .label { margin: 0; color: var(--text); }
+.cab__count { margin: 0; font-size: 12px; color: var(--muted); }
+.cab__tools { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: 8px 0 10px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+.cab__field { display: inline-flex; align-items: center; gap: 6px; }
+.cab__field[hidden] { display: none; }
+.cab__field .label { font-size: 12px; }
+.cab__field select { height: 30px; background: var(--panel-2); color: var(--text); border: 1px solid var(--line); border-radius: var(--r-sm); font: inherit; font-size: 13px; padding: 0 6px; }
+.cab__field input[type="color"] { width: 34px; height: 30px; padding: 2px; background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-sm); cursor: pointer; }
+.cab__field select:focus-visible,
+.cab__field input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.cab__sel { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; font-size: 12.5px; color: var(--text); }
+.cab__sel:empty { display: none; }
+.cab__sel .linkbtn { font-size: 12px; }
+/* One column (score and Power on first) until the panel has room for the list beside them. */
+.cab__body { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-3); align-items: start; }
+.cab__side { order: -1; }
+@container (min-width: 760px) {
+  .cab__body { grid-template-columns: minmax(0, 1fr) minmax(240px, 300px); }
+  .cab__side { order: 0; position: sticky; top: calc(var(--topbar-h, 56px) + 8px); }
+}
+@container (max-width: 420px) {
+  .cab__item { grid-template-columns: 8px minmax(0, 1fr); }
+  .cab__act { grid-column: 2; }
+}
+.cab__list { display: grid; gap: 10px; min-width: 0; }
+.cab__group .label { margin: 0 0 4px; font-size: 12px; }
+.cab__items { margin: 0; padding: 0; list-style: none; border: 1px solid var(--line); border-radius: var(--r-sm); }
+.cab__item { display: grid; grid-template-columns: 8px minmax(0, 1fr) auto; gap: 10px; align-items: start; padding: 7px 8px; }
+.cab__item + .cab__item { border-top: 1px solid var(--line); }
+.cab__item[data-selected="true"] { background: var(--panel-2); box-shadow: inset 2px 0 0 var(--accent); }
+.cab__dot { width: 8px; height: 8px; margin-top: 5px; border: 1px solid var(--muted); border-radius: 50%; }
+.cab__item[data-state="need"] .cab__dot { border-color: var(--text); }
+.cab__item[data-state="on"] .cab__dot { background: var(--ok); border-color: var(--ok); }
+.cab__item[data-state="warn"] .cab__dot { background: var(--warn); border-color: var(--warn); }
+.cab__item[data-state="off"] .cab__dot { border-color: var(--error); }
+.cab__text { min-width: 0; }
+.cab__text p { margin: 0; }
+.cab__name { font-size: 13px; line-height: 1.4; color: var(--text); overflow-wrap: anywhere; }
+.cab__to { color: var(--muted); }
+.cab__meta { font-size: 11.5px; line-height: 1.4; color: var(--muted); }
+.cab__tag { font-family: var(--font-head); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.cab__item[data-state="need"] .cab__tag { color: var(--text); }
+.cab__item[data-state="off"] .cab__tag { color: var(--error); }
+.cab__warn { margin-top: 2px !important; font-size: 12px; color: var(--warn); }
+.cab__act { display: flex; gap: 10px; white-space: nowrap; }
+.cab__act .linkbtn { font-size: 12px; }
+.cab__notes { margin: 0; font-size: 12px; line-height: 1.45; }
+.cab__side { display: grid; gap: 10px; min-width: 0; }
+.cab__score { padding: 10px; background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-sm); }
+.cab__gauge { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.cab__gauge .label { margin: 0; font-size: 12px; }
+.cab__num { margin: 0; font-size: 13px; color: var(--muted); }
+.cab__num span { font-size: 26px; color: var(--text); }
+.cab__bar { position: relative; height: 4px; margin: 6px 0 8px; background: var(--line); border-radius: 2px; overflow: hidden;
+  background-image: repeating-linear-gradient(90deg, transparent 0 calc(10% - 1px), var(--bg) calc(10% - 1px) 10%); }
+.cab__bar span { position: absolute; inset: 0 auto 0 0; background: var(--ok); transition: width var(--dur) var(--ease); }
+.cab__reasons { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; font-size: 12px; line-height: 1.4; color: var(--muted); }
+.cab__reasons li { padding-left: 8px; border-left: 2px solid var(--line-strong); }
+.cab__reasons li[data-level="ok"] { border-left-color: var(--ok); }
+.cab__reasons li[data-level="warn"] { border-left-color: var(--warn); color: var(--text); }
+.cab__reasons li[data-level="error"] { border-left-color: var(--error); color: var(--text); }
+.cab__reasons .mono { color: var(--text); }
+.cab__empty { margin: 0; font-size: 12.5px; line-height: 1.45; }
+.cab__finish { display: grid; gap: 8px; }
+.cab__power { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.cab__power .hand__why { flex: 1 1 140px; margin: 0; line-height: 1.4; }
+.cab__close { display: flex; flex-wrap: wrap; gap: 6px; }
+
 /* Part under the pointer in 3D, outlined in the list and the browser. */
 .cat.is-3d-hover { box-shadow: inset 2px 0 0 var(--accent); }
 .cat__item.is-3d-hover .cat__actions { color: var(--text); }
@@ -814,6 +890,7 @@ details.issues-group .issues { margin-top: var(--s-2); }
   .hand__tools { gap: 4px; }
   .hand__tools .vbtn { padding: 0 6px; letter-spacing: .05em; }
   .tray__item { flex-basis: 156px; }
+  .cab__tools .vbtn { padding: 0 6px; letter-spacing: .05em; }
   .viewer__range { flex-basis: 100%; }
   .viewer__range input { flex: 1; width: auto; }
   .viewer__field { flex-basis: 100%; }

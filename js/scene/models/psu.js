@@ -6,7 +6,7 @@ import * as THREE from 'three';
 import { mat, meshPanelMaterial } from '../materials.js';
 import { boxMM, instancedBoxes, labelTexture } from '../resources.js';
 import { makeFan } from '../fan-model.js';
-import { psuDims } from '../layout.js';
+import { psuDims, psuSockets } from '../layout.js';
 
 export function buildPSU(part, { anisotropy = 4 } = {}) {
   const { len, h, w } = psuDims(part);
@@ -42,17 +42,9 @@ export function buildPSU(part, { anisotropy = 4 } = {}) {
   boxMM(g, x0 - 0.2, x0, -0.7, 0.7, z1 - 5.6, z1 - 4.8, mat('plasticGloss'));
 
   // Inside face: modular sockets, or a sleeved cable exit on non-modular units.
-  if (part?.modular === 'full' || part?.modular === 'semi') {
-    const sockets = [];
-    const rows = h > 7 ? 2 : 1;
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < 5; c++) {
-        const zc = z0 + 1.3 + c * ((w - 2.6) / 4);
-        const yc = rows === 1 ? 0 : (r ? -1.5 : 1.5);
-        sockets.push([x1, x1 + 0.12, yc - 0.6, yc + 0.6, zc - 0.9, zc + 0.9]);
-      }
-    }
-    instancedBoxes(g, sockets, mat('plastic'));
+  const face = psuSockets(part);
+  if (face.modular) {
+    instancedBoxes(g, face.sockets.map(({ y, z }) => [x1, x1 + 0.12, y - 0.6, y + 0.6, z - 0.9, z + 0.9]), mat('plastic'));
   } else {
     boxMM(g, x1, x1 + 0.3, -1.6, 1.6, -2, 2, mat('rubber'));
   }

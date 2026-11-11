@@ -25,6 +25,7 @@ export const ENUMS = {
     'Cybenetics Bronze', 'Cybenetics Silver', 'Cybenetics Gold', 'Cybenetics Platinum', 'Cybenetics Titanium'],
   psuFormFactor: ['ATX', 'SFX', 'SFX-L'],
   gpuPower: ['6-pin', '8-pin', '16-pin'],
+  cpuPower: ['8-pin', '4-pin'],
   chipMaker: ['NVIDIA', 'AMD', 'Intel'],
   caseType: ['full-tower', 'mid-tower', 'matx', 'itx'],
   sidePanel: ['glass', 'mesh', 'solid', 'acrylic'],
@@ -91,11 +92,12 @@ const OPTIONAL = {
     maxPowerW: 'int', igpuName: 'string?', coolerIncluded: 'bool?', generation: 'string',
     architecture: 'string', launchYear: 'int',
   },
+  motherboard: { cpuPower: 'enum:cpuPower[]' },
   ram: { modules: 'int', moduleGB: 'int', casLatency: 'int', rgb: 'bool' },
   gpu: { chipMaker: 'enum:chipMaker', chip: 'string', launchYear: 'int', fans: 'int', thicknessMM: 'number' },
   psu: { formFactor: 'enum:psuFormFactor', atxVersion: 'string?' },
   // psuFormFactors null = the maker page gives only a PSU length, not a type.
-  case: { caseType: 'enum:caseType', psuFormFactors: 'enum:psuFormFactor[]?', sidePanel: 'enum:sidePanel', frontPanel: 'enum:frontPanel?', boardMount: 'enum:boardMount?' },
+  case: { caseType: 'enum:caseType', psuFormFactors: 'enum:psuFormFactor[]?', sidePanel: 'enum:sidePanel', frontPanel: 'enum:frontPanel?', boardMount: 'enum:boardMount?', frontIO: 'object' },
   cooler: { fans: 'int', fanSizeMM: 'int', rgb: 'bool' },
   storage: { interface: 'string', pcieGen: 'int', readMBs: 'int', writeMBs: 'int', rpm: 'int' },
   fans: { airflowCFM: 'number?', staticPressureMMH2O: 'number?', noiseDBA: 'number?' },
@@ -219,6 +221,10 @@ const SANITY = {
       });
       if (!p.pcieSlots.some((s) => s.size === 'x16')) warn(w, 'no x16 slot listed');
     }
+    if (Array.isArray(p.cpuPower)) {
+      if (p.cpuPower[0] !== '8-pin') err(w, 'cpuPower: the first CPU power socket is an 8-pin');
+      if (p.cpuPower.length > 3) err(w, 'cpuPower: more than 3 sockets');
+    }
   },
   ram(p, w) {
     const m = /^(\d+)x(\d+)$/.exec(p.kit || '');
@@ -276,6 +282,10 @@ const SANITY = {
           if (!Number.isInteger(n) || n < 1 || n > 4) err(w, `fanMounts.${pos}.${s} count ${n} invalid`);
         }
       }
+    }
+    if (p.frontIO) {
+      for (const k of Object.keys(p.frontIO)) if (!['usbC', 'usbA'].includes(k)) err(w, `frontIO.${k} unknown`);
+      for (const k of ['usbC', 'usbA']) if (!Number.isInteger(p.frontIO[k]) || p.frontIO[k] < 0 || p.frontIO[k] > 4) err(w, `frontIO.${k} must be 0..4`);
     }
     nestedNulls(w, p, 'drivebays');
     nestedNulls(w, p, 'dimensionsMM');

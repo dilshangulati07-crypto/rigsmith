@@ -1,7 +1,7 @@
 {
   "category": "case",
   "schemaVersion": 1,
-  "notes": "refPriceTHB is an approximate Thai street price entered by hand, not a live price. Check before buying. Specs are from the maker page in specSource (checked 2026-11-11); null = not stated there or the page could not be read. maxGPULengthMM / maxCoolerHeightMM = the largest figure the maker prints (often without a front radiator). radiatorSupport: one entry per position; sizesMM = every size the page lists, maxMM = largest (some pages give only a maximum). fanMounts: { position: { fanSizeMM: count } }; \"2x 120/140\" = two of either size; shroud = on top of the PSU shroud; a missing position has no mount; bracket and accessory mounts are not counted. drivebays: \"3.5\" = mounts that take a 3.5in drive, \"2.5\" = every 2.5in mount including combo bays; 0 = the page lists drive mounts and none of that size. dimensionsMM = depth x width x height as printed. psuFormFactors null = the page gives only a PSU length. frontPanel = what the front face is (mesh, glass or solid), used by the 3D viewer; entered from product photos and not re-checked against specSource, null = not sure. boardMount = how the motherboard is mounted when it is not the usual tower layout: \"io-down\" = board on the side with its rear I/O facing the floor and the graphics card standing upright in its slot (Corsair 2000D AIRFLOW, per its manual and reviews); missing = standard tower layout.",
+  "notes": "refPriceTHB is an approximate Thai street price entered by hand, not a live price. Check before buying. Specs are from the maker page in specSource (checked 2026-11-11); null = not stated there or the page could not be read. maxGPULengthMM / maxCoolerHeightMM = the largest figure the maker prints (often without a front radiator). radiatorSupport: one entry per position; sizesMM = every size the page lists, maxMM = largest (some pages give only a maximum). fanMounts: { position: { fanSizeMM: count } }; \"2x 120/140\" = two of either size; shroud = on top of the PSU shroud; a missing position has no mount; bracket and accessory mounts are not counted. drivebays: \"3.5\" = mounts that take a 3.5in drive, \"2.5\" = every 2.5in mount including combo bays; 0 = the page lists drive mounts and none of that size. dimensionsMM = depth x width x height as printed. psuFormFactors null = the page gives only a PSU length. frontPanel = what the front face is (mesh, glass or solid), used by the 3D viewer; entered from product photos and not re-checked against specSource, null = not sure. boardMount = how the motherboard is mounted when it is not the usual tower layout: \"io-down\" = board on the side with its rear I/O facing the floor and the graphics card standing upright in its slot (Corsair 2000D AIRFLOW, per its manual and reviews); missing = standard tower layout. frontIO (optional): front-panel USB-C and USB-A port counts; left out where it was not checked.",
   "parts": [
     {
       "id": "corsair-4000d-airflow",
@@ -73,7 +73,11 @@
       "frontPanel": "mesh",
       "specSource": "https://www.corsair.com/us/en/p/pc-cases/cc-9011200-ww/4000d-airflow-tempered-glass-mid-tower-atx-case-black-cc-9011200-ww",
       "specSourceType": "official",
-      "sku": "CC-9011200-WW"
+      "sku": "CC-9011200-WW",
+      "frontIO": {
+        "usbC": 1,
+        "usbA": 1
+      }
     },
     {
       "id": "corsair-3000d-airflow",
@@ -228,7 +232,11 @@
       "frontPanel": "mesh",
       "specSource": "https://www.corsair.com/us/en/p/pc-cases/cc-9011210-ww/5000d-airflow-tempered-glass-mid-tower-atx-pc-case-black-cc-9011210-ww",
       "specSourceType": "official",
-      "sku": "CC-9011210-WW"
+      "sku": "CC-9011210-WW",
+      "frontIO": {
+        "usbC": 1,
+        "usbA": 4
+      }
     },
     {
       "id": "corsair-7000d-airflow",
@@ -280,7 +288,11 @@
       "frontPanel": "mesh",
       "specSource": "https://www.corsair.com/us/en/p/pc-cases/cc-9011218-ww/7000d-airflow-full-tower-atx-pc-case-black-cc-9011218-ww",
       "specSourceType": "official",
-      "sku": "CC-9011218-WW"
+      "sku": "CC-9011218-WW",
+      "frontIO": {
+        "usbC": 1,
+        "usbA": 4
+      }
     },
     {
       "id": "corsair-2000d-airflow",
@@ -327,7 +339,11 @@
       "boardMount": "io-down",
       "specSource": "https://www.corsair.com/us/en/p/pc-cases/cc-9011244-ww/2000d-airflow-mini-itx-pc-case-black-cc-9011244-ww",
       "specSourceType": "official",
-      "sku": "CC-9011244-WW"
+      "sku": "CC-9011244-WW",
+      "frontIO": {
+        "usbC": 1,
+        "usbA": 2
+      }
     },
     {
       "id": "nzxt-h5-flow",
@@ -372,7 +388,11 @@
         "ATX"
       ],
       "sidePanel": "glass",
-      "frontPanel": "mesh"
+      "frontPanel": "mesh",
+      "frontIO": {
+        "usbC": 1,
+        "usbA": 1
+      }
     },
     {
       "id": "nzxt-h7-flow",
@@ -417,7 +437,11 @@
         "ATX"
       ],
       "sidePanel": "glass",
-      "frontPanel": "mesh"
+      "frontPanel": "mesh",
+      "frontIO": {
+        "usbC": 1,
+        "usbA": 2
+      }
     },
     {
       "id": "nzxt-h9-flow-2025",
@@ -565,7 +589,11 @@
       "sidePanel": "glass",
       "frontPanel": "glass",
       "specSource": "https://lian-li.com/product/o11-dynamic-evo/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "frontIO": {
+        "usbC": 1,
+        "usbA": 2
+      }
     },
     {
       "id": "lian-li-o11-dynamic-evo-xl",
@@ -727,7 +755,11 @@
       "sidePanel": "glass",
       "frontPanel": "glass",
       "specSource": "https://lian-li.com/product/o11-vision/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "frontIO": {
+        "usbC": 1,
+        "usbA": 2
+      }
     },
     {
       "id": "lian-li-lancool-216",
@@ -809,7 +841,11 @@
       "sidePanel": "glass",
       "frontPanel": "mesh",
       "specSource": "https://lian-li.com/product/lancool-216/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "frontIO": {
+        "usbC": 1,
+        "usbA": 2
+      }
     },
     {
       "id": "lian-li-lancool-207",
@@ -1076,7 +1112,11 @@
       "sidePanel": "glass",
       "frontPanel": null,
       "specSource": "https://www.fractal-design.com/products/cases/north/north/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "frontIO": {
+        "usbC": 1,
+        "usbA": 2
+      }
     },
     {
       "id": "fractal-design-pop-air",
@@ -1236,7 +1276,11 @@
       "sidePanel": "glass",
       "frontPanel": "mesh",
       "specSource": "https://www.fractal-design.com/products/cases/meshify/meshify-2-compact/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "frontIO": {
+        "usbC": 1,
+        "usbA": 2
+      }
     },
     {
       "id": "fractal-design-terra",
@@ -1402,7 +1446,11 @@
       "sidePanel": "acrylic",
       "frontPanel": null,
       "specSource": "https://www.coolermaster.com/en-global/products/masterbox-q300l.html",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "frontIO": {
+        "usbC": 0,
+        "usbA": 2
+      }
     },
     {
       "id": "cooler-master-masterbox-nr200p",
@@ -1478,7 +1526,11 @@
       "sidePanel": "glass",
       "frontPanel": null,
       "specSource": "https://www.coolermaster.com/en-global/products/masterbox-nr200p.html",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "frontIO": {
+        "usbC": 1,
+        "usbA": 2
+      }
     },
     {
       "id": "cooler-master-masterbox-td500-mesh-v2",
@@ -1558,7 +1610,11 @@
       "sidePanel": "glass",
       "frontPanel": "mesh",
       "specSource": "https://www.coolermaster.com/en-global/products/masterbox-td500-mesh-v2.html",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "frontIO": {
+        "usbC": 1,
+        "usbA": 2
+      }
     },
     {
       "id": "be-quiet-pure-base-500dx",
@@ -1599,7 +1655,11 @@
         "ATX"
       ],
       "sidePanel": "glass",
-      "frontPanel": "mesh"
+      "frontPanel": "mesh",
+      "frontIO": {
+        "usbC": 1,
+        "usbA": 2
+      }
     },
     {
       "id": "hyte-y60",
@@ -1631,7 +1691,11 @@
         "ATX"
       ],
       "sidePanel": "glass",
-      "frontPanel": "glass"
+      "frontPanel": "glass",
+      "frontIO": {
+        "usbC": 1,
+        "usbA": 2
+      }
     },
     {
       "id": "phanteks-eclipse-g360a",
@@ -1954,7 +2018,11 @@
       "frontPanel": "mesh",
       "specSource": "https://www.deepcool.com/products/Cases/CH560-New-Generation-of-Airflow-Case/2023/17101.shtml",
       "specSourceType": "official",
-      "sku": "R-CH560-BKAPE4-G-1"
+      "sku": "R-CH560-BKAPE4-G-1",
+      "frontIO": {
+        "usbC": 1,
+        "usbA": 2
+      }
     },
     {
       "id": "deepcool-cc560",

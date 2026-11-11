@@ -40,6 +40,29 @@ export function psuDims(psu) {
   return { ff: 'ATX', len: watt > 1000 ? 18 : watt > 750 ? 16 : 14, h: 8.6, w: 15 };
 }
 
+/**
+ * Cable sockets on the PSU's inside face (PSU-local: face at x = len / 2, see models/psu.js):
+ * a grid on modular units, or one cable exit on non-modular units (modular unknown = exit).
+ */
+export function psuSockets(psu) {
+  const { len, h, w } = psuDims(psu);
+  const modular = psu?.modular === 'full' || psu?.modular === 'semi';
+  if (!modular) return { x: len / 2, modular, sockets: [{ y: 0, z: 0 }] };
+  const rows = h > 7 ? 2 : 1;
+  const sockets = [];
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < 5; c++) sockets.push({ y: rows === 1 ? 0 : (r ? -1.5 : 1.5), z: -w / 2 + 1.3 + c * ((w - 2.6) / 4) });
+  }
+  return { x: len / 2, modular, sockets };
+}
+
+/** SATA power and data sockets at a drive's -X end (drive-local, see models/storage.js), or null. */
+export function driveSockets(ff) {
+  if (ff === '2.5in') return { x: -DRIVE_DIMS[ff][0] / 2, power: [0, -1.4, 0], data: [0, 0.45, 0] };
+  if (ff === '3.5in') return { x: -DRIVE_DIMS[ff][0] / 2, power: [0, -2.0, -0.9], data: [0, 0.4, -0.9] };
+  return null;
+}
+
 // Drive sizes (cm): long side (x), short side (y), thickness (z).
 export const DRIVE_DIMS = {
   'M.2 2280': [8.0, 2.2, 0.24],
@@ -133,6 +156,16 @@ export function caseLayout(pcCase) {
     psuOpening = { z0: zc - 4.3, z1: zc + 4.3, y0: WALL, y1: WALL + 15 };
   }
 
+  // Cable cut-outs under the board for the bottom-edge headers: slots in the shroud top next
+  // to the tray, or in the tray itself when there is room behind it. { kind, x, w, y, z }.
+  const cutouts = [];
+  if (!ioDown && shroud) {
+    const xs = [shroud.x0 + 11, Math.min(boardX0 + big.w - 3.5, shroud.x1 - 4)];
+    for (const x of xs) if (!cutouts.some((c) => Math.abs(c.x - x) < 10)) cutouts.push({ kind: 'shroud', x: r2(x), w: x === xs[0] ? 10 : 5, y: shroud.y1, z: r2(shroud.z0 + 0.95) });
+  } else if (!ioDown && rearSpace >= 1.2 && largestBottom - 1.2 >= WALL + 1.0) {
+    for (const t of [0.16, 0.5, 0.84]) cutouts.push({ kind: 'tray', x: r2(boardX0 + big.w * t), w: 4, y: r2(largestBottom - 1.2), z: trayZ });
+  }
+
   return {
     type, D, W, H, generic: !known, ghost: !pcCase,
     sidePanel: pcCase?.sidePanel ?? 'glass',
@@ -146,6 +179,7 @@ export function caseLayout(pcCase) {
     grommets: !ioDown && grommetX < D / 2 - WALL - frontReserve - 1
       ? [0.2, 0.5, 0.8].map((t) => ({ x: grommetX, y: (shroud ? shroud.y1 : WALL) + 3 + t * (boardTopY - (shroud ? shroud.y1 : WALL) - 6) }))
       : [],
+    cutouts,
     // Rear-panel openings, in world coordinates.
     io, rearFan, psuOpening,
     driveBays: pcCase?.drivebays ?? null,

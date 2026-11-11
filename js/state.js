@@ -176,18 +176,27 @@ export class BuildStore extends EventTarget {
 export const buildStore = new BuildStore();
 
 // ---------------------------------------------------------------- build-by-hand progress
-// Which pieces are in the case (keys from js/scene/assembly.js, in install order), with
-// undo/redo over every action (install, reset) and the 3D view mode. Saved to localStorage
-// so a reload continues where the user left off. Fires 'change' with detail { action }.
+// Which pieces are in the case (keys from js/scene/assembly.js, in install order), the cables
+// connected (ids from js/scene/cable-plan.js, each with its moved waypoints, or null for the
+// tidy auto-route) and whether the side panel is closed, with undo/redo over every action;
+// plus the 3D view mode and the cable style. Saved to localStorage so a reload continues
+// where the user left off. Fires 'change' with detail { action }.
 const ASSEMBLY_KEY = 'rigsmith.assembly.v1';
 const HISTORY_LIMIT = 200;
+export const CABLE_STYLES = Object.freeze(['black', 'white', 'custom', 'sleeved']);
+const DEFAULT_STYLE = Object.freeze({ kind: 'black', color: '#ff5a1f' });
+
+const snap = (installed, cables, closed) => ({ installed, cables, closed });
+const copyCables = (c) => Object.fromEntries(Object.entries(c).map(([k, v]) => [k, { pts: v.pts ? v.pts.map((p) => [...p]) : null, src: v.src ?? null, dst: v.dst ?? null }]));
+const isHex = (v) => typeof v === 'string' && /^#[0-9a-f]{6}$/i.test(v);
 
 export class AssemblyProgress extends EventTarget {
-  #installed = [];
+  #now = snap([], {}, false);
   #undo = [];
   #redo = [];
   #mode = 'viewer';
   #caseId = null;
+  #style = { ...DEFAULT_STYLE };
   #storage;
   #key;
 
@@ -197,11 +206,15 @@ export class AssemblyProgress extends EventTarget {
     this.#key = storageKey;
   }
 
-  get installed() { return [...this.#installed]; }
+  get installed() { return [...this.#now.installed]; }
+  /** Connected cables: { id: { pts: [[x,y,z]...] | null, src, dst } } (a copy). */
+  get cables() { return copyCables(this.#now.cables); }
+  get closed() { return this.#now.closed; }
   get mode() { return this.#mode; }
   get caseId() { return this.#caseId; }
   get canUndo() { return this.#undo.length > 0; }
   get canRedo() { return this.#redo.length > 0; }
+  get cableStyle() { return { ...this.#style }; }
 
   setMode(mode) {
     if (mode !== 'viewer' && mode !== 'hand') return;
@@ -210,62 +223,115 @@ export class AssemblyProgress extends EventTarget {
     this.#emit('mode');
   }
 
+  /** Cable look (not part of undo): { kind: black | white | custom | sleeved, color: '#rrggbb' }. */
+  setCableStyle(patch) {
+    const kind = CABLE_STYLES.includes(patch.kind) ? patch.kind : this.#style.kind;
+    const color = isHex(patch.color) ? patch.color.toLowerCase() : this.#style.color;
+    if (kind === this.#style.kind && color === this.#style.color) return;
+    this.#style = { kind, color };
+    this.#emit('style');
+  }
+
   #commit(next, action) {
-    this.#undo.push(this.#installed);
+    this.#undo.push(this.#now);
     if (this.#undo.length > HISTORY_LIMIT) this.#undo.shift();
     this.#redo = [];
-    this.#installed = next;
+    this.#now = next;
     this.#emit(action);
   }
 
   install(key) {
-    if (this.#installed.includes(key)) return false;
-    this.#commit([...this.#installed, key], 'install');
+    if (this.#now.installed.includes(key)) return false;
+    this.#commit(snap([...this.#now.installed, key], this.#now.cables, this.#now.closed), 'install');
+    return true;
+  }
+
+  /** Connect one cable on its tidy route; `ends` = { src, dst } port overrides (or nulls). */
+  connect(id, { src = null, dst = null } = {}) {
+    if (this.#now.cables[id]) return false;
+    this.#commit(snap(this.#now.installed, { ...copyCables(this.#now.cables), [id]: { pts: null, src, dst } }, this.#now.closed), 'cable');
+    return true;
+  }
+
+  /** Connect every cable in `ends` ({ id: { src, dst } }) on tidy routes, as one step. */
+  connectAll(ends) {
+    const next = {};
+    for (const [id, e] of Object.entries(ends)) next[id] = { pts: null, src: e?.src ?? null, dst: e?.dst ?? null };
+    if (JSON.stringify(next) === JSON.stringify(this.#now.cables)) return false;
+    this.#commit(snap(this.#now.installed, next, this.#now.closed), 'cable');
+    return true;
+  }
+
+  disconnect(id) {
+    if (!this.#now.cables[id]) return false;
+    const next = copyCables(this.#now.cables);
+    delete next[id];
+    this.#commit(snap(this.#now.installed, next, this.#now.closed && Object.keys(next).length > 0), 'cable');
+    return true;
+  }
+
+  /** Moved waypoints for a connected cable (null = back to the tidy route). */
+  setRoute(id, pts) {
+    if (!this.#now.cables[id]) return false;
+    const next = copyCables(this.#now.cables);
+    next[id].pts = pts ? pts.map((p) => p.map((v) => Math.round(v * 100) / 100)) : null;
+    this.#commit(snap(this.#now.installed, next, this.#now.closed), 'cable');
+    return true;
+  }
+
+  setClosed(closed) {
+    if (!!closed === this.#now.closed) return false;
+    this.#commit(snap(this.#now.installed, this.#now.cables, !!closed), 'close');
     return true;
   }
 
   reset() {
-    if (!this.#installed.length) return false;
-    this.#commit([], 'reset');
+    if (!this.#now.installed.length && !Object.keys(this.#now.cables).length && !this.#now.closed) return false;
+    this.#commit(snap([], {}, false), 'reset');
     return true;
   }
 
   undo() {
     if (!this.#undo.length) return false;
-    this.#redo.push(this.#installed);
-    this.#installed = this.#undo.pop();
+    this.#redo.push(this.#now);
+    this.#now = this.#undo.pop();
     this.#emit('undo');
     return true;
   }
 
   redo() {
     if (!this.#redo.length) return false;
-    this.#undo.push(this.#installed);
-    this.#installed = this.#redo.pop();
+    this.#undo.push(this.#now);
+    this.#now = this.#redo.pop();
     this.#emit('redo');
     return true;
   }
 
   /**
-   * Fit the progress to the current build: `keep(keys)` returns the keys that still apply.
-   * A different case starts over (with no history). Silent unless something changed.
+   * Fit the progress to the current build: `keep(keys)` returns the piece keys that still
+   * apply, `keepCables(cables)` the cables that still apply. A different case starts over
+   * (with no history). Silent unless something changed.
    */
-  sync(caseId, keep) {
+  sync(caseId, keep, keepCables = (c) => c) {
     if (caseId !== this.#caseId) {
-      const had = this.#installed.length || this.#undo.length;
+      const had = this.#now.installed.length || this.#undo.length;
       this.#caseId = caseId;
-      this.#installed = [];
+      this.#now = snap([], {}, false);
       this.#undo = [];
       this.#redo = [];
       if (had) this.#emit('sync');
       else this.save();
       return;
     }
-    const next = keep(this.#installed);
-    const fix = (list) => list.map(keep);
-    if (next.length === this.#installed.length) return;
-    this.#installed = next;
-    this.#undo = fix(this.#undo);
+    const fix = (s) => {
+      const cables = keepCables(s.cables);
+      return snap(keep(s.installed), cables, s.closed && Object.keys(cables).length > 0);
+    };
+    const next = fix(this.#now);
+    const n = (c) => Object.keys(c).length;
+    if (next.installed.length === this.#now.installed.length && n(next.cables) === n(this.#now.cables) && next.closed === this.#now.closed) return;
+    this.#now = next;
+    this.#undo = this.#undo.map(fix);
     this.#redo = [];
     this.#emit('sync');
   }
@@ -274,7 +340,8 @@ export class AssemblyProgress extends EventTarget {
     if (!this.#storage) return false;
     try {
       this.#storage.setItem(this.#key, JSON.stringify({
-        version: 1, mode: this.#mode, caseId: this.#caseId, installed: this.#installed, undo: this.#undo, redo: this.#redo,
+        version: 2, mode: this.#mode, caseId: this.#caseId, style: this.#style,
+        installed: this.#now.installed, cables: this.#now.cables, closed: this.#now.closed, undo: this.#undo, redo: this.#redo,
       }));
       return true;
     } catch {
@@ -289,14 +356,33 @@ export class AssemblyProgress extends EventTarget {
     } catch {
       s = null;
     }
-    if (!s || s.version !== 1) return false;
+    if (!s || (s.version !== 1 && s.version !== 2)) return false;
     const list = (a) => (Array.isArray(a) ? a.filter((k) => typeof k === 'string') : []);
-    const lists = (a) => (Array.isArray(a) ? a.filter(Array.isArray).map(list).slice(-HISTORY_LIMIT) : []);
+    const point = (p) => Array.isArray(p) && p.length === 3 && p.every((v) => typeof v === 'number' && Number.isFinite(v));
+    const cables = (c) => {
+      const out = {};
+      if (!c || typeof c !== 'object' || Array.isArray(c)) return out;
+      for (const [id, v] of Object.entries(c)) {
+        if (!v || typeof v !== 'object') continue;
+        out[id] = { pts: Array.isArray(v.pts) && v.pts.every(point) ? v.pts : null, src: typeof v.src === 'string' ? v.src : null, dst: typeof v.dst === 'string' ? v.dst : null };
+      }
+      return out;
+    };
+    // Version 1 kept the history as plain key lists.
+    const entry = (e) => {
+      if (Array.isArray(e)) return snap(list(e), {}, false);
+      if (e && typeof e === 'object') return snap(list(e.installed), cables(e.cables), e.closed === true);
+      return null;
+    };
+    const entries = (a) => (Array.isArray(a) ? a.map(entry).filter(Boolean).slice(-HISTORY_LIMIT) : []);
     this.#mode = s.mode === 'hand' ? 'hand' : 'viewer';
     this.#caseId = typeof s.caseId === 'string' ? s.caseId : null;
-    this.#installed = list(s.installed);
-    this.#undo = lists(s.undo);
-    this.#redo = lists(s.redo);
+    this.#now = snap(list(s.installed), cables(s.cables), s.closed === true);
+    this.#undo = entries(s.undo);
+    this.#redo = entries(s.redo);
+    if (s.style && typeof s.style === 'object') {
+      this.#style = { kind: CABLE_STYLES.includes(s.style.kind) ? s.style.kind : DEFAULT_STYLE.kind, color: isHex(s.style.color) ? s.style.color : DEFAULT_STYLE.color };
+    }
     return true;
   }
 

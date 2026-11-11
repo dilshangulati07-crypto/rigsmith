@@ -7,10 +7,8 @@ import * as THREE from 'three';
 import { mat, ledMaterial } from '../materials.js';
 import { boxMM, instancedBoxes } from '../resources.js';
 import { makeFan } from '../fan-model.js';
-import { gpuDims } from '../layout-board.js';
+import { gpuDims, gpuPowerSockets } from '../layout-board.js';
 import { PCIE_PITCH } from '../board-layout.js';
-
-const CONNECTOR = { '16-pin': [1.9, 0.75], '8-pin': [2.0, 0.9], '6-pin': [1.5, 0.9] }; // length, depth (cm)
 
 export function buildGPU(part) {
   const g = new THREE.Group();
@@ -62,13 +60,8 @@ export function buildGPU(part) {
   }
 
   // Power connectors on the top edge, toward the far end of the PCB.
-  const conns = (part.powerConnectors ?? []).filter((c) => CONNECTOR[c]);
-  let x = Math.min(L * 0.72, L - 4) - 0.5;
-  for (const c of conns) {
-    const [len, dep] = CONNECTOR[c];
-    boxMM(g, x - len, x, H, H + 0.85, zc / 2 - dep / 2, zc / 2 + dep / 2, mat('plastic'));
-    boxMM(g, x - len + 0.15, x - 0.15, H + 0.85, H + 1.2, zc / 2 - dep / 2 + 0.1, zc / 2 + dep / 2 - 0.1, mat('sleeve'));
-    x -= len + 0.35;
+  for (const s of gpuPowerSockets(part)) {
+    boxMM(g, s.x0, s.x1, H, s.y, s.z - s.dep / 2, s.z + s.dep / 2, mat('plastic'));
   }
 
   // Logo strip on the top edge.

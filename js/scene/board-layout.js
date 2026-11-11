@@ -80,9 +80,55 @@ export function boardLayout(board) {
     pcie,
     chipset,
     atx24: itx ? rect(15.9, 16.9, 9.4, 14.6) : rect(w - 1.2, w - 0.2, 5.5, 10.7),
-    eps: rect(4.2, 6.2, 0.15, 1.05),
+    eps: epsSockets(board?.cpuPower),
+    sata: sataPorts(ff, w, h, board?.sataPorts ?? 4),
+    headers: headerLayout(ff, w, h),
     m2: m2Positions(ff, board?.m2Slots ?? 1, pcie),
   };
+}
+
+// CPU power sockets along the top edge: the data's list (e.g. ["8-pin", "4-pin"]), else one
+// 8-pin with known = false. Each: { u0, u1, v0, v1, pins, known }.
+function epsSockets(list) {
+  const known = Array.isArray(list) && list.length > 0;
+  let u = 4.2;
+  return (known ? list : ['8-pin']).map((kind) => {
+    const pins = kind === '4-pin' ? 4 : 8;
+    const s = { ...rect(u, u + (pins === 8 ? 2.0 : 1.05), 0.15, 1.05), pins, known };
+    u = s.u1 + 0.3;
+    return s;
+  });
+}
+
+// SATA ports: right-angle ports on the front edge, two per stack (u/v = plug centre).
+function sataPorts(ff, w, h, count) {
+  const v0 = ff === 'ITX' ? 15.0 : h - 9.5;
+  const stacks = Math.min(Math.ceil(count / 2), ff === 'ITX' ? 1 : 3);
+  const out = [];
+  for (let i = 0; i < stacks; i++) for (const dz of [0.25, 0.65]) if (out.length < count) out.push({ u: w - 0.55, v: v0 + i * 1.3 + 0.5, dz });
+  return out;
+}
+
+// Headers (centre u, v; size along u and v). Fan and lighting headers keep their usual
+// spots: CPU_FAN by the socket, pump/OPT at the top right, case fans, ARGB, audio, USB and
+// the front-panel header along the bottom edge. Real boards differ in detail.
+function headerLayout(ff, w, h) {
+  const hd = (kind, u, v, du, dv) => ({ kind, u, v, du, dv });
+  if (ff === 'ITX') {
+    return [
+      hd('cpuFan', 13.25, 0.68, 0.95, 0.55), hd('pump', 15.4, 0.68, 0.95, 0.55),
+      hd('audio', 1.6, h - 0.5, 1.3, 0.55), hd('argb', 4.2, h - 0.5, 0.75, 0.55), hd('sysFan', 6.4, h - 0.5, 0.95, 0.55),
+      hd('usb3', 9.6, h - 0.55, 2.0, 0.85), hd('fpanel', 13.4, h - 0.5, 1.3, 0.55), hd('usbc', w - 0.55, 7.6, 0.6, 1.1),
+    ];
+  }
+  const bottom = h - 0.5;
+  return [
+    hd('cpuFan', 15.5, 0.68, 0.95, 0.55), hd('pump', w - 2.35, 0.68, 0.95, 0.55), hd('sysFan', 3.55, 0.5, 0.9, 0.5),
+    hd('audio', 1.7, bottom, 1.3, 0.55), hd('argb', 4.5, bottom, 0.75, 0.55), hd('sysFan', 7.0, bottom, 0.95, 0.55),
+    hd('argb', 9.4, bottom, 0.75, 0.55), hd('sysFan', 12.0, bottom, 0.95, 0.55), hd('sysFan', 16.2, bottom, 0.95, 0.55),
+    hd('fpanel', w - 3.0, bottom, 1.3, 0.55),
+    hd('usbc', w - 0.55, 11.7, 0.6, 1.1), hd('usb3', w - 0.6, 13.9, 0.85, 2.0),
+  ];
 }
 
 // M.2 slot centres for a 2280 drive (8.0 x 2.2 cm, long side along u).

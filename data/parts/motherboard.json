@@ -1,7 +1,7 @@
 {
   "category": "motherboard",
   "schemaVersion": 1,
-  "notes": "refPriceTHB is an approximate Thai street price entered by hand, not a live price. Check before buying. pcieSlots: physical size, electrical lanes, PCIe generation and source (cpu/chipset), in the order the maker lists them (CPU slots first); lanes are the most the slot runs with the main CPU family the page lists (e.g. Ryzen 9000/7000, not 8000 APUs). m2Slots counts M.2 (Key M) SSD slots on the board, not slots on a bundled PCIe add-in card. wifi: none | wifi5 | wifi6 | wifi6e | wifi7. maxMemoryGB is the figure on the maker's spec page and can rise with BIOS updates. specSource = page checked (2026-11-11); MSI parts cite a datasheet that lists M.2/SATA/Wi-Fi only.",
+  "notes": "refPriceTHB is an approximate Thai street price entered by hand, not a live price. Check before buying. pcieSlots: physical size, electrical lanes, PCIe generation and source (cpu/chipset), in the order the maker lists them (CPU slots first); lanes are the most the slot runs with the main CPU family the page lists (e.g. Ryzen 9000/7000, not 8000 APUs). m2Slots counts M.2 (Key M) SSD slots on the board, not slots on a bundled PCIe add-in card. wifi: none | wifi5 | wifi6 | wifi6e | wifi7. maxMemoryGB is the figure on the maker's spec page and can rise with BIOS updates. specSource = page checked (2026-11-11); MSI parts cite a datasheet that lists M.2/SATA/Wi-Fi only. cpuPower (optional): the CPU power sockets on the board, e.g. [\"8-pin\",\"4-pin\"]; left out where it was not checked, and the cable step then asks for one 8-pin.",
   "parts": [
     {
       "id": "gigabyte-a520m-s2h",
@@ -33,7 +33,10 @@
       ],
       "m2Slots": 1,
       "sataPorts": 4,
-      "wifi": "none"
+      "wifi": "none",
+      "cpuPower": [
+        "8-pin"
+      ]
     },
     {
       "id": "msi-a520m-a-pro",
@@ -65,7 +68,10 @@
       ],
       "m2Slots": 1,
       "sataPorts": 4,
-      "wifi": "none"
+      "wifi": "none",
+      "cpuPower": [
+        "8-pin"
+      ]
     },
     {
       "id": "asrock-a520m-hdv",
@@ -97,7 +103,10 @@
       ],
       "m2Slots": 1,
       "sataPorts": 4,
-      "wifi": "none"
+      "wifi": "none",
+      "cpuPower": [
+        "8-pin"
+      ]
     },
     {
       "id": "msi-b450m-pro-vdh-max",
@@ -157,7 +166,10 @@
       ],
       "m2Slots": 2,
       "sataPorts": 4,
-      "wifi": "wifi5"
+      "wifi": "wifi5",
+      "cpuPower": [
+        "8-pin"
+      ]
     },
     {
       "id": "asrock-b550m-pro4",
@@ -278,7 +290,11 @@
       ],
       "m2Slots": 2,
       "sataPorts": 6,
-      "wifi": "none"
+      "wifi": "none",
+      "cpuPower": [
+        "8-pin",
+        "4-pin"
+      ]
     },
     {
       "id": "gigabyte-b550-aorus-elite-v2",
@@ -353,7 +369,11 @@
       "sataPorts": 6,
       "wifi": "wifi6",
       "specSource": "https://www.asus.com/motherboards-components/motherboards/tuf-gaming/tuf-gaming-b550-plus-wifi-ii/techspec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "cpuPower": [
+        "8-pin",
+        "4-pin"
+      ]
     },
     {
       "id": "asus-rog-strix-b550-f-gaming-wifi-ii",
@@ -407,7 +427,11 @@
       "sataPorts": 6,
       "wifi": "wifi6e",
       "specSource": "https://rog.asus.com/motherboards/rog-strix/rog-strix-b550-f-gaming-wifi-ii-model/spec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "cpuPower": [
+        "8-pin",
+        "4-pin"
+      ]
     },
     {
       "id": "gigabyte-b550i-aorus-pro-ax",
@@ -434,7 +458,10 @@
       ],
       "m2Slots": 2,
       "sataPorts": 4,
-      "wifi": "wifi6"
+      "wifi": "wifi6",
+      "cpuPower": [
+        "8-pin"
+      ]
     },
     {
       "id": "asus-rog-strix-b550-i-gaming",
@@ -516,7 +543,10 @@
       ],
       "m2Slots": 1,
       "sataPorts": 4,
-      "wifi": "none"
+      "wifi": "none",
+      "cpuPower": [
+        "8-pin"
+      ]
     },
     {
       "id": "asrock-b650m-pro-rs-wifi",
@@ -629,7 +659,11 @@
       "sataPorts": 4,
       "wifi": "wifi6",
       "specSource": "https://www.asus.com/motherboards-components/motherboards/tuf-gaming/tuf-gaming-b650-plus-wifi/techspec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "cpuPower": [
+        "8-pin",
+        "4-pin"
+      ]
     },
     {
       "id": "gigabyte-b650-aorus-elite-ax",
@@ -673,7 +707,11 @@
       "sataPorts": 6,
       "wifi": "wifi6e",
       "specSource": "https://storage-asset.msi.com/datasheet/mb/global/MAG-B650-TOMAHAWK-WIFI.pdf",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "cpuPower": [
+        "8-pin",
+        "8-pin"
+      ]
     },
     {
       "id": "msi-mpg-b650i-edge-wifi",
@@ -744,7 +782,11 @@
       "sataPorts": 4,
       "wifi": "wifi6e",
       "specSource": "https://rog.asus.com/motherboards/rog-strix/rog-strix-b650e-f-gaming-wifi-model/spec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "cpuPower": [
+        "8-pin",
+        "8-pin"
+      ]
     },
     {
       "id": "asus-rog-strix-b650e-i-gaming-wifi",
@@ -771,7 +813,11 @@
       ],
       "m2Slots": 2,
       "sataPorts": 2,
-      "wifi": "wifi6e"
+      "wifi": "wifi6e",
+      "cpuPower": [
+        "8-pin",
+        "4-pin"
+      ]
     },
     {
       "id": "asus-tuf-gaming-b850-plus-wifi",
@@ -886,7 +932,11 @@
       "sataPorts": 4,
       "wifi": "wifi6e",
       "specSource": "https://storage-asset.msi.com/datasheet/mb/global/MAG-X670E-TOMAHAWK-WIFI.pdf",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "cpuPower": [
+        "8-pin",
+        "8-pin"
+      ]
     },
     {
       "id": "asus-rog-crosshair-x670e-hero",
@@ -928,7 +978,11 @@
       "sataPorts": 6,
       "wifi": "wifi6e",
       "specSource": "https://rog.asus.com/motherboards/rog-crosshair/rog-crosshair-x670e-hero-model/spec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "cpuPower": [
+        "8-pin",
+        "8-pin"
+      ]
     },
     {
       "id": "asus-tuf-gaming-x870-plus-wifi",
@@ -1008,7 +1062,11 @@
       "sataPorts": 4,
       "wifi": "wifi7",
       "specSource": "https://storage-asset.msi.com/datasheet/mb/global/MAG-X870-TOMAHAWK-WIFI.pdf",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "cpuPower": [
+        "8-pin",
+        "8-pin"
+      ]
     },
     {
       "id": "asus-rog-strix-x870-i-gaming-wifi",
@@ -1074,7 +1132,11 @@
       "sataPorts": 4,
       "wifi": "wifi7",
       "specSource": "https://rog.asus.com/motherboards/rog-strix/rog-strix-x870e-e-gaming-wifi/spec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "cpuPower": [
+        "8-pin",
+        "8-pin"
+      ]
     },
     {
       "id": "asrock-x870e-taichi",
@@ -1131,7 +1193,11 @@
       "sataPorts": 4,
       "wifi": "wifi7",
       "specSource": "https://rog.asus.com/motherboards/rog-crosshair/rog-crosshair-x870e-hero/spec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "cpuPower": [
+        "8-pin",
+        "8-pin"
+      ]
     },
     {
       "id": "gigabyte-h610m-s2h-ddr4",
@@ -1163,7 +1229,10 @@
       ],
       "m2Slots": 1,
       "sataPorts": 4,
-      "wifi": "none"
+      "wifi": "none",
+      "cpuPower": [
+        "8-pin"
+      ]
     },
     {
       "id": "asus-prime-h610m-e-d4",
@@ -1195,7 +1264,10 @@
       ],
       "m2Slots": 1,
       "sataPorts": 4,
-      "wifi": "none"
+      "wifi": "none",
+      "cpuPower": [
+        "8-pin"
+      ]
     },
     {
       "id": "gigabyte-b760m-ds3h-ddr4",
@@ -1633,7 +1705,11 @@
       "sataPorts": 4,
       "wifi": "wifi7",
       "specSource": "https://rog.asus.com/motherboards/rog-strix/rog-strix-z790-e-gaming-wifi-ii/spec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "cpuPower": [
+        "8-pin",
+        "8-pin"
+      ]
     },
     {
       "id": "asus-rog-maximus-z790-hero",
@@ -1675,7 +1751,11 @@
       "sataPorts": 6,
       "wifi": "wifi6e",
       "specSource": "https://rog.asus.com/motherboards/rog-maximus/rog-maximus-z790-hero-model/spec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "cpuPower": [
+        "8-pin",
+        "8-pin"
+      ]
     },
     {
       "id": "msi-pro-b860m-a-wifi",
@@ -1996,7 +2076,11 @@
       "sataPorts": 4,
       "wifi": "wifi7",
       "specSource": "https://rog.asus.com/motherboards/rog-strix/rog-strix-z890-e-gaming-wifi/spec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "cpuPower": [
+        "8-pin",
+        "8-pin"
+      ]
     },
     {
       "id": "asus-rog-maximus-z890-hero",
@@ -2038,7 +2122,11 @@
       "sataPorts": 4,
       "wifi": "wifi7",
       "specSource": "https://rog.asus.com/motherboards/rog-maximus/rog-maximus-z890-hero/spec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "cpuPower": [
+        "8-pin",
+        "8-pin"
+      ]
     }
   ]
 }

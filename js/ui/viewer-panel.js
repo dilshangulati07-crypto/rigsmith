@@ -313,6 +313,7 @@ export async function mountViewerPanel(el, app) {
   canvas.addEventListener('pointerleave', () => { pointer = null; hoverFrom3D(null); });
   canvas.addEventListener('pointerdown', (e) => { down = { x: e.clientX, y: e.clientY, t: performance.now() }; });
   canvas.addEventListener('pointerup', (e) => {
+    if (hand?.cabling) return; // clicks select cables and ports in the cable step
     if (!down || Math.hypot(e.clientX - down.x, e.clientY - down.y) > 5 || performance.now() - down.t > 500) return;
     const r = canvas.getBoundingClientRect();
     const hit = pickAt({ x: ((e.clientX - r.left) / r.width) * 2 - 1, y: -((e.clientY - r.top) / r.height) * 2 + 1 });
@@ -384,7 +385,7 @@ export async function mountViewerPanel(el, app) {
   hand = mountHandPanel(ref('hand'), { app, viewer, bscene, rig, fx, reducedMotion, isShown: () => el.getClientRects().length > 0 });
   if (assemblyProgress.mode === 'hand') setMode('hand', { animate: false });
   // ?debug3d exposes the viewer for checking draw calls and GPU memory in the console.
-  if (new URLSearchParams(location.search).has('debug3d')) window.rigsmith3d = { viewer, scene: bscene, fx, hand, setMode, app };
+  if (new URLSearchParams(location.search).has('debug3d')) window.rigsmith3d = { viewer, scene: bscene, fx, hand, setMode, app, rig };
   ref('loading').hidden = true;
   el.dataset.state = 'ready';
 
@@ -397,7 +398,7 @@ export async function mountViewerPanel(el, app) {
     },
     toggleSidePanel: () => { if (!building()) setPanel(!bscene.sidePanel); },
     togglePower: () => {
-      if (building()) app.toast('Connect the cables first: power comes after the cable step.', 'warn');
+      if (building() && !hand.canPower()) app.toast('Connect the required cables first: the cable step lists what is missing.', 'warn');
       else fx.togglePower();
     },
     toggleExplode: () => { if (!building()) setExplode(bscene.explode > 0 ? 0 : 100); },

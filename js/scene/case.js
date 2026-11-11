@@ -147,7 +147,7 @@ export function buildCase(part, cl, { anisotropy = 4 } = {}) {
 
   // ---- shell
   boxMM(root, -D / 2, D / 2, 0, WALL, -W / 2, W / 2, mat('caseSteel'));                         // floor
-  boxMM(root, -D / 2, D / 2, 0, H, -W / 2, -W / 2 + WALL, mat('caseSteel'));                     // back side, behind the tray
+  boxMM(root, -D / 2, D / 2, 0, H, -W / 2, -W / 2 + WALL, mat('caseSteel'), { name: 'back-side' }); // back side, behind the tray
 
   // Top: mesh where the case takes top fans or a radiator, with a solid strip for front I/O.
   if (cl.topVented) {
@@ -244,8 +244,11 @@ export function buildCase(part, cl, { anisotropy = 4 } = {}) {
     boxMM(root, s.x1 - WALL, s.x1, WALL, s.y1, s.z0, s.z1, mat('caseSteel'));
     boxMM(root, s.x0, s.x1, WALL, s.y1, s.z1 - WALL, s.z1, mat('caseSteel'));
     boxMM(root, s.x0 + 1, s.x1 - 0.4, s.y1 - 0.06, s.y1 + 0.02, s.z1 - 0.45, s.z1 - 0.3, mat('frameAlu'), { cast: false });
-    // Cable pass-through next to the tray.
-    boxMM(root, s.x0 + 6, s.x0 + 16, s.y1, s.y1 + 0.02, s.z0 + 0.3, s.z0 + 1.6, mat('rubber'), { cast: false });
+  }
+  // Cable cut-outs: slots in the shroud top, or rubber-edged slots in the tray under the board.
+  for (const c of cl.cutouts) {
+    if (c.kind === 'shroud') boxMM(root, c.x - c.w / 2, c.x + c.w / 2, c.y, c.y + 0.02, c.z - 0.65, c.z + 0.65, mat('rubber'), { cast: false });
+    else boxMM(root, c.x - c.w / 2, c.x + c.w / 2, c.y - 0.6, c.y + 0.6, trayZ, trayZ + 0.22, mat('rubber'), { cast: false });
   }
 
   frontIO(root, cl);
@@ -253,6 +256,7 @@ export function buildCase(part, cl, { anisotropy = 4 } = {}) {
   root.userData.slotCovers = covers;
   root.userData.standoffs = standoffs;
   root.userData.sidePanel = side;
+  root.userData.backSide = root.getObjectByName('back-side');
   return root;
 }
 

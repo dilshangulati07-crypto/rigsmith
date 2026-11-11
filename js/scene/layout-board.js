@@ -62,6 +62,24 @@ export function gpuDims(gpu) {
   return { L, T, H: GPU_HEIGHT, approx };
 }
 
+const GPU_SOCKET = { '16-pin': [1.9, 0.75], '8-pin': [2.0, 0.9], '6-pin': [1.5, 0.9] }; // length, depth (cm)
+
+/**
+ * Power sockets on the card's top edge, toward the far end of the PCB, in card-local cm
+ * (see layoutGPU): [{ kind, x0, x1, y, z, dep }] with the socket opening at y.
+ */
+export function gpuPowerSockets(gpu) {
+  const { L, T, H } = gpuDims(gpu);
+  const zc = T - 0.45;
+  let x = Math.min(L * 0.72, L - 4) - 0.5;
+  return (gpu.powerConnectors ?? []).filter((c) => GPU_SOCKET[c]).map((kind) => {
+    const [len, dep] = GPU_SOCKET[kind];
+    const s = { kind, x0: x - len, x1: x, y: H + 0.85, z: zc / 2, dep };
+    x -= len + 0.35;
+    return s;
+  });
+}
+
 /**
  * Graphics card in the top x16 slot. Model local: +X from the bracket along the card, +Y out
  * of the board (top edge, power connectors), +Z toward the cooler side; PCB at z = 0.

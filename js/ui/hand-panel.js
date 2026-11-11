@@ -1,5 +1,6 @@
 // Build by hand, the UI: parts tray with thumbnails, install order with reasons, progress by
 // step, undo/redo/reset, "Show me where", mute, and the drag from the tray into the 3D case.
+// Once every part is in, the cable step (js/ui/cable-panel.js) takes over the panel.
 // Rules come from js/scene/assembly.js (order) and js/compat.js (fit); progress lives in
 // js/state.js (assemblyProgress); the 3D side is js/scene/hand-build.js.
 import {
@@ -7,6 +8,7 @@ import {
 } from '../scene/assembly.js';
 import { createHandBuild } from '../scene/hand-build.js';
 import { createSound } from '../scene/sound.js';
+import { mountCablePanel } from './cable-panel.js';
 import { ramSlotNames } from '../scene/layout-board.js';
 import { assemblyProgress } from '../state.js';
 import { getCategory } from '../categories.js';
@@ -65,15 +67,19 @@ export function mountHandPanel(el, { app, viewer, bscene, rig, fx, reducedMotion
     </div>
     <p class="hand__msg" data-h="msg" role="status" aria-live="polite"></p>
     <div class="hand__done" data-h="done" hidden>
-      <p><span class="label">Parts installed — cables next</span> Every part is in. Cable routing comes in the next step.</p>
-      <button class="vbtn vbtn--power" type="button" disabled aria-describedby="hand-power-why">Power on</button>
-      <span class="hand__why mono" id="hand-power-why">Connect the cables first</span>
+      <p><span class="label">Parts installed — cables next</span> Every part is in. Connect the cables below, or press Auto-route.</p>
     </div>
+    <div class="cab" data-h="cables" hidden></div>
     <div class="tray" data-h="tray-wrap">
       <h3 class="label tray__title" id="tray-title">Parts tray</h3>
       <ul class="tray__list" data-h="tray" aria-labelledby="tray-title"></ul>
     </div>`);
   const $ = (k) => el.querySelector(`[data-h="${k}"]`);
+  const cab = mountCablePanel($('cables'), {
+    app, viewer, bscene, rig, fx, sound, progress, reducedMotion,
+    setMsg: (text, level, ms) => setMsg(text, level, ms),
+    onChange: () => { renderProgress(); refreshButtons(); },
+  });
 
   // ---------------------------------------------------------------- state
   const installedSet = () => new Set(progress.installed);
@@ -82,7 +88,8 @@ export function mountHandPanel(el, { app, viewer, bscene, rig, fx, reducedMotion
     const build = bscene.build;
     if (!build || !bscene.layout) return;
     plan = planAssembly(build, bscene.layout);
-    progress.sync(plan.caseId, (keys) => reconcile(plan, keys));
+    cab.replan(plan);
+    progress.sync(plan.caseId, (keys) => reconcile(plan, keys), (c) => cab.keepCables(c));
     refresh();
   }
 
@@ -102,7 +109,8 @@ export function mountHandPanel(el, { app, viewer, bscene, rig, fx, reducedMotion
       m.textContent = plan.reason;
       m.dataset.level = 'info';
     } else if (p?.complete) {
-      m.textContent = '';
+      m.textContent = cab.hint();
+      m.dataset.level = 'info';
     } else if (p) {
       m.textContent = p.current ? `Step ${p.stages.findIndex((s) => s.id === p.current.id) + 1} of ${p.stages.length} · ${p.current.label}. ${stageHint(p.current, plan)}` : 'Add parts to the build to install them.';
       m.dataset.level = 'info';
@@ -116,12 +124,7 @@ export function mountHandPanel(el, { app, viewer, bscene, rig, fx, reducedMotion
     const stage = currentStage(plan, inst);
     hb.setState(plan, inst, stage?.id ?? null);
 
-    // Progress by step.
-    render($('progress'), html`
-      <div class="hsteps" role="progressbar" aria-label="Install progress" aria-valuemin="0" aria-valuemax="${p.total}" aria-valuenow="${p.done}" aria-valuetext="${p.done} of ${p.total} parts installed${p.current ? `, now: ${p.current.label}` : ''}">
-        ${p.stages.map((s) => html`<span class="hsteps__seg" data-state="${s.state}" title="${s.label}: ${s.done} of ${s.total}"><span class="hsteps__fill" style="width:${Math.round((s.done / s.total) * 100)}%"></span><span class="hsteps__label">${s.short}</span></span>`)}
-      </div>
-      <p class="hsteps__count mono">${p.done}/${p.total}</p>`);
+    renderProgress(p);
 
     // Tray.
     const items = plan.ready ? plan.groups.map((g) => {
@@ -161,14 +164,10 @@ export function mountHandPanel(el, { app, viewer, bscene, rig, fx, reducedMotion
         </li>`)}`);
     fillThumbs();
 
-    $('undo').disabled = !progress.canUndo || busy;
-    $('redo').disabled = !progress.canRedo || busy;
-    $('reset').disabled = !progress.installed.length || busy;
-    $('where').disabled = !p.current;
-    $('mute').setAttribute('aria-pressed', String(!sound.muted));
-    $('mute').textContent = sound.muted ? 'Muted' : 'Sound';
-    $('done').hidden = !p.complete;
+    $('tray-wrap').hidden = p.complete && plan.ready;
     el.dataset.complete = String(p.complete);
+    cab.setActive(active && p.complete && plan.ready);
+    refreshButtons();
     refreshMsg();
 
     // Camera follows the work: a new step focuses its area.
@@ -177,6 +176,32 @@ export function mountHandPanel(el, { app, viewer, bscene, rig, fx, reducedMotion
       lastStage = sid;
       if (sid) hb.focusStage(sid);
     }
+  }
+
+  // Progress by step, with the cable step at the end once there is a cable plan.
+  function renderProgress(p = plan && progressOf(plan, installedSet())) {
+    if (!p) return;
+    const c = cab.summary();
+    const cableState = !p.complete ? 'todo' : c.done >= c.total ? 'done' : 'current';
+    const total = p.total + c.total;
+    const done = p.done + c.done;
+    render($('progress'), html`
+      <div class="hsteps" role="progressbar" aria-label="Build progress" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${done}" aria-valuetext="${p.done} of ${p.total} parts installed${c.total ? `, ${c.done} of ${c.total} cables connected` : ''}${p.current ? `, now: ${p.current.label}` : ''}">
+        ${p.stages.map((s) => html`<span class="hsteps__seg" data-state="${s.state}" title="${s.label}: ${s.done} of ${s.total}"><span class="hsteps__fill" style="width:${Math.round((s.done / s.total) * 100)}%"></span><span class="hsteps__label">${s.short}</span></span>`)}
+        ${c.total ? html`<span class="hsteps__seg" data-state="${cableState}" title="Cables: ${c.done} of ${c.total}"><span class="hsteps__fill" style="width:${Math.round((c.done / c.total) * 100)}%"></span><span class="hsteps__label">Cables</span></span>` : ''}
+      </div>
+      <p class="hsteps__count mono">${done}/${total}</p>`);
+  }
+  function refreshButtons() {
+    const p = plan && progressOf(plan, installedSet());
+    $('undo').disabled = !progress.canUndo || busy;
+    $('redo').disabled = !progress.canRedo || busy;
+    $('reset').disabled = (!progress.installed.length && !Object.keys(progress.cables).length) || busy;
+    $('where').disabled = !p?.current && !cab.active;
+    $('mute').setAttribute('aria-pressed', String(!sound.muted));
+    $('mute').textContent = sound.muted ? 'Muted' : 'Sound';
+    // The "cables next" banner only until the first cable is in.
+    $('done').hidden = !p?.complete || !plan.ready || Object.keys(progress.cables).length > 0;
   }
 
   // Thumbnails render from the 3D models; models build asynchronously, so retry when missing.
@@ -243,6 +268,7 @@ export function mountHandPanel(el, { app, viewer, bscene, rig, fx, reducedMotion
   }
 
   function showWhere(groupKey) {
+    if (cab.active) { cab.showNext(); return; }
     const key = groupKey ?? firstReady();
     if (!key) return;
     const order = canInstall(plan, installedSet(), key);
@@ -258,16 +284,16 @@ export function mountHandPanel(el, { app, viewer, bscene, rig, fx, reducedMotion
   }
 
   function undo() {
-    if (busy || hb.dragging) return;
+    if (busy || hb.dragging || cab.dragging) return;
     if (progress.undo()) setMsg('Undone.', 'info', 1800);
   }
   function redo() {
-    if (busy || hb.dragging) return;
+    if (busy || hb.dragging || cab.dragging) return;
     if (progress.redo()) setMsg('Redone.', 'info', 1800);
   }
   function reset() {
-    if (busy || hb.dragging) return;
-    if (progress.reset()) setMsg('Case reset. Undo puts the parts back.', 'info', 4000);
+    if (busy || hb.dragging || cab.dragging) return;
+    if (progress.reset()) setMsg('Case reset. Undo puts the parts and cables back.', 'info', 4000);
   }
 
   // ---------------------------------------------------------------- drag from the tray
@@ -374,11 +400,13 @@ export function mountHandPanel(el, { app, viewer, bscene, rig, fx, reducedMotion
     if (e.altKey || e.ctrlKey || e.metaKey) return;
     if (k === 'h') showWhere(selected && canInstall(plan, installedSet(), selected).ok ? selected : null);
     else if (k === 'm') { sound.setMuted(!sound.muted); refresh(); setMsg(sound.muted ? 'Sound off.' : 'Sound on.', 'info', 1500); }
-    else if (e.key === 'Escape' && hb.dragging) { hb.cancelDrag(); press = null; el.dataset.dragging = 'false'; setMsg(null); }
+    else if (e.key === 'Escape' && hb.dragging) { hb.cancelDrag(); press = null; el.dataset.dragging = 'false'; setMsg(null); } else if (e.key === 'Escape') cab.escape();
+    else if ((e.key === 'Delete' || e.key === 'Backspace') && cab.active) { e.preventDefault(); cab.removeSelected(); }
   }
   document.addEventListener('keydown', onKey);
   const onProgress = (e) => {
     if (e.detail.action === 'mode') return;
+    if (e.detail.action === 'style') { cab.refresh(); return; }
     // History from before a part swap can name parts that are gone: fit it to this build.
     if ((e.detail.action === 'undo' || e.detail.action === 'redo') && plan) progress.sync(plan.caseId, (keys) => reconcile(plan, keys));
     refresh();
@@ -403,6 +431,7 @@ export function mountHandPanel(el, { app, viewer, bscene, rig, fx, reducedMotion
       if (!active) return;
       active = false;
       press = null;
+      cab.leave();
       hb.leave();
       el.hidden = true;
       setMsg(null);
@@ -410,7 +439,10 @@ export function mountHandPanel(el, { app, viewer, bscene, rig, fx, reducedMotion
     get active() { return active; },
     /** Call when the build scene has applied a new build (parts swapped, case changed). */
     onLayout() { if (active) replan(); },
-    update(dt) { if (active) hb.update(dt); },
+    update(dt) { if (active) { hb.update(dt); cab.update3d(dt); } },
+    /** True when every required cable is in (the PC may power on). */
+    canPower: () => active && cab.canPower(),
+    get cabling() { return active && cab.active; },
     // For tools/test-browser.mjs (exposed with ?debug3d).
     test: {
       get plan() { return plan; },
@@ -419,7 +451,8 @@ export function mountHandPanel(el, { app, viewer, bscene, rig, fx, reducedMotion
       undo,
       redo,
       reset,
-      get busy() { return busy || hb.animating || hb.dragging || rig.moving; },
+      get busy() { return busy || hb.animating || hb.dragging || rig.moving || cab.dragging; },
+      cables: cab.test,
       get message() { return $('msg').textContent; },
       screenPoint: (groupKey, opts) => hb.screenPoint(groupKey, opts),
     },
@@ -427,6 +460,7 @@ export function mountHandPanel(el, { app, viewer, bscene, rig, fx, reducedMotion
       this.leave();
       document.removeEventListener('keydown', onKey);
       progress.removeEventListener('change', onProgress);
+      cab.dispose();
       hb.dispose();
       sound.dispose();
     },

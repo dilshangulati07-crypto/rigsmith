@@ -1,5 +1,6 @@
-// Three real builds shared by tools/test-assembly.mjs and tools/test-browser.mjs: an ATX
-// tower, an mATX build with an AIO, and an ITX build. Parts are picked from data/parts by
+// Four real builds shared by tools/test-assembly.mjs, tools/test-cables.mjs and
+// tools/test-browser.mjs: an ATX tower, an mATX build with an AIO, an ITX build and a
+// dual-chamber case with a 360 mm AIO and a 3x 8-pin card. Parts are picked from data/parts by
 // rule (first compatible match), so the builds follow the catalogue as it changes.
 import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -69,6 +70,22 @@ export const BUILDS = [
       ['cooler', (p) => p.type === 'air' && p.heightMM < 75],
       ['psu', (p) => p.formFactor === 'SFX' && p.wattage >= 750],
       ['storage', (p) => p.formFactor === 'M.2 2280'],
+    ]),
+  },
+  {
+    id: 'dual',
+    name: 'Dual-chamber, 360 mm AIO, 3x 8-pin GPU, 3.5in drive, ARGB fans',
+    build: makeBuild([
+      ['case', 'lian-li-o11-dynamic-evo'],
+      ['motherboard', 'asus-rog-strix-x870e-e-gaming-wifi'],
+      ['cpu', (p) => p.socket === 'AM5'],
+      ['ram', (p) => p.type === 'DDR5' && p.kit === '2x16'],
+      ['gpu', (p) => p.powerConnectors?.length === 3 && p.lengthMM < 340],
+      ['cooler', (p) => p.type === 'aio' && p.radiatorSizeMM === 360],
+      ['psu', (p) => p.formFactor === 'ATX' && p.wattage >= 1000],
+      ['storage', (p) => p.formFactor === 'M.2 2280'],
+      ['storage', (p) => p.formFactor === '3.5in'],
+      ['fans', (p) => p.packCount === 3 && p.sizeMM === 120 && p.rgb],
     ]),
   },
 ];

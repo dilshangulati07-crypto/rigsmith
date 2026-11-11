@@ -71,7 +71,7 @@ function wattage(build) {
 
 // One 8-pin PCIe plug carries 150 W. Cards with a 16-pin socket ship with an adapter
 // that needs one 8-pin plug per 150 W of board power (2 to 4 plugs).
-const adapterPlugs = (gpu) => Math.min(4, Math.max(2, Math.ceil(gpu.tdp / 150)));
+export const adapterPlugs = (gpu) => Math.min(4, Math.max(2, Math.ceil(gpu.tdp / 150)));
 
 function gpuConnectors({ gpu, psu }) {
   if (!gpu || !psu) return [];
