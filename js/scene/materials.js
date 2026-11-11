@@ -41,6 +41,8 @@ const defs = {
   ledWhite: () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xd8e4f2, emissiveIntensity: 3 }),
   // Orange has low luminance, so it needs more intensity than white to clear the bloom threshold.
   ledAccent: () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xff5a1f, emissiveIntensity: 6 }),
+  // Motion blur disc over spinning fan blades; effects.js sets its opacity from the fan speed.
+  fanBlur: () => new THREE.MeshBasicMaterial({ color: 0x2a2f36, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide }),
 };
 
 /** Get a shared material by name. */
@@ -86,4 +88,14 @@ export function meshPanelMaterial(widthCm, heightCm, pitch = 0.7, anisotropy = 4
     color: 0x1a1d22, metalness: 0.6, roughness: 0.5,
     alphaMap: tex, transparent: true, depthWrite: false, side: THREE.DoubleSide,
   });
+}
+
+/**
+ * LED material owned by one part (not shared), so each part can have its own colour.
+ * Starts dark: effects.js drives colour and intensity. Disposed with the part's model.
+ */
+export function ledMaterial(hex = 0xd8e4f2) {
+  const m = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: hex, emissiveIntensity: 0 });
+  m.userData.led = true;
+  return m;
 }

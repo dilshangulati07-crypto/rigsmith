@@ -1,7 +1,7 @@
 {
   "category": "case",
   "schemaVersion": 1,
-  "notes": "refPriceTHB is an approximate Thai street price entered by hand, not a live price. Check before buying. Specs are from the maker page in specSource (checked 2026-11-11); null = not stated there or the page could not be read. maxGPULengthMM / maxCoolerHeightMM = the largest figure the maker prints (often without a front radiator). radiatorSupport: one entry per position; sizesMM = every size the page lists, maxMM = largest (some pages give only a maximum). fanMounts: { position: { fanSizeMM: count } }; \"2x 120/140\" = two of either size; shroud = on top of the PSU shroud; a missing position has no mount; bracket and accessory mounts are not counted. drivebays: \"3.5\" = mounts that take a 3.5in drive, \"2.5\" = every 2.5in mount including combo bays; 0 = the page lists drive mounts and none of that size. dimensionsMM = depth x width x height as printed. psuFormFactors null = the page gives only a PSU length. frontPanel = what the front face is (mesh, glass or solid), used by the 3D viewer; entered from product photos and not re-checked against specSource, null = not sure.",
+  "notes": "refPriceTHB is an approximate Thai street price entered by hand, not a live price. Check before buying. Specs are from the maker page in specSource (checked 2026-11-11); null = not stated there or the page could not be read. maxGPULengthMM / maxCoolerHeightMM = the largest figure the maker prints (often without a front radiator). radiatorSupport: one entry per position; sizesMM = every size the page lists, maxMM = largest (some pages give only a maximum). fanMounts: { position: { fanSizeMM: count } }; \"2x 120/140\" = two of either size; shroud = on top of the PSU shroud; a missing position has no mount; bracket and accessory mounts are not counted. drivebays: \"3.5\" = mounts that take a 3.5in drive, \"2.5\" = every 2.5in mount including combo bays; 0 = the page lists drive mounts and none of that size. dimensionsMM = depth x width x height as printed. psuFormFactors null = the page gives only a PSU length. frontPanel = what the front face is (mesh, glass or solid), used by the 3D viewer; entered from product photos and not re-checked against specSource, null = not sure. boardMount = how the motherboard is mounted when it is not the usual tower layout: \"io-down\" = board on the side with its rear I/O facing the floor and the graphics card standing upright in its slot (Corsair 2000D AIRFLOW, per its manual and reviews); missing = standard tower layout.",
   "parts": [
     {
       "id": "corsair-4000d-airflow",
@@ -324,6 +324,7 @@
       ],
       "sidePanel": "mesh",
       "frontPanel": "mesh",
+      "boardMount": "io-down",
       "specSource": "https://www.corsair.com/us/en/p/pc-cases/cc-9011244-ww/2000d-airflow-mini-itx-pc-case-black-cc-9011244-ww",
       "specSourceType": "official",
       "sku": "CC-9011244-WW"

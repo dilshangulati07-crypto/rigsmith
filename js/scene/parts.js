@@ -10,12 +10,23 @@ import { buildMotherboard } from './models/motherboard.js';
 import { buildPSU } from './models/psu.js';
 import { buildStorage } from './models/storage.js';
 import { buildFans, fansFromGLB } from './models/fans.js';
+import { buildCPU } from './models/cpu.js';
+import { buildCooler } from './models/cooler.js';
+import { buildRAM } from './models/ram.js';
+import { buildGPU } from './models/gpu.js';
 
 // build(part, ctx): procedural. fromGLB(scene, part, ctx): optional adapter for a loaded model.
 // ctx = { caseLayout, anisotropy }
+// Models may set userData: units (separately placed pieces), rotors (spinning fans),
+// leds (owned LED materials for the lighting controls), approx (assumed sizes, shown on hover).
+// Order matters: the case is built first.
 const TYPES = {
   case: { build: (p, ctx) => buildCase(p, ctx.caseLayout, ctx) },
   motherboard: { build: (p) => buildMotherboard(p) },
+  cpu: { build: (p) => buildCPU(p) },
+  cooler: { build: (p) => buildCooler(p) },
+  ram: { build: (p) => buildRAM(p) },
+  gpu: { build: (p) => buildGPU(p) },
   psu: { build: (p, ctx) => buildPSU(p, ctx) },
   storage: { build: (p) => buildStorage(p) },
   fans: { build: (p) => buildFans(p), fromGLB: fansFromGLB },
@@ -59,6 +70,7 @@ export async function createModel(part, ctx = {}) {
     try {
       const g = await loadGLB(part, ctx);
       g.userData.source = 'glb';
+      g.userData.rotors ??= [g.getObjectByName('rotor')].filter(Boolean);
       return g;
     } catch (err) {
       console.warn(`Rigsmith: models/${part.id}.glb failed to load, using the procedural model.`, err);
@@ -66,5 +78,6 @@ export async function createModel(part, ctx = {}) {
   }
   const g = type.build(part, ctx);
   g.userData.source = 'procedural';
+  if (g.userData.rotor && !g.userData.rotors) g.userData.rotors = [g.userData.rotor];
   return g;
 }

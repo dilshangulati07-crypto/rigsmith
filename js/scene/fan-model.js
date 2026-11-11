@@ -49,11 +49,12 @@ function bladeGeometry(size, depth) {
 /**
  * @param {number} size  frame size in cm (12 = 120 mm fan)
  * @param {number} depth thickness in cm (2.5 = 25 mm)
- * @param {{frame?: boolean, ring?: boolean, blades?: number}} opts
+ * @param {{frame?: boolean, ring?: boolean, blades?: number, led?: THREE.Material}} opts
+ *   led: material for the LED ring (an owned ledMaterial() so the part can be recoloured)
  * @returns {{group: THREE.Group, rotor: THREE.Group}}
  */
 export function makeFan(size = 12, depth = 2.5, opts = {}) {
-  const { frame = true, ring = true, blades = frame ? 7 : 9 } = opts;
+  const { frame = true, ring = true, blades = frame ? 7 : 9, led = mat('ledWhite') } = opts;
   const group = new THREE.Group();
   group.name = 'fan';
 
@@ -78,11 +79,17 @@ export function makeFan(size = 12, depth = 2.5, opts = {}) {
     rotor.add(b);
   }
   group.add(rotor);
+  // Blur disc: invisible at rest, fades in as the fan speeds up.
+  const blur = new THREE.Mesh(cached(`blur:${size}`, () => new THREE.CircleGeometry(size * 0.455, 40)), mat('fanBlur'));
+  blur.position.z = depth * 0.42;
+  blur.castShadow = false;
+  blur.renderOrder = 1;
+  group.add(blur);
 
   if (frame && ring) {
     const ringGeo = cached(`ring:${size}`, () => new THREE.TorusGeometry(size * 0.468, 0.09, 8, 72));
     for (const side of [1, -1]) {
-      const r = new THREE.Mesh(ringGeo, mat('ledWhite'));
+      const r = new THREE.Mesh(ringGeo, led);
       r.position.z = side * (depth / 2 - 0.15);
       group.add(r);
     }

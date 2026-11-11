@@ -1,6 +1,7 @@
 // Keeps the 3D scene in step with the build. One model per part, built once and reused:
 // a change rebuilds only the parts that changed and disposes the ones removed. Everything
-// else just moves to its new placement from layoutBuild().
+// else just moves to its new placement from layoutBuild(). Also runs the exploded view.
+// Fan speed and lighting live in effects.js.
 import * as THREE from 'three';
 import { layoutBuild, cross, FOOT } from './layout.js';
 import { createModel, MODELLED } from './parts.js';
@@ -8,8 +9,9 @@ import { buildGhostCase, NO_PICK_LAYER } from './case.js';
 import { disposeTree } from './resources.js';
 import { mat } from './materials.js';
 
-const FAN_RPS = 2.2; // on-screen revolutions per second at 1800 rpm (real speeds alias at 60 fps)
 const PANEL_SECONDS = 0.35;
+const EXPLODE_RATE = 5;     // 1/s: exponential approach to the slider value
+const PANEL_EXPLODE = 22;   // extra cm the side panel moves out at 100 %
 
 const v3 = (a) => new THREE.Vector3(a[0], a[1], a[2]);
 const basis = new THREE.Matrix4();
@@ -53,9 +55,10 @@ export function createBuildScene({ viewer, anisotropy = 4, reducedMotion = false
   const slots = new Map(); // key -> { key, category, part, index, model }
   let layout = null;
   let ghost = null;
-  let bundle = null;
-  let bundleSig = '';
+  const cables = new Map(); // name -> { sig, group }
   let target = null;
+  let explodeGoal = 0;
+  let explodeT = 0;
 
   // ---- sync (serialised: a newer build waits for the current one, older ones are skipped)
   let pending = null;
@@ -109,54 +112,74 @@ export function createBuildScene({ viewer, anisotropy = 4, reducedMotion = false
     if (ghost) ghost.visible = !build.case;
 
     placeAll();
-    updateBundle(build);
+    updateCables(build);
+    applyExplode();
     refreshHighlight();
     viewer.invalidateShadows();
     onChange?.(layout);
   }
 
+  // Every placed object remembers its base pose and explode direction for applyExplode().
+  function put(obj, it) {
+    obj.visible = !!it?.placement;
+    if (!it?.placement) return;
+    place(obj, it.placement);
+    obj.userData.base = obj.position.clone();
+    obj.userData.explode = v3(it.explode ?? [0, 0, 1]).multiplyScalar(it.dist ?? 6);
+  }
   function placeAll() {
     for (const s of slots.values()) {
-      const m = s.model;
-      if (s.category === 'motherboard' && layout.board) place(m, layout.board.placement);
-      else if (s.category === 'psu' && layout.psu) place(m, layout.psu.placement);
-      else if (s.category === 'storage') {
-        const e = layout.storage.find((x) => x.index === s.index);
-        m.visible = !!e?.placement;
-        if (e?.placement) place(m, e.placement);
-      } else if (s.category === 'fans') {
-        const entries = layout.fans.filter((f) => f.partIndex === s.index);
-        (m.userData.units ?? []).forEach((u, i) => {
-          const f = entries.find((e) => e.unit === i);
-          u.visible = !!f;
-          if (f) place(u, f.placement);
-        });
+      if (s.category === 'case') {
+        // Slot covers the graphics card's bracket replaces.
+        const covers = s.model.userData.slotCovers ?? [];
+        covers.forEach((c, i) => { c.visible = !layout.gpu?.covers.includes(i); });
+        continue;
       }
+      const items = layout.items.filter((it) => it.category === s.category && it.index === s.index);
+      const units = s.model.userData.units;
+      if (units) units.forEach((u, i) => put(u, items.find((it) => it.unit === i)));
+      else put(s.model, items.find((it) => it.unit === null));
     }
   }
 
-  // PSU cable bundle, routed behind the tray to the lowest grommet. Rebuilt only when the
-  // PSU position changes. Lives in case space; tagged with the PSU's key so hovering it picks the PSU.
-  function updateBundle(build) {
-    const psuSlot = [...slots.values()].find((s) => s.category === 'psu');
-    const sig = psuSlot && layout.psu ? JSON.stringify([psuSlot.key, layout.psu.bundle]) : '';
-    if (sig === bundleSig) return;
-    bundleSig = sig;
-    if (bundle) disposeTree(bundle);
-    bundle = null;
+  // Cables in case space: the PSU bundle (to the lowest grommet, behind the tray) and AIO tubes.
+  // Rebuilt only when their route changes; tagged with their part's key so hovering picks the part.
+  function cableSet(name, slot, routes, radius, material) {
+    const sig = slot && routes.length ? JSON.stringify([slot.key, routes, radius]) : '';
+    const old = cables.get(name);
+    if (old?.sig === sig) return;
+    if (old) disposeTree(old.group);
+    cables.delete(name);
     if (!sig) return;
-    bundle = new THREE.Group();
-    bundle.name = 'psu-cables';
-    const pts = layout.psu.bundle;
-    const thick = build.psu?.modular === 'full' ? 0.45 : 0.6;
-    for (const [dy, dz] of [[0, 0], [0.9, 0.2], [-0.9, -0.1]]) {
-      const curve = new THREE.CatmullRomCurve3(pts.map((p, i) => new THREE.Vector3(p[0], p[1] + (i ? dy : dy * 0.5), p[2] + (i > 1 ? dz : 0))));
-      const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 40, thick, 10, false), mat('sleeve'));
+    const group = new THREE.Group();
+    group.name = name;
+    for (const pts of routes) {
+      const curve = new THREE.CatmullRomCurve3(pts.map((p) => v3(p)));
+      const tube = new THREE.Mesh(new THREE.TubeGeometry(curve, 48, radius, 10, false), material);
       tube.castShadow = true;
-      bundle.add(tube);
+      group.add(tube);
     }
-    bundle.userData.slotKey = psuSlot.key;
-    root.add(bundle);
+    group.userData.slotKey = slot.key;
+    root.add(group);
+    cables.set(name, { sig, group });
+  }
+  function updateCables(build) {
+    const slotOf = (c) => [...slots.values()].find((s) => s.category === c);
+    const psu = slotOf('psu');
+    const pts = layout.psu?.bundle;
+    const routes = pts ? [[0, 0], [0.9, 0.2], [-0.9, -0.1]].map(([dy, dz]) => pts.map((p, i) => [p[0], p[1] + (i ? dy : dy * 0.5), p[2] + (i > 1 ? dz : 0)])) : [];
+    cableSet('psu-cables', psu, routes, build.psu?.modular === 'full' ? 0.45 : 0.6, mat('sleeve'));
+    cableSet('aio-tubes', slotOf('cooler'), layout.cooler?.tubes ?? [], 0.55, mat('rubber'));
+  }
+
+  // ---- exploded view: parts move along their layout direction; cables hide while apart
+  function applyExplode() {
+    const e = explodeT * explodeT * (3 - 2 * explodeT);
+    root.traverse((o) => {
+      if (o.userData.base) o.position.copy(o.userData.base).addScaledVector(o.userData.explode, e);
+    });
+    for (const c of cables.values()) c.group.visible = explodeT < 0.02;
+    applyPanel();
   }
 
   // ---- highlight: accent boxes drawn on top of everything (shows parts hidden under covers too)
@@ -178,7 +201,8 @@ export function createBuildScene({ viewer, anisotropy = 4, reducedMotion = false
     const out = [];
     for (const s of slots.values()) {
       if (s.category !== target.category || (target.id && s.part.id !== target.id)) continue;
-      if (s.category === 'fans') out.push(...(s.model.userData.units ?? []).filter((u) => u.visible));
+      const units = s.model.userData.units;
+      if (units) out.push(...units.filter((u) => u.visible));
       else if (s.model.visible) out.push(s.model);
     }
     return out;
@@ -204,7 +228,7 @@ export function createBuildScene({ viewer, anisotropy = 4, reducedMotion = false
       let o = hit.object;
       while (o && !o.userData.slotKey) o = o.parent;
       const s = o && slots.get(o.userData.slotKey);
-      if (s) return { category: s.category, id: s.part.id, part: s.part };
+      if (s) return { category: s.category, id: s.part.id, part: s.part, approx: s.model.userData.approx ?? [] };
     }
     return null;
   }
@@ -220,7 +244,8 @@ export function createBuildScene({ viewer, anisotropy = 4, reducedMotion = false
     if (!p) return;
     p.userData.baseZ ??= p.position.z;
     const e = panelT * panelT * (3 - 2 * panelT);
-    p.position.z = p.userData.baseZ + (1 - e) * 14;
+    const ex = explodeT * explodeT * (3 - 2 * explodeT);
+    p.position.z = p.userData.baseZ + (1 - e) * 14 + ex * PANEL_EXPLODE;
     p.visible = panelT > 0.001;
   }
   function setSidePanel(on, { animate = !reducedMotion } = {}) {
@@ -238,11 +263,12 @@ export function createBuildScene({ viewer, anisotropy = 4, reducedMotion = false
       applyPanel();
       if (panelT === goal) viewer.invalidateShadows();
     }
-    if (reducedMotion) return;
-    for (const s of slots.values()) {
-      if (s.category !== 'fans') continue;
-      const speed = FAN_RPS * Math.min(1.25, Math.max(0.6, (s.part.rpmMax ?? 1800) / 1800)) * Math.PI * 2 * dt;
-      for (const r of s.model.userData.rotors ?? []) r.rotation.z += speed;
+    if (explodeT !== explodeGoal) {
+      const d = explodeGoal - explodeT;
+      explodeT = reducedMotion || Math.abs(d) < 0.002 ? explodeGoal : explodeT + d * Math.min(1, dt * EXPLODE_RATE);
+      applyExplode();
+      if (target) refreshHighlight();
+      viewer.invalidateShadows();
     }
   }
 
@@ -266,5 +292,11 @@ export function createBuildScene({ viewer, anisotropy = 4, reducedMotion = false
       else refreshHighlight();
     },
     has: (category) => [...slots.values()].some((s) => s.category === category),
+    /** Exploded view amount, 0..1 (animates toward it). */
+    setExplode(v) { explodeGoal = Math.min(1, Math.max(0, v)); },
+    get explode() { return explodeGoal; },
+    /** Current models, for effects.js: [{ key, category, part, model }]. */
+    get models() { return [...slots.values()]; },
+    approxFor: (category, id) => [...slots.values()].find((s) => s.category === category && (!id || s.part.id === id))?.model.userData.approx ?? [],
   };
 }

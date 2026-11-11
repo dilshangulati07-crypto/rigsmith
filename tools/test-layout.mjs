@@ -6,6 +6,7 @@ import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { layoutBuild, worldExtent, psuDims, DRIVE_DIMS, WALL, SIDE } from '../js/scene/layout.js';
+import { ramModules } from '../js/scene/layout-board.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const VERBOSE = process.argv.includes('-v');
@@ -15,10 +16,16 @@ const boards = load('motherboard');
 const psus = load('psu');
 const fans = load('fans');
 const drives = load('storage');
+const gpus = load('gpu').filter((g) => g.lengthMM);
+const coolers = load('cooler');
+const rams = load('ram');
 
 const failures = [];
 const where = {};
 const TOL = 0.05;
+const gNotes = [];
+const radNotes = [];
+const overlapNotes = [];
 
 // Axis-aligned box from a placement and a local size.
 function box(placement, size) {
@@ -48,9 +55,21 @@ for (const pcCase of cases) {
     if (!board) continue;
     for (const psu of psuSet) {
       if (pcCase.psuFormFactors && !pcCase.psuFormFactors.includes(psu.formFactor)) continue;
-      const build = { case: pcCase, motherboard: board, psu, fans: [pack3, single], storage: [...nvme, sata, hdd] };
-      check(build, `${pcCase.id} + ${ff} + ${psu.id}`);
-      runs++;
+      const base = { case: pcCase, motherboard: board, psu, fans: [pack3, single], storage: [...nvme, sata, hdd] };
+      check(base, `${pcCase.id} + ${ff} + ${psu.id}`);
+      // Longest card and tallest air cooler the case takes, plus a full set of memory.
+      const maxL = pcCase.maxGPULengthMM ?? 300;
+      const maxH = pcCase.maxCoolerHeightMM ?? 160;
+      const longGpu = gpus.filter((g) => g.lengthMM <= maxL).sort((a, b) => b.lengthMM - a.lengthMM)[0];
+      const air = coolers.filter((c) => c.type === 'air' && c.heightMM && c.heightMM <= maxH).sort((a, b) => b.heightMM - a.heightMM)[0];
+      const kit2 = rams.find((r) => ramModules(r) === 2 && r.type === board.memoryType);
+      check({ ...base, gpu: longGpu, cooler: air, ram: [kit2, kit2] }, `${pcCase.id} + ${ff} + ${psu.id} + ${longGpu?.id} + ${air?.id}`);
+      // Largest AIO the case lists, with a 2-slot card.
+      const radMax = Math.max(0, ...(pcCase.radiatorSupport ?? []).map((r) => r.maxMM ?? 0));
+      const aio = coolers.filter((c) => c.type === 'aio' && c.radiatorSizeMM <= (radMax || 240)).sort((a, b) => b.radiatorSizeMM - a.radiatorSizeMM)[0];
+      const slim = gpus.find((g) => g.slotWidth === 2 && g.lengthMM <= maxL);
+      check({ ...base, gpu: slim, cooler: aio, ram: [kit2] }, `${pcCase.id} + ${ff} + ${psu.id} + ${aio?.id}`);
+      runs += 3;
     }
   }
 }
@@ -90,15 +109,46 @@ function check(build, label) {
     if (!inside(b, shell)) fail(`${ff} drive outside the case`);
     if (s.kind !== 'm2') solids.push([`${ff} drive`, b]);
   }
+  if (L.gpu) {
+    if (L.gpu.inside) {
+      const relaxed = { min: shell.min.map((v, a) => v - (a === 0 || (c.ioDown && a === 1) ? 1.3 : 0)), max: shell.max };
+      if (!inside(L.gpu.box, relaxed)) fail('graphics card outside the case');
+    } else if ((build.case.maxGPULengthMM ?? 0) >= build.gpu.lengthMM && !c.ioDown) gNotes.push(label);
+    solids.push(['gpu', L.gpu.box, ['board', 'fan']]);
+  }
+  const rad = L.cooler?.radiator;
+  if (rad) {
+    const b = { min: rad.placement.p.map((v, a) => v - rad.ext[a] / 2), max: rad.placement.p.map((v, a) => v + rad.ext[a] / 2) };
+    if (!inside(b, shell)) fail(`${rad.mount} radiator outside the case`);
+    solids.push([`${rad.mount} radiator`, b, ['gpu', 'board']]);
+  }
+  if (build.cooler && !L.cooler?.radiator && build.cooler.type === 'aio') radNotes.push(label);
+  if (build.ram?.length && L.board) {
+    const want = Math.min(build.ram.reduce((n, r) => n + ramModules(r), 0), L.board.layout.ram.length);
+    if (L.ram.length !== want) fail(`${L.ram.length} of ${want} memory modules placed`);
+    const slots = new Set(L.ram.map((r) => r.slot));
+    if (slots.size !== L.ram.length) fail('two memory modules share a slot');
+    if (L.board.layout.ram.length === 4 && L.ram.length === 2 && !(slots.has(1) && slots.has(3))) fail('2 modules not in A2/B2');
+  }
+  if (L.cooler?.kind === 'air' && build.case.maxCoolerHeightMM && build.cooler.heightMM <= build.case.maxCoolerHeightMM) {
+    if (L.board.z + L.cooler.height > shell.max[2] + 0.3) fail(`air cooler (${L.cooler.height} cm) goes through the side panel`);
+  }
   for (let i = 0; i < solids.length; i++) {
     for (let j = i + 1; j < solids.length; j++) {
+      const skip = (a, b) => (a[2] ?? []).some((k) => b[0].includes(k));
+      if (skip(solids[i], solids[j]) || skip(solids[j], solids[i])) continue;
+      if (L.overlap && [solids[i][0], solids[j][0]].some((n) => /psu|gpu|board/.test(n))) continue;
       if (overlap(solids[i][1], solids[j][1])) fail(`${solids[i][0]} overlaps ${solids[j][0]}`);
     }
   }
+  if (L.overlap) overlapNotes.push(label);
   if (VERBOSE) console.log(label, L.psu?.where, L.fans.map((f) => f.mount).join(','), L.notes.join(' | '));
 }
 
-console.log(`${runs} case/board/PSU combinations. PSU positions: ${JSON.stringify(where)}`);
+if (gNotes.length) console.log(`Note: ${gNotes.length} build(s) where a card within maxGPULengthMM is longer than the case model's interior, e.g. ${gNotes[0]}`);
+if (overlapNotes.length) console.log(`Note: ${overlapNotes.length} compact build(s) flagged as overlapping (riser/sandwich layouts), e.g. ${overlapNotes[0]}`);
+if (radNotes.length) console.log(`Note: ${radNotes.length} build(s) with no radiator position, e.g. ${radNotes[0]}`);
+console.log(`${runs} case/board/PSU/cooling combinations. PSU positions: ${JSON.stringify(where)}`);
 if (failures.length) {
   const unique = [...new Set(failures)];
   console.log(`FAIL: ${unique.length} problem(s)`);

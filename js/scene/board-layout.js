@@ -19,7 +19,7 @@ const SLOT_U0 = 4.2; // rear end of a PCIe slot, from the board's rear edge
 
 // Board-relative v of each expansion slot position. ATX has 7, mATX 4, ITX 1.
 export function slotRowV(ff, k) {
-  return ff === 'ITX' ? 15.6 : 16.6 + k * PCIE_PITCH;
+  return (ff === 'ITX' ? 15.6 : 16.6) + k * PCIE_PITCH;
 }
 export const SLOT_ROWS = { 'E-ATX': 7, ATX: 7, mATX: 4, ITX: 1 };
 
@@ -37,6 +37,9 @@ const SOCKET = {
   LGA1700: { w: 3.75, h: 4.5, kind: 'lga' },
   LGA1851: { w: 3.75, h: 4.5, kind: 'lga' },
 };
+
+/** Socket size (cm) and kind ('pga' | 'lga') for a socket name; AM5 when unknown. */
+export const socketSize = (socket) => SOCKET[socket] ?? SOCKET.AM5;
 
 const rect = (u0, u1, v0, v1) => ({ u0, u1, v0, v1 });
 

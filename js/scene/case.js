@@ -8,6 +8,7 @@ import { mat, meshPanelMaterial } from './materials.js';
 import { boxMM, cylinderZ } from './resources.js';
 import { STANDOFFS, BOARD_DIMS } from './board-layout.js';
 import { WALL, SIDE, FOOT, STANDOFF } from './layout.js';
+import { boardPoint } from './layout-math.js';
 
 const FRAME = 0.6;  // aluminium edge profile
 const BORDER = 1.6; // solid border around mesh panels
@@ -63,14 +64,14 @@ function rearPanel(parent, cl, anisotropy) {
     shape.holes.push(p);
   };
   const holes = [];
-  const io = cl.io;
-  rectHole(io.z0, io.z1, io.y0, io.y1);
+  const io = cl.io; // null when the board's I/O faces the floor
+  if (io) rectHole(io.z0, io.z1, io.y0, io.y1);
 
   // Expansion slots: one opening, filled with individual slot covers.
   const sz0 = trayZ + 1.0;
   const sz1 = Math.min(trayZ + 13, W / 2 - SIDE - 0.6);
-  const st1 = cl.slots[0] + 1.0;
-  const st0 = cl.slots[cl.slots.length - 1] - 1.0;
+  const st1 = cl.slots.length ? cl.slots[0] + 1.0 : 0;
+  const st0 = cl.slots.length ? cl.slots[cl.slots.length - 1] - 1.0 : 0;
   if (st0 > WALL + 0.5 && sz1 - sz0 > 4) rectHole(sz0, sz1, st0, st1);
 
   if (cl.rearFan) {
@@ -216,8 +217,7 @@ export function buildCase(part, cl, { anisotropy = 4 } = {}) {
   for (const ff of cl.formFactors) {
     for (const [u, v] of STANDOFFS[ff] ?? []) {
       if (u > BOARD_DIMS[ff].w || v > BOARD_DIMS[ff].h) continue;
-      const x = cl.boardX0 + u;
-      const y = cl.boardTopY - v;
+      const [x, y] = boardPoint(cl.frame, u, v);
       if (seen.some(([a, b]) => Math.hypot(a - x, b - y) < 0.5)) continue;
       seen.push([x, y]);
       const s = new THREE.Mesh(cylinderZ(0.28, STANDOFF, 6), mat('brass'));
@@ -232,7 +232,7 @@ export function buildCase(part, cl, { anisotropy = 4 } = {}) {
   }
   // CPU power cut-out above the board.
   const above = H - WALL - cl.boardTopY;
-  if (above > 1.6) boxMM(root, cl.boardX0 + 2, cl.boardX0 + 9, cl.boardTopY + above / 2 - 0.6, cl.boardTopY + above / 2 + 0.6, trayZ, trayZ + 0.25, mat('rubber'));
+  if (above > 1.6 && !cl.ioDown) boxMM(root, cl.boardX0 + 2, cl.boardX0 + 9, cl.boardTopY + above / 2 - 0.6, cl.boardTopY + above / 2 + 0.6, trayZ, trayZ + 0.25, mat('rubber'));
 
   if (cl.shroud) {
     const s = cl.shroud;

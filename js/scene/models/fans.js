@@ -2,6 +2,7 @@
 // only on RGB fans. The layout positions each unit separately.
 import * as THREE from 'three';
 import { makeFan } from '../fan-model.js';
+import { ledMaterial } from '../materials.js';
 
 export function buildFans(part) {
   const g = new THREE.Group();
@@ -10,8 +11,9 @@ export function buildFans(part) {
   const depth = (part.thicknessMM ?? 25) / 10;
   const units = [];
   const rotors = [];
+  const led = part.rgb === true ? ledMaterial() : null;
   for (let i = 0; i < (part.packCount ?? 1); i++) {
-    const f = makeFan(size, depth, { ring: part.rgb === true, blades: part.sizeMM >= 140 ? 7 : 9 });
+    const f = makeFan(size, depth, { ring: !!led, led: led ?? undefined, blades: part.sizeMM >= 140 ? 7 : 9 });
     f.group.name = `fan-${i}`;
     g.add(f.group);
     units.push(f.group);
@@ -19,6 +21,7 @@ export function buildFans(part) {
   }
   g.userData.units = units;
   g.userData.rotors = rotors;
+  g.userData.leds = led ? [led] : [];
   return g;
 }
 

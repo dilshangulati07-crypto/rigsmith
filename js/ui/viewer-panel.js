@@ -1,17 +1,19 @@
 // 3D view panel: starts the viewer, keeps it in sync with the build, and runs the tools
-// (side panel, camera presets, quality, screenshot), FPS readout, empty state and hover.
+// (side panel, camera presets, quality, screenshot, power, fan profile, lighting, exploded
+// view), FPS readout, empty state and hover.
 // Loaded on demand the first time the panel is on screen, so the parts list never waits for three.js.
 import * as THREE from 'three';
 import { createViewer, isWebGL2Available } from '../scene/renderer.js';
 import { createStage } from '../scene/stage.js';
 import { createBuildScene } from '../scene/build-scene.js';
 import { createCameraRig, CAMERA_PRESETS } from '../scene/camera-rig.js';
+import { createEffects, FAN_PROFILES, RGB_MODES } from '../scene/effects.js';
 import { FOOT } from '../scene/layout.js';
 import { getCategory } from '../categories.js';
 import { CONFIG } from '../config.js';
 import { html, render } from './dom.js';
 
-const DRAWN = 'Drawn in 3D: case, motherboard, PSU, storage and case fans. CPU, cooler, memory and graphics card are not drawn yet.';
+const DRAWN = 'Every part is drawn at the size in the data. Where the data has no size (PSU length, graphics card height, radiator thickness) a typical size is used; hover a part to see which.';
 
 const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'build';
 
@@ -24,7 +26,10 @@ export async function mountViewerPanel(el, app) {
       <div class="viewer__frame brackets" aria-hidden="true"></div>
       <div class="viewer__hud">
         <p class="viewer__title"><span class="label">3D view</span> <span class="viewer__case mono" data-ref="case"></span></p>
-        <p class="viewer__fps mono" data-ref="fps" title="Frame rate and render quality">-- FPS</p>
+        <div class="viewer__readout">
+          <p class="viewer__fps mono" data-ref="fps" title="Frame rate and render quality">-- FPS</p>
+          <p class="viewer__power mono" data-ref="power" data-power="off" aria-live="polite">Off</p>
+        </div>
       </div>
       <div class="viewer__msg" data-ref="msg" hidden></div>
       <div class="viewer__loading" data-ref="loading" role="status" aria-live="polite">
@@ -32,7 +37,7 @@ export async function mountViewerPanel(el, app) {
         <div class="loader__bar"><div class="loader__fill" data-ref="bar" style="width:15%"></div></div>
         <p class="viewer__loading-step mono" data-ref="step">Loading the 3D engine</p>
       </div>
-      <p class="viewer__hover mono" data-ref="hover" aria-live="polite"></p>
+      <div class="viewer__hover" data-ref="hover" aria-live="polite" hidden></div>
     </div>
     <div class="viewer__tools">
       <button class="vbtn" type="button" data-v="panel" aria-pressed="true" aria-keyshortcuts="G">Side panel</button>
@@ -42,6 +47,31 @@ export async function mountViewerPanel(el, app) {
       <span class="viewer__spacer"></span>
       <button class="vbtn" type="button" data-v="quality">Quality: High</button>
       <button class="vbtn" type="button" data-v="shot" aria-keyshortcuts="P">Screenshot</button>
+    </div>
+    <div class="viewer__tools viewer__tools--fx">
+      <button class="vbtn vbtn--power" type="button" data-v="power" aria-pressed="false" aria-keyshortcuts="O">Power on</button>
+      <div class="vgroup" role="group" aria-label="Fan speed">
+        ${FAN_PROFILES.map((p) => html`<button class="vbtn" type="button" data-v="profile" data-profile="${p.id}" aria-pressed="false">${p.label}</button>`)}
+      </div>
+      <button class="vbtn" type="button" data-v="lighting" aria-expanded="false" aria-controls="viewer-lighting">Lighting</button>
+      <span class="viewer__spacer"></span>
+      <label class="viewer__range">
+        <span class="label">Explode</span>
+        <input type="range" min="0" max="100" step="1" value="0" data-v="explode" aria-keyshortcuts="E">
+        <output class="mono" data-ref="explode">0%</output>
+      </label>
+    </div>
+    <div class="viewer__lighting" id="viewer-lighting" hidden>
+      <label class="viewer__field"><span class="label">Part</span>
+        <select data-v="light-target"></select>
+      </label>
+      <label class="viewer__field"><span class="label">Colour</span>
+        <input type="color" data-v="light-color" value="#d8e4f2">
+      </label>
+      <div class="vgroup" role="group" aria-label="Lighting mode">
+        ${RGB_MODES.map((m) => html`<button class="vbtn" type="button" data-v="light-mode" data-mode="${m.id}" aria-pressed="false">${m.label}</button>`)}
+      </div>
+      <p class="viewer__lighting-note muted" data-ref="light-note"></p>
     </div>
     <div class="viewer__notes">
       <p data-ref="notes"></p>
@@ -114,8 +144,25 @@ export async function mountViewerPanel(el, app) {
         else rig.refresh();
       }
       updateStatus(layout);
+      // Re-label (or hide) the tooltip if the hovered part was swapped.
+      if (lastTarget) showTarget(lastTarget, lastTarget.id ? app.catalog.get(lastTarget.id) : null, ref('hover').classList.contains('is-docked') === false);
+      fx?.refresh();
+      updateLighting();
     },
   });
+
+  // ---- power, fans, lighting
+  let fx = null;
+  function showPower({ power, profile, rpm }) {
+    const label = { off: 'Off', booting: 'Booting…', on: 'Running' }[power];
+    ref('power').textContent = power === 'off' ? label : `${label}${rpm ? ` · fans ${rpm} rpm` : ''}`;
+    ref('power').dataset.power = power;
+    const b = el.querySelector('[data-v="power"]');
+    b.setAttribute('aria-pressed', String(power !== 'off'));
+    b.textContent = power === 'off' ? 'Power on' : 'Power off';
+    for (const x of el.querySelectorAll('[data-v="profile"]')) x.setAttribute('aria-pressed', String(x.dataset.profile === profile));
+  }
+  fx = createEffects({ viewer, scene: bscene, reducedMotion, onStatus: showPower });
 
   function updateStatus(layout) {
     const build = app.store.build;
@@ -144,6 +191,38 @@ export async function mountViewerPanel(el, app) {
     el.querySelector('[data-v="panel"]').setAttribute('aria-pressed', String(on));
   }
 
+  // ---- lighting panel
+  let lightTarget = 'all';
+  function updateLighting() {
+    if (!fx) return;
+    const targets = fx.lightTargets();
+    if (lightTarget !== 'all' && !targets.some((t) => t.id === lightTarget)) lightTarget = 'all';
+    const sel = el.querySelector('[data-v="light-target"]');
+    render(sel, html`<option value="all">All lighting</option>${targets.map((t) => html`<option value="${t.id}">${getCategory(t.category).short} · ${t.label}</option>`)}`);
+    sel.value = lightTarget;
+    const cur = fx.getRgb(lightTarget);
+    el.querySelector('[data-v="light-color"]').value = cur.color;
+    for (const b of el.querySelectorAll('[data-v="light-mode"]')) b.setAttribute('aria-pressed', String(b.dataset.mode === cur.mode));
+    ref('light-note').textContent = targets.length
+      ? `Lit parts: RGB fans, RGB memory, AIO pump ring, graphics card logo.${reducedMotion ? ' Breathe and rainbow stay still because reduced motion is on.' : ''}`
+      : 'No part in this build has LEDs. RGB fans, RGB memory, an RGB AIO and the graphics card logo can be lit.';
+  }
+  function toggleLighting(open) {
+    const b = el.querySelector('[data-v="lighting"]');
+    const panel = el.querySelector('.viewer__lighting');
+    const show = open ?? panel.hidden;
+    panel.hidden = !show;
+    b.setAttribute('aria-expanded', String(show));
+  }
+
+  // ---- exploded view
+  function setExplode(pct) {
+    const v = Math.round(Math.min(100, Math.max(0, pct)));
+    bscene.setExplode(v / 100);
+    el.querySelector('[data-v="explode"]').value = String(v);
+    ref('explode').textContent = `${v}%`;
+  }
+
   async function screenshot() {
     bscene.setHelpersVisible(false);
     const blob = await viewer.capture();
@@ -168,6 +247,20 @@ export async function mountViewerPanel(el, app) {
     if (v === 'quality') viewer.setQuality(viewer.quality === 'high' ? 'low' : 'high', { manual: true });
     if (v === 'shot') screenshot();
     if (v === 'choose-case') app.setCategory('case', { focusBrowser: true });
+    if (v === 'power') fx.togglePower();
+    if (v === 'profile') fx.setProfile(b.dataset.profile);
+    if (v === 'lighting') toggleLighting();
+    if (v === 'light-mode') { fx.setRgb(lightTarget, { mode: b.dataset.mode }); updateLighting(); }
+  });
+  el.addEventListener('input', (e) => {
+    const v = e.target.dataset?.v;
+    if (v === 'explode') setExplode(Number(e.target.value));
+    if (v === 'light-color') fx.setRgb(lightTarget, { color: e.target.value, ...(fx.getRgb(lightTarget).mode === 'off' ? { mode: 'static' } : {}) });
+  });
+  el.addEventListener('change', (e) => {
+    const v = e.target.dataset?.v;
+    if (v === 'light-target') { lightTarget = e.target.value; updateLighting(); }
+    if (v === 'light-color') updateLighting();
   });
 
   // ---- hover and click in 3D
@@ -182,7 +275,7 @@ export async function mountViewerPanel(el, app) {
       pickQueued = true;
       requestAnimationFrame(() => {
         pickQueued = false;
-        if (pointer && !e.buttons) hoverFrom3D(pickAt(pointer));
+        if (pointer && !e.buttons) hoverFrom3D(pickAt(pointer), e);
       });
     }
   });
@@ -199,19 +292,37 @@ export async function mountViewerPanel(el, app) {
     return bscene.pick(ndc);
   }
   let hoverKey = '';
-  function hoverFrom3D(hit) {
+  function hoverFrom3D(hit, e) {
     const key = hit ? `${hit.category}:${hit.id}` : '';
+    if (e && hit) moveTip(e);
     if (key === hoverKey) return;
     hoverKey = key;
     canvas.style.cursor = hit ? 'pointer' : '';
-    showTarget(hit ? { category: hit.category, id: hit.id } : null, hit?.part);
+    showTarget(hit ? { category: hit.category, id: hit.id } : null, hit?.part, !!e);
     app.onViewerHover?.(hit ? { category: hit.category, id: hit.id } : null);
   }
-  function showTarget(target, part) {
+  // Tooltip next to the pointer (3D hover) or docked bottom-left (hover from the list).
+  function moveTip(e) {
+    const tip = ref('hover');
+    const r = canvas.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const y = e.clientY - r.top;
+    const flip = x > r.width * 0.6;
+    tip.style.left = flip ? 'auto' : `${x + 14}px`;
+    tip.style.right = flip ? `${r.width - x + 14}px` : 'auto';
+    tip.style.top = `${Math.max(8, Math.min(r.height - 72, y + 14))}px`;
+  }
+  function showTarget(target, part, follow = false) {
     lastTarget = target;
     const shown = bscene.highlight(target);
-    const label = target && shown ? `${getCategory(target.category).short} · ${part?.name ?? getCategory(target.category).label}` : '';
-    ref('hover').textContent = label;
+    const tip = ref('hover');
+    if (!target || !shown) { tip.hidden = true; return; }
+    const approx = bscene.approxFor(target.category, target.id);
+    render(tip, html`<p class="viewer__hover-name"><span class="mono">${getCategory(target.category).short}</span> ${part?.name ?? getCategory(target.category).label}</p>
+      ${approx.length ? html`<p class="viewer__hover-approx">Approximate: ${approx.join('; ')}</p>` : ''}`);
+    tip.classList.toggle('is-docked', !follow);
+    if (!follow) tip.removeAttribute('style');
+    tip.hidden = false;
   }
 
   // ---- frame loop and FPS readout
@@ -219,6 +330,7 @@ export async function mountViewerPanel(el, app) {
   viewer.start((dt) => {
     rig.update(dt);
     bscene.update(dt);
+    fx.update(dt);
     fpsClock += dt;
     if (fpsClock >= 0.5) {
       fpsClock = 0;
@@ -235,8 +347,10 @@ export async function mountViewerPanel(el, app) {
   try { await viewer.compile(); } catch { /* compile is only a warm-up */ }
   ready = true;
   updateQualityUi();
+  fx.refresh();
+  updateLighting();
   // ?debug3d exposes the viewer for checking draw calls and GPU memory in the console.
-  if (new URLSearchParams(location.search).has('debug3d')) window.rigsmith3d = { viewer, scene: bscene };
+  if (new URLSearchParams(location.search).has('debug3d')) window.rigsmith3d = { viewer, scene: bscene, fx };
   ref('loading').hidden = true;
   el.dataset.state = 'ready';
 
@@ -248,6 +362,8 @@ export async function mountViewerPanel(el, app) {
       showTarget(target, part);
     },
     toggleSidePanel: () => setPanel(!bscene.sidePanel),
+    togglePower: () => fx.togglePower(),
+    toggleExplode: () => setExplode(bscene.explode > 0 ? 0 : 100),
     nextCamera: () => rig.next(),
     screenshot,
   };
