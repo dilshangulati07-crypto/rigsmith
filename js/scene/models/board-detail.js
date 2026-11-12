@@ -129,7 +129,7 @@ function occupied(L) {
  * Small parts on the board. `g` is the board group; `covers` the M.2 heatsink groups
  * ({ slot, cover }) so their screws move with them.
  */
-export function addBoardDetail(g, L, part, covers) {
+export function addBoardDetail(g, L, part, covers, { sinkTop = 3.0, grooves = true } = {}) {
   const hi = new THREE.Group();   // High and Ultra
   const ultra = new THREE.Group(); // Ultra only
   hi.name = 'board-detail';
@@ -171,8 +171,10 @@ export function addBoardDetail(g, L, part, covers) {
   for (const p of L.pcie) dark.push([p.u0 + 0.25, p.u0 + p.len - 0.25, -(p.v + 0.09), -(p.v - 0.09), 1.1, 1.11]);
   for (const r of L.ram) dark.push([r.u - 0.07, r.u + 0.07, -(r.v1 - 0.9), -(r.v0 + 0.9), 0.75, 0.76]);
   // Grooves across the VRM heatsinks.
-  for (let u = top.u0 + 0.5; u < top.u1 - 0.3; u += 0.55) dark.push([u, u + 0.12, -(top.v1 - 0.25), -(top.v0 + 0.3), 3.0, 3.012]);
-  for (let v = left.v0 + 0.5; v < left.v1 - 0.3; v += 0.55) dark.push([left.u0 + 0.3, left.u1 - 0.25, -(v + 0.12), -v, 3.0, 3.012]);
+  if (grooves) {
+    for (let u = top.u0 + 0.5; u < top.u1 - 0.3; u += 0.55) dark.push([u, u + 0.12, -(top.v1 - 0.25), -(top.v0 + 0.3), sinkTop, sinkTop + 0.012]);
+    for (let v = left.v0 + 0.5; v < left.v1 - 0.3; v += 0.55) dark.push([left.u0 + 0.3, left.u1 - 0.25, -(v + 0.12), -v, sinkTop, sinkTop + 0.012]);
+  }
   instancedBoxes(hi, dark, mat('chip'), { cast: false });
   instancedBoxes(hi, pins, mat('gold'), { cast: false });
 

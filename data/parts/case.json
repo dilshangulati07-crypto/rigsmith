@@ -77,6 +77,18 @@
       "frontIO": {
         "usbC": 1,
         "usbA": 1
+      },
+      "look": {
+        "style": "corsair-airflow",
+        "colour": "black",
+        "accent": "yellow",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
       }
     },
     {
@@ -147,7 +159,19 @@
       "frontPanel": "mesh",
       "specSource": "https://www.corsair.com/us/en/p/pc-cases/cc-9011251-ww/3000d-airflow-tempered-glass-mid-tower-black-cc-9011251-ww",
       "specSourceType": "official",
-      "sku": "CC-9011251-WW"
+      "sku": "CC-9011251-WW",
+      "look": {
+        "style": "corsair-airflow",
+        "colour": "black",
+        "accent": "yellow",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "corsair-5000d-airflow",
@@ -236,6 +260,18 @@
       "frontIO": {
         "usbC": 1,
         "usbA": 4
+      },
+      "look": {
+        "style": "corsair-airflow",
+        "colour": "black",
+        "accent": "yellow",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
       }
     },
     {
@@ -292,6 +328,18 @@
       "frontIO": {
         "usbC": 1,
         "usbA": 4
+      },
+      "look": {
+        "style": "corsair-airflow",
+        "colour": "black",
+        "accent": "yellow",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
       }
     },
     {
@@ -343,6 +391,18 @@
       "frontIO": {
         "usbC": 1,
         "usbA": 2
+      },
+      "look": {
+        "style": "corsair-airflow",
+        "colour": "black",
+        "accent": "yellow",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
       }
     },
     {
@@ -392,6 +452,18 @@
       "frontIO": {
         "usbC": 1,
         "usbA": 1
+      },
+      "look": {
+        "style": "nzxt-h",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
       }
     },
     {
@@ -441,6 +513,18 @@
       "frontIO": {
         "usbC": 1,
         "usbA": 2
+      },
+      "look": {
+        "style": "nzxt-h",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
       }
     },
     {
@@ -513,7 +597,19 @@
       "frontPanel": "glass",
       "specSource": "https://nzxt.com/product/h9-flow",
       "specSourceType": "official",
-      "sku": "CM-H92FB-01"
+      "sku": "CM-H92FB-01",
+      "look": {
+        "style": "nzxt-h9",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "lian-li-o11-dynamic-evo",
@@ -593,6 +689,18 @@
       "frontIO": {
         "usbC": 1,
         "usbA": 2
+      },
+      "look": {
+        "style": "o11",
+        "colour": "black",
+        "accent": "silver",
+        "finish": "metal",
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
       }
     },
     {
@@ -678,7 +786,19 @@
       "sidePanel": "glass",
       "frontPanel": "glass",
       "specSource": "https://lian-li.com/product/o11-dynamic-evo-xl/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "o11",
+        "colour": "black",
+        "accent": "silver",
+        "finish": "metal",
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "lian-li-o11-vision",
@@ -759,6 +879,18 @@
       "frontIO": {
         "usbC": 1,
         "usbA": 2
+      },
+      "look": {
+        "style": "o11-vision",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
       }
     },
     {
@@ -845,6 +977,18 @@
       "frontIO": {
         "usbC": 1,
         "usbA": 2
+      },
+      "look": {
+        "style": "lancool",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
       }
     },
     {
@@ -906,7 +1050,19 @@
       "sidePanel": "glass",
       "frontPanel": "mesh",
       "specSource": "https://lian-li.com/product/lancool-207/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "lancool",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "lian-li-a4-h2o",
@@ -954,7 +1110,19 @@
       "sidePanel": "mesh",
       "frontPanel": null,
       "specSource": "https://lian-li.com/product/a4h2o/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "a4-h2o",
+        "colour": "black",
+        "accent": null,
+        "finish": "metal",
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "silver"
+        ]
+      }
     },
     {
       "id": "lian-li-dan-case-a3-matx",
@@ -1032,7 +1200,19 @@
       "sidePanel": "glass",
       "frontPanel": null,
       "specSource": "https://lian-li.com/product/a3-matx/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "dan-a3",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "fractal-design-north",
@@ -1116,6 +1296,18 @@
       "frontIO": {
         "usbC": 1,
         "usbA": 2
+      },
+      "look": {
+        "style": "fractal-north",
+        "colour": "black",
+        "accent": "walnut",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
       }
     },
     {
@@ -1190,7 +1382,19 @@
       "sidePanel": "glass",
       "frontPanel": "mesh",
       "specSource": "https://www.fractal-design.com/products/cases/pop/pop-air/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "fractal-pop",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "fractal-design-meshify-2-compact",
@@ -1280,6 +1484,18 @@
       "frontIO": {
         "usbC": 1,
         "usbA": 2
+      },
+      "look": {
+        "style": "fractal-meshify",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
       }
     },
     {
@@ -1328,7 +1544,19 @@
       "sidePanel": "mesh",
       "frontPanel": null,
       "specSource": "https://www.fractal-design.com/products/cases/terra/terra/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "fractal-terra",
+        "colour": "gunmetal",
+        "accent": "walnut",
+        "finish": "metal",
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "gunmetal",
+          "silver"
+        ]
+      }
     },
     {
       "id": "fractal-design-ridge",
@@ -1380,7 +1608,19 @@
       "sidePanel": "mesh",
       "frontPanel": null,
       "specSource": "https://www.fractal-design.com/products/cases/ridge/ridge/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "fractal-ridge",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "cooler-master-masterbox-q300l",
@@ -1450,6 +1690,15 @@
       "frontIO": {
         "usbC": 0,
         "usbA": 2
+      },
+      "look": {
+        "style": "cm-q300l",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
       }
     },
     {
@@ -1530,6 +1779,18 @@
       "frontIO": {
         "usbC": 1,
         "usbA": 2
+      },
+      "look": {
+        "style": "cm-nr200",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
       }
     },
     {
@@ -1614,6 +1875,18 @@
       "frontIO": {
         "usbC": 1,
         "usbA": 2
+      },
+      "look": {
+        "style": "cm-td500",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
       }
     },
     {
@@ -1659,6 +1932,20 @@
       "frontIO": {
         "usbC": 1,
         "usbA": 2
+      },
+      "look": {
+        "style": "bequiet-500dx",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "front"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
       }
     },
     {
@@ -1695,6 +1982,18 @@
       "frontIO": {
         "usbC": 1,
         "usbA": 2
+      },
+      "look": {
+        "style": "hyte-y60",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
       }
     },
     {
@@ -1723,7 +2022,19 @@
         "ATX"
       ],
       "sidePanel": "glass",
-      "frontPanel": "mesh"
+      "frontPanel": "mesh",
+      "look": {
+        "style": "phanteks-g360a",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "phanteks-nv7",
@@ -1786,7 +2097,19 @@
       "sidePanel": "glass",
       "frontPanel": "glass",
       "specSource": "https://phanteks.com/product/nv7/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "phanteks-nv",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "montech-air-903-max",
@@ -1863,7 +2186,19 @@
       "sidePanel": "glass",
       "frontPanel": "mesh",
       "specSource": "https://www.montechpc.com/air-903-max",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "montech-air",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "montech-sky-two",
@@ -1932,7 +2267,19 @@
       "sidePanel": "glass",
       "frontPanel": "glass",
       "specSource": "https://www.montechpc.com/sky-two",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "montech-sky",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "deepcool-ch560",
@@ -2022,6 +2369,18 @@
       "frontIO": {
         "usbC": 1,
         "usbA": 2
+      },
+      "look": {
+        "style": "deepcool-ch",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
       }
     },
     {
@@ -2098,7 +2457,19 @@
       "sidePanel": "glass",
       "frontPanel": "mesh",
       "specSource": "https://www.deepcool.com/products/Cases/CC560-Mid-Tower-ATX-PC-Case/2021/15216.shtml",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "deepcool-ch",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "deepcool-ch370",
@@ -2177,7 +2548,19 @@
       "sidePanel": "glass",
       "frontPanel": "mesh",
       "specSource": "https://www.deepcool.com/products/Cases/CH370-Micro-ATX-Case/2022/15949.shtml",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "deepcool-ch",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "jonsbo-d31-mesh",
@@ -2253,7 +2636,19 @@
       "sidePanel": "glass",
       "frontPanel": "mesh",
       "specSource": "https://www.jonsbo.com/en/products/D31meshblack.html",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "jonsbo-d31",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "asus-prime-ap201",
@@ -2310,7 +2705,19 @@
       "sidePanel": "mesh",
       "frontPanel": "mesh",
       "specSource": "https://www.asus.com/motherboards-components/gaming-cases/all-series/asus-prime-ap201-microatx-case/techspec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "asus-ap201",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "thermaltake-versa-h18",
@@ -2337,7 +2744,16 @@
         "ATX"
       ],
       "sidePanel": "glass",
-      "frontPanel": null
+      "frontPanel": null,
+      "look": {
+        "style": "thermaltake-versa",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     }
   ]
 }

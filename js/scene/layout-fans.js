@@ -125,7 +125,7 @@ export function layoutFans(fanParts, cl, boardFront, notes, reserved = new Set()
 
 // ---------------------------------------------------------------- AIO radiator
 const RAD_ORDER = ['front', 'top', 'side', 'bottom', 'rear'];
-export const RAD_THICK = 2.7; // typical 27 mm core; the data has no radiator thickness
+export const RAD_THICK = 2.7; // typical 27 mm core, used where the data has no radiatorThicknessMM
 
 /** Radiator size and fan set of an AIO, from the data. */
 export function radiatorSpec(cooler) {
@@ -133,7 +133,8 @@ export function radiatorSpec(cooler) {
   const fanMM = cooler.fanSizeMM ?? (sizeMM % 140 === 0 ? 140 : 120);
   const n = cooler.fans ?? Math.max(1, Math.round(sizeMM / fanMM));
   const fanT = 2.5;
-  return { sizeMM, fanMM, n, fanT, len: (n * fanMM) / 10 + 3.7, width: fanMM / 10 + 0.4, stack: RAD_THICK + fanT };
+  const thick = cooler.radiatorThicknessMM ? cooler.radiatorThicknessMM / 10 : RAD_THICK;
+  return { sizeMM, fanMM, n, fanT, thick, len: (n * fanMM) / 10 + 3.7, width: fanMM / 10 + 0.4, stack: thick + fanT };
 }
 
 // Positions where the case takes a radiator of `sizeMM`, best first.

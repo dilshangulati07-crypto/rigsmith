@@ -219,12 +219,42 @@ export function normalFromHeight(src, strength = 2) {
   return c;
 }
 
+// Hole shapes for perforated panels, drawn in a unit tile (0..1). Each returns the holes as
+// paths so the same outline serves the alpha mask and the pressed-rim height map.
+const HOLES = {
+  // Staggered round holes: the usual stamped steel mesh.
+  round: (hole) => { for (const [x, y] of [[0.25, 0.25], [0.75, 0.75]]) hole((g, s) => g.arc(x * s, y * s, 0.2 * s, 0, Math.PI * 2)); },
+  // Triangles pointing alternately up and down.
+  tri: (hole) => {
+    for (const [x, y, up] of [[0.25, 0.25, 1], [0.75, 0.25, -1], [0.25, 0.75, -1], [0.75, 0.75, 1]]) {
+      hole((g, s) => { g.moveTo((x - 0.19) * s, (y + 0.15 * up) * s); g.lineTo((x + 0.19) * s, (y + 0.15 * up) * s); g.lineTo(x * s, (y - 0.17 * up) * s); g.closePath(); });
+    }
+  },
+  // Honeycomb.
+  hex: (hole) => {
+    for (const [x, y] of [[0.25, 0.25], [0.75, 0.75]]) {
+      hole((g, s) => { for (let i = 0; i < 6; i++) { const a = (i / 6) * Math.PI * 2; g[i ? 'lineTo' : 'moveTo']((x + Math.cos(a) * 0.27) * s, (y + Math.sin(a) * 0.23) * s); } g.closePath(); });
+    }
+  },
+  // Diamonds: angular, faceted fronts.
+  diamond: (hole) => {
+    for (const [x, y] of [[0.25, 0.25], [0.75, 0.75]]) {
+      hole((g, s) => { g.moveTo(x * s, (y - 0.23) * s); g.lineTo((x + 0.2) * s, y * s); g.lineTo(x * s, (y + 0.23) * s); g.lineTo((x - 0.2) * s, y * s); g.closePath(); });
+    }
+  },
+  // Tall slots, offset column to column.
+  slot: (hole) => {
+    for (const [x, y] of [[0.25, 0.5], [0.75, 0], [0.75, 1]]) hole((g, s) => g.roundRect((x - 0.11) * s, (y - 0.36) * s, 0.22 * s, 0.72 * s, 0.1 * s));
+  },
+};
+
 /**
- * Perforated sheet: staggered round holes. Returns the alpha mask (white = steel) and a
+ * Perforated sheet in one of the HOLES patterns. Returns the alpha mask (white = steel) and a
  * normal map with a pressed rim around every hole, both tiling as one unit.
  */
-export function perforation(anisotropy = 4) {
-  return cached('perforation', () => {
+export function perforation(anisotropy = 4, pattern = 'round') {
+  const holes = HOLES[pattern] ?? HOLES.round;
+  return cached(`perforation:${HOLES[pattern] ? pattern : 'round'}`, () => {
     const size = 128;
     const [mask, g] = canvas(size);
     const [height, hg] = canvas(size);
@@ -232,23 +262,38 @@ export function perforation(anisotropy = 4) {
     g.fillRect(0, 0, size, size);
     hg.fillStyle = '#fff';
     hg.fillRect(0, 0, size, size);
-    const r = size * 0.2;
-    for (const [cx, cy] of [[0.25, 0.25], [0.75, 0.75]]) {
-      g.fillStyle = '#000';
-      g.beginPath();
-      g.arc(cx * size, cy * size, r, 0, Math.PI * 2);
-      g.fill();
-      const grad = hg.createRadialGradient(cx * size, cy * size, r * 0.9, cx * size, cy * size, r * 1.45);
-      grad.addColorStop(0, '#000');
-      grad.addColorStop(1, 'rgba(255,255,255,0)');
-      hg.fillStyle = grad;
-      hg.beginPath();
-      hg.arc(cx * size, cy * size, r * 1.45, 0, Math.PI * 2);
-      hg.fill();
-    }
+    g.fillStyle = '#000';
+    hg.fillStyle = '#000';
+    hg.shadowColor = '#000';
+    hg.shadowBlur = size * 0.09;
+    holes((path) => {
+      for (const c of [g, hg]) { c.beginPath(); path(c, size); c.fill(); }
+    });
     return { alpha: texture(mask, { anisotropy }), normal: texture(normalFromHeight(height, 3), { anisotropy }) };
   });
 }
+
+// Pale wood grain to multiply with a wood colour (slatted fronts, trim strips).
+export const woodGrain = () => cached('woodGrain', () => {
+  const size = 256;
+  const [c, g] = canvas(size);
+  const r = rng(41);
+  g.fillStyle = '#e4dcd0';
+  g.fillRect(0, 0, size, size);
+  for (let i = 0; i < 520; i++) {
+    const x = r() * size;
+    const y = r() * size;
+    const len = 60 + r() * 200;
+    g.strokeStyle = r() < 0.6 ? `rgba(70,45,25,${0.08 + r() * 0.2})` : `rgba(255,250,240,${0.1 + r() * 0.2})`;
+    g.lineWidth = 0.6 + r() * 1.4;
+    g.beginPath();
+    g.moveTo(x, y);
+    g.bezierCurveTo(x + (r() - 0.5) * 5, y + len * 0.3, x + (r() - 0.5) * 5, y + len * 0.7, x + (r() - 0.5) * 4, y + len);
+    g.stroke();
+    if (y + len > size) { g.translate(0, -size); g.stroke(); g.translate(0, size); }
+  }
+  return texture(c, { srgb: true, anisotropy: 8 });
+});
 
 // Desk for photo mode: oak-like boards with grain lines and a few darker streaks.
 export const wood = () => cached('wood', () => {

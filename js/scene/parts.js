@@ -16,20 +16,20 @@ import { buildRAM } from './models/ram.js';
 import { buildGPU } from './models/gpu.js';
 
 // build(part, ctx): procedural. fromGLB(scene, part, ctx): optional adapter for a loaded model.
-// ctx = { caseLayout, anisotropy }
+// ctx = { caseLayout, anisotropy, theme } (theme: the viewer's black / white build theme, see look.js)
 // Models may set userData: units (separately placed pieces), rotors (spinning fans),
 // leds (owned LED materials for the lighting controls), approx (assumed sizes, shown on hover).
 // Order matters: the case is built first.
 const TYPES = {
   case: { build: (p, ctx) => buildCase(p, ctx.caseLayout, ctx) },
-  motherboard: { build: (p) => buildMotherboard(p) },
-  cpu: { build: (p) => buildCPU(p) },
-  cooler: { build: (p) => buildCooler(p) },
-  ram: { build: (p) => buildRAM(p) },
-  gpu: { build: (p) => buildGPU(p) },
+  motherboard: { build: (p, ctx) => buildMotherboard(p, ctx) },
+  cpu: { build: (p, ctx) => buildCPU(p, ctx) },
+  cooler: { build: (p, ctx) => buildCooler(p, ctx) },
+  ram: { build: (p, ctx) => buildRAM(p, ctx) },
+  gpu: { build: (p, ctx) => buildGPU(p, ctx) },
   psu: { build: (p, ctx) => buildPSU(p, ctx) },
-  storage: { build: (p) => buildStorage(p) },
-  fans: { build: (p) => buildFans(p), fromGLB: fansFromGLB },
+  storage: { build: (p, ctx) => buildStorage(p, ctx) },
+  fans: { build: (p, ctx) => buildFans(p, ctx), fromGLB: fansFromGLB },
 };
 
 export const MODELLED = Object.freeze(Object.keys(TYPES));
@@ -60,7 +60,7 @@ async function loadGLB(part, ctx) {
 
 /**
  * @param {object} part a part from the catalogue
- * @param {{caseLayout?: object, anisotropy?: number}} ctx
+ * @param {{caseLayout?: object, anisotropy?: number, theme?: string}} ctx
  * @returns {Promise<import('three').Group>}
  */
 export async function createModel(part, ctx = {}) {

@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import { share } from './resources.js';
 import * as tex from './textures.js';
+import { COLOURS } from './look.js';
 
 /**
  * Give a material's maps the same density on every part, whatever the mesh's size. Most
@@ -121,14 +122,53 @@ export function mat(name) {
   return cache.get(name);
 }
 
+// ---------------------------------------------------------------- coloured finishes
+// A surface finish in a named colour (look.js COLOURS), made once per pair and shared. Black
+// reuses the base materials above, so a black build draws with exactly the same set as before.
+const BLACK = { sleeve: 'tubeBraid', steel: 'caseSteel', inner: 'caseInner', alu: 'frameAlu', heatsink: 'heatsink', plastic: 'plastic', gloss: 'plasticGloss', anodised: 'psuBody', blade: 'fanBlade' };
+// `pale`: paint on metal hides the metal, so light colours stay white instead of turning chrome.
+const FINISH = {
+  steel: (color, pale) => powderCoat({ color, metalness: pale ? 0.06 : 0.35, roughness: 0.6 }),
+  inner: (color, pale) => powderCoat({ color, metalness: pale ? 0.05 : 0.25, roughness: 0.74 }),
+  alu: (color, pale) => brushedMetal({ color, metalness: pale ? 0.35 : 0.9, roughness: 0.42 }),
+  heatsink: (color, pale) => brushedMetal({ color, metalness: pale ? 0.35 : 0.9, roughness: 0.46 }, 2.5),
+  bare: (color) => brushedMetal({ color, metalness: 1, roughness: 0.4 }, 2.5),
+  plastic: (color) => moulded({ color, metalness: 0, roughness: 0.62 }),
+  gloss: (color) => std({ color, metalness: 0, roughness: 0.14 }),
+  anodised: (color, pale) => sandblasted({ color, metalness: pale ? 0.2 : 0.45, roughness: 0.66 }),
+  mirror: (color) => std({ color, metalness: 1, roughness: 0.07 }),
+  blade: (color, pale) => std({ color, metalness: 0, roughness: 0.42, transparent: !pale, opacity: pale ? 1 : 0.9 }),
+  wood: (color) => detailUV(std({ color, map: tex.woodGrain(), roughness: 0.7, metalness: 0 }), 6),
+  flat: (color) => std({ color, metalness: 0, roughness: 0.5 }),
+  sleeve: (color) => std({ color, metalness: 0, roughness: 0.8, bumpMap: tex.weave(), bumpScale: 1.4 }),
+};
+const lum = (hex) => (0.2126 * ((hex >> 16) & 255) + 0.7152 * ((hex >> 8) & 255) + 0.0722 * (hex & 255)) / 255;
+
+/**
+ * Shared material: finish `kind` in `colour` (a look.js colour name, or a hex number).
+ * @param {'steel'|'inner'|'alu'|'heatsink'|'bare'|'plastic'|'gloss'|'anodised'|'mirror'|'blade'|'wood'|'flat'} kind
+ */
+export function finish(kind, colour = 'black') {
+  if (colour === 'black' && BLACK[kind]) return mat(BLACK[kind]);
+  const hex = typeof colour === 'number' ? colour : COLOURS[colour] ?? COLOURS.black;
+  const key = `${kind}:${hex}`;
+  if (!cache.has(key)) {
+    const make = FINISH[kind];
+    if (!make) throw new Error(`Unknown finish: ${kind}`);
+    cache.set(key, share(make(hex, lum(hex) > 0.45)));
+  }
+  return cache.get(key);
+}
+
 /** Tileable alpha mask of round holes for perforated steel / mesh panels. */
 export function perforationTexture(anisotropy = 4) {
   return tex.perforation(anisotropy).alpha;
 }
 
 /** Mesh panel material with holes, repeated so each tile is `pitch` cm. Owned by the caller (not shared). */
-export function meshPanelMaterial(widthCm, heightCm, pitch = 0.7, anisotropy = 4) {
-  const { alpha, normal } = tex.perforation(anisotropy);
+export function meshPanelMaterial(widthCm, heightCm, pitch = 0.7, anisotropy = 4, { pattern = 'round', colour = 'black' } = {}) {
+  const { alpha, normal } = tex.perforation(anisotropy, pattern);
+  const pale = colour === 'white' || colour === 'silver';
   const tile = (t) => {
     const c = t.clone();
     c.repeat.set(widthCm / pitch, heightCm / pitch);
@@ -136,7 +176,7 @@ export function meshPanelMaterial(widthCm, heightCm, pitch = 0.7, anisotropy = 4
     return c;
   };
   return new THREE.MeshStandardMaterial({
-    color: 0x1a1d22, metalness: 0.6, roughness: 0.5,
+    color: colour === 'black' ? 0x1a1d22 : COLOURS[colour] ?? 0x1a1d22, metalness: pale ? 0.1 : 0.6, roughness: 0.5,
     alphaMap: tile(alpha), normalMap: tile(normal), normalScale: new THREE.Vector2(0.8, 0.8),
     transparent: true, depthWrite: false, side: THREE.DoubleSide,
   });
@@ -167,5 +207,29 @@ export function setMaterialQuality(quality) {
 export function ledMaterial(hex = 0xd8e4f2) {
   const m = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: hex, emissiveIntensity: 0 });
   m.userData.led = true;
+  return m;
+}
+
+/**
+ * Frosted plastic over LEDs (light bars, lit fan blades, pump caps): milky white when off,
+ * and a softer, wider glow than a bare LED when lit (`gain` scales what effects.js sets).
+ * Owned by one part, like ledMaterial(). `opacity` < 1 for translucent blades.
+ */
+export function diffuserMaterial({ gain = 0.55, opacity = 1, tint = 0xc4c9cf } = {}) {
+  const m = new THREE.MeshStandardMaterial({ color: tint, roughness: 0.6, metalness: 0, emissive: 0xd8e4f2, emissiveIntensity: 0, transparent: opacity < 1, opacity });
+  m.userData.led = true;
+  m.userData.gain = gain;
+  return m;
+}
+
+/**
+ * A small display (AIO pump screens, PSU read-outs): its own picture, lit only while the PC
+ * is on. It keeps its colours: the lighting controls only switch it on and off.
+ * @param {THREE.Texture} texture owned by the caller's model
+ */
+export function screenMaterial(texture) {
+  const m = new THREE.MeshStandardMaterial({ color: 0x050506, roughness: 0.15, metalness: 0, emissive: 0xffffff, emissiveMap: texture, emissiveIntensity: 0 });
+  m.userData.led = true;
+  m.userData.screen = true;
   return m;
 }

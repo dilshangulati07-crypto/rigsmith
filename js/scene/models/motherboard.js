@@ -1,19 +1,47 @@
 // Procedural motherboard from boardLayout(): PCB at the real form-factor size, I/O shroud and
 // rear I/O plate, VRM heatsinks with chokes, CPU socket for the board's socket type, one RAM
 // slot per memorySlots, PCIe slots from pcieSlots[], M.2 covers per m2Slots, chipset heatsink,
-// power connectors, SATA ports and headers.
+// power connectors, SATA ports and headers. The product line (look.style -> LINES) sets the
+// heatsink colour and size, the I/O cover, accent strips, lit zones and the name on the covers.
 // Local origin: the PCB's rear-top corner on its front face. +X = toward the case front,
 // -Y = down the board, +Z = out of the board toward the window.
 // Moving parts for the hands-on build (userData.mechanisms): the socket lever on its hinge and
 // the M.2 heatsink covers. The rear I/O plate is named "io-shield" (it goes in before the board).
 import * as THREE from 'three';
-import { mat } from '../materials.js';
-import { boxMM, instancedBoxes, cylinderZ } from '../resources.js';
+import { mat, finish, diffuserMaterial } from '../materials.js';
+import { boxMM, instancedBoxes, cylinderZ, detail, textPlane } from '../resources.js';
+import { lookOf } from '../look.js';
 import { boardLayout } from '../board-layout.js';
 import { PCB } from '../layout.js';
 import { boardFace, addBoardDetail } from './board-detail.js';
 
-export function buildMotherboard(part) {
+// sink: heatsink colour. io: false = no cover over the rear ports (entry boards). small: low,
+// short heatsinks. strip: accent strip finish on the covers ('mirror' or a colour). text: the
+// line's name on the I/O cover and the chipset heatsink.
+const LINES = {
+  budget: { sink: 'silver', io: false, small: true },
+  'msi-pro': { sink: 'silver', text: 'PRO' },
+  'asrock-pro': { sink: 'silver', text: 'PRO RS' },
+  prime: { sink: 'white', cover: 'white', text: 'PRIME' },
+  'msi-tomahawk': { sink: 'gunmetal', text: 'TOMAHAWK' },
+  'msi-mpg': { sink: 'black', strip: 'red', text: 'MPG' },
+  'msi-mpg-edge': { sink: 'silver', cover: 'silver', text: 'MPG' },
+  aorus: { sink: 'gunmetal', strip: 'grey', text: 'AORUS' },
+  tuf: { sink: 'gunmetal', strip: 'grey', slashes: true, text: 'TUF GAMING' },
+  'rog-strix': { sink: 'black', strip: 'mirror', text: 'ROG STRIX' },
+  'rog-hero': { sink: 'black', strip: 'mirror', tall: true, text: 'ROG' },
+  'asrock-taichi': { sink: 'black', strip: 'gold', tall: true, text: 'TAICHI' },
+};
+
+export function buildMotherboard(part, { theme } = {}) {
+  const look = lookOf(part, theme);
+  const line = LINES[look.style] ?? { sink: 'gunmetal' };
+  const sink = line.sink === 'gunmetal' ? mat('heatsink') : finish('heatsink', line.sink);
+  const strip = line.strip === 'mirror' ? finish('mirror', 0x3a3e45) : line.strip ? finish('flat', look.accent && line.strip !== 'grey' ? look.accent : line.strip) : mat('aluLight');
+  const coverMat = finish('plastic', line.cover ?? 'black');
+  const leds = [];
+  const marks = new THREE.Group();
+  const fg = line.sink === 'white' || line.sink === 'silver' ? '#2c3037' : '#aeb4bc';
   const L = boardLayout(part);
   const g = new THREE.Group();
   g.name = 'motherboard';
@@ -33,8 +61,29 @@ export function buildMotherboard(part) {
   g.add(face);
 
   // Rear I/O: shroud on the board, port blocks, and the I/O plate that sits in the case cut-out.
-  r(L.io, 0, 3.8, mat('plastic'));
-  on(L.io.u1 - 0.3, L.io.u1, L.io.v0, L.io.v1, 0, 3.85, mat('aluLight'));
+  if (line.io !== false) {
+    r(L.io, 0, 3.8, coverMat);
+    on(L.io.u1 - 0.3, L.io.u1, L.io.v0, L.io.v1, 0, 3.85, strip);
+    if (line.slashes) for (const dv of [1.2, 1.9]) on(L.io.u0 + 0.5, L.io.u1 - 0.6, L.io.v1 - dv - 0.25, L.io.v1 - dv, 3.8, 3.83, strip, { cast: false });
+    if (look.has('io')) {
+      // Lit strip set into the I/O cover.
+      const soft = diffuserMaterial();
+      leds.push(soft);
+      on(L.io.u0 + 0.9, L.io.u0 + 1.35, L.io.v0 + 1.5, L.io.v1 - 5.5, 3.8, 3.86, soft, { cast: false });
+    }
+    if (line.text) {
+      const len = Math.min(6.5, line.text.length * 0.62);
+      const t = textPlane(line.text, len, 0.7, { fg: line.cover ? '#2c3037' : '#aeb4bc', align: 'center' });
+      t.rotation.z = -Math.PI / 2;
+      t.position.set((L.io.u0 + L.io.u1) / 2 + 0.3, -(L.io.v1 - 1.2 - len / 2), 3.806);
+      marks.add(t);
+    }
+  }
+  if (look.has('edge')) {
+    const soft = diffuserMaterial();
+    leds.push(soft);
+    on(L.w - 0.5, L.w - 0.2, L.h * 0.55, L.h * 0.86, 0, 0.12, soft, { cast: false });
+  }
   on(-0.86, -0.78, L.io.v0 - 0.2, L.io.v1 + 0.2, -PCB, 4.3, mat('frameAlu'), { name: 'io-shield' });
   const ports = [];
   const span = L.io.v1 - L.io.v0;
@@ -52,10 +101,14 @@ export function buildMotherboard(part) {
   }
 
   // VRM: heatsinks with a brushed top edge and chokes along their inner side.
-  for (const v of L.vrm) {
-    r(v, 0, 3.0, mat('heatsink'));
-    on(v.u0, v.u1, v.v0, v.v0 + 0.14, 3.0, 3.06, mat('aluLight'), { cast: false });
-  }
+  // Entry boards: one low, short heatsink (or none on the second bank).
+  const vh = line.small ? 1.7 : line.tall ? 3.4 : 3.0;
+  L.vrm.forEach((v, i) => {
+    if (line.small && i > 0) return;
+    const u1 = line.small ? v.u0 + (v.u1 - v.u0) * 0.6 : v.u1;
+    on(v.u0, u1, v.v0, v.v1, 0, vh, sink);
+    on(v.u0, u1, v.v0, v.v0 + 0.14, vh, vh + 0.06, strip, { cast: false });
+  });
   const chokes = [];
   const [top, left] = L.vrm;
   for (let u = top.u0 + 0.6; u + 0.7 < top.u1; u += 1.0) chokes.push([u, u + 0.7, -(top.v1 + 0.95), -(top.v1 + 0.2), 0, 0.55]);
@@ -117,7 +170,7 @@ export function buildMotherboard(part) {
     if (m.cover === 'own') {
       const cover = new THREE.Group();
       cover.name = 'm2-cover';
-      onTo(cover, m.u - 4.4, m.u + 4.4, m.v - 1.3, m.v + 1.3, 0.55, 1.0, mat('heatsink'));
+      onTo(cover, m.u - 4.4, m.u + 4.4, m.v - 1.3, m.v + 1.3, 0.55, line.small ? 0.75 : 1.0, sink);
       for (const dv of [-0.65, 0, 0.65]) onTo(cover, m.u - 4.2, m.u + 4.2, m.v + dv - 0.05, m.v + dv + 0.05, 1.0, 1.03, mat('aluLight'), { cast: false });
       g.add(cover);
       mechanisms.m2Covers.push({ slot, cover });
@@ -130,14 +183,23 @@ export function buildMotherboard(part) {
     on(c.u0 + 0.6, c.u0 + 1.4, c.v0 + 0.6, c.v1 - 0.6, 0, 0.55, mat('heatsink'));
     const cover = new THREE.Group();
     cover.name = 'm2-cover';
-    onTo(cover, c.u0, c.u1, c.v0, c.v1, 0.55, 1.2, mat('heatsink'));
-    onTo(cover, c.u0, c.u1, c.v0, c.v0 + 0.12, 1.2, 1.25, mat('aluLight'), { cast: false });
+    onTo(cover, c.u0, c.u1, c.v0, c.v1, 0.55, 1.2, sink);
+    onTo(cover, c.u0, c.u1, c.v0, c.v0 + 0.12, 1.2, 1.25, strip, { cast: false });
     g.add(cover);
     const slot = L.m2.findIndex((m) => m.cover === 'chipset');
     if (slot >= 0) mechanisms.m2Covers.push({ slot, cover });
   } else {
-    r(c, 0, 1.0, mat('heatsink'));
-    on(c.u0, c.u1, c.v0, c.v0 + 0.12, 1.0, 1.05, mat('aluLight'), { cast: false });
+    // Entry boards have a small square heatsink; the others a wide cover with the line's strip.
+    const k = line.small ? 0.28 : 0;
+    const cu0 = c.u0 + (c.u1 - c.u0) * k; const cu1 = c.u1 - (c.u1 - c.u0) * k;
+    const cv0 = c.v0 + (c.v1 - c.v0) * k * 0.5; const cv1 = c.v1 - (c.v1 - c.v0) * k * 0.5;
+    on(cu0, cu1, cv0, cv1, 0, 1.0, sink);
+    on(cu0, cu1, cv0, cv0 + (line.strip ? 0.5 : 0.12), 1.0, 1.05, strip, { cast: false });
+    if (line.text) {
+      const t = textPlane(line.text, Math.min(cu1 - cu0 - 0.8, line.text.length * 0.6), 0.7, { fg, align: 'center' });
+      t.position.set((cu0 + cu1) / 2, -(cv0 + cv1) / 2 - 0.3, 1.006);
+      marks.add(t);
+    }
   }
 
   // Power connectors.
@@ -158,7 +220,8 @@ export function buildMotherboard(part) {
     g.add(bat);
   }
 
-  addBoardDetail(g, L, part, mechanisms.m2Covers);
+  g.add(detail(marks, 1));
+  addBoardDetail(g, L, part, mechanisms.m2Covers, { sinkTop: vh, grooves: !line.small });
 
   // Anchors for the parts that plug into the board (board-local, cm).
   g.userData.anchors = {
@@ -169,5 +232,6 @@ export function buildMotherboard(part) {
   };
   g.userData.layout = L;
   g.userData.mechanisms = mechanisms;
+  g.userData.leds = leds;
   return g;
 }

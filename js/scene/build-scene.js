@@ -10,7 +10,8 @@ import { createModel, MODELLED } from './parts.js';
 import { partSlots, pieceKey } from './assembly.js';
 import { buildGhostCase, NO_PICK_LAYER } from './case.js';
 import { disposeTree } from './resources.js';
-import { mat } from './materials.js';
+import { mat, finish } from './materials.js';
+import { tubeLook } from './models/cooler.js';
 
 const PANEL_SECONDS = 0.35;
 const EXPLODE_RATE = 5;     // 1/s: exponential approach to the slider value
@@ -34,7 +35,8 @@ function isShown(o) {
 /**
  * @param {{viewer: object, anisotropy?: number, reducedMotion?: boolean, onChange?: (layout: object) => void}} opts
  */
-export function createBuildScene({ viewer, anisotropy = 4, reducedMotion = false, onChange }) {
+export function createBuildScene({ viewer, anisotropy = 4, reducedMotion = false, onChange, theme: theme0 = 'auto' }) {
+  let theme = theme0; // black / white build theme (look.js), applied when models are built
   const root = new THREE.Group();
   root.name = 'build';
   root.position.y = FOOT;
@@ -84,7 +86,7 @@ export function createBuildScene({ viewer, anisotropy = 4, reducedMotion = false
     for (const w of want) {
       let s = slots.get(w.key);
       if (!s) {
-        const model = await createModel(w.part, { caseLayout: layout.case, anisotropy });
+        const model = await createModel(w.part, { caseLayout: layout.case, anisotropy, theme });
         model.userData.slotKey = w.key;
         root.add(model);
         s = { ...w, model };
@@ -192,7 +194,8 @@ export function createBuildScene({ viewer, anisotropy = 4, reducedMotion = false
     const pts = layout.psu?.bundle;
     const routes = pts ? [[0, 0], [0.9, 0.2], [-0.9, -0.1]].map(([dy, dz]) => pts.map((p, i) => [p[0], p[1] + (i ? dy : dy * 0.5), p[2] + (i > 1 ? dz : 0)])) : [];
     cableSet('psu-cables', psu, routes, build.psu?.modular === 'full' ? 0.45 : 0.6, mat('sleeve'));
-    cableSet('aio-tubes', slotOf('cooler'), layout.cooler?.tubes ?? [], 0.55, mat('tubeBraid'));
+    const tube = tubeLook(build.cooler, theme);
+    cableSet('aio-tubes', slotOf('cooler'), layout.cooler?.tubes ?? [], tube.radius, finish('sleeve', tube.colour));
   }
 
   // ---- exploded view: parts move along their layout direction; cables hide while apart
@@ -332,6 +335,17 @@ export function createBuildScene({ viewer, anisotropy = 4, reducedMotion = false
       else refreshHighlight();
     },
     has: (category) => [...slots.values()].some((s) => s.category === category),
+    get theme() { return theme; },
+    /** Black / white build theme: rebuilds every model in the colour its product is sold in. */
+    setTheme(t) {
+      if (t === theme) return;
+      theme = t;
+      for (const s of slots.values()) disposeTree(s.model);
+      slots.clear();
+      for (const c of cables.values()) disposeTree(c.group);
+      cables.clear();
+      if (current) sync(current);
+    },
     /** Exploded view amount, 0..1 (animates toward it). */
     setExplode(v, { animate = true } = {}) {
       explodeGoal = Math.min(1, Math.max(0, v));

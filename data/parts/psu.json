@@ -27,7 +27,16 @@
         "molex": 2
       },
       "specSource": "https://www.deepcool.com/products/PowerSupplyUnits/powersupplyunits/PF450D-230V-Power-Supply-Unit/2021/15141.shtml",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "deepcool-p",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "corsair-cv450",
@@ -54,7 +63,16 @@
       },
       "specSource": "https://www.corsair.com/ww/sv/p/psu/cp-9020209-ww/cv-series-cv450-450-watt-80-plus-bronze-certified-psu-cp-9020209-ww",
       "specSourceType": "official",
-      "sku": "CP-9020209-WW"
+      "sku": "CP-9020209-WW",
+      "look": {
+        "style": "corsair-cx",
+        "colour": "black",
+        "accent": "yellow",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "thermaltake-smart-500w",
@@ -78,6 +96,15 @@
         "pcie16": 0,
         "sata": null,
         "molex": null
+      },
+      "look": {
+        "style": "thermaltake-smart",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
       }
     },
     {
@@ -102,6 +129,15 @@
         "pcie16": 0,
         "sata": null,
         "molex": null
+      },
+      "look": {
+        "style": "seasonic-s12",
+        "colour": "grey",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
       }
     },
     {
@@ -128,7 +164,16 @@
         "molex": 3
       },
       "specSource": "https://www.deepcool.com/products/PowerSupplyUnits/powersupplyunits/PK550D-80-PLUS-Bronze-Power-Supply/2022/15621.shtml",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "deepcool-p",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "corsair-cx650",
@@ -155,7 +200,16 @@
       },
       "specSource": "https://www.corsair.com/us/en/p/psu/cp-9020278-na/cx-series-cx650-650-watt-80-plus-bronze-atx-power-supply-cp-9020278-na",
       "specSourceType": "official",
-      "sku": "CP-9020278-NA"
+      "sku": "CP-9020278-NA",
+      "look": {
+        "style": "corsair-cx",
+        "colour": "black",
+        "accent": "yellow",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-mag-a650bn",
@@ -181,7 +235,16 @@
         "molex": 2
       },
       "specSource": "https://storage-asset.msi.com/datasheet/power-supply/global/MAG-A650BN.pdf",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "msi-mag",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "cooler-master-mwe-650-bronze-v2",
@@ -207,7 +270,16 @@
         "molex": 4
       },
       "specSource": "https://www.coolermaster.com/en-global/products/mwe-650-bronze-v2.html",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "cm-mwe",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "seasonic-focus-gm-650",
@@ -231,6 +303,15 @@
         "pcie16": 0,
         "sata": null,
         "molex": null
+      },
+      "look": {
+        "style": "seasonic-focus",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
       }
     },
     {
@@ -257,7 +338,16 @@
         "molex": 3
       },
       "specSource": "https://global.deepcool.com/products/PowerSupplyUnits/powersupplyunits/PM750D-80-PLUS-Gold-Power-Supply/2021/12995.shtml",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "deepcool-p",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "corsair-rm750e",
@@ -284,7 +374,16 @@
       },
       "specSource": "https://www.corsair.com/us/en/p/psu/cp-9020262-na/rme-series-rm750e-fully-modular-low-noise-atx-power-supply-cp-9020262-na",
       "specSourceType": "official",
-      "sku": "CP-9020262-NA"
+      "sku": "CP-9020262-NA",
+      "look": {
+        "style": "corsair-rm",
+        "colour": "black",
+        "accent": "yellow",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-mag-a750gl-pcie5",
@@ -310,7 +409,19 @@
         "molex": 4
       },
       "specSource": "https://storage-asset.msi.com/datasheet/power-supply/global/MAG-A750GL-PCIE5.pdf",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "msi-mag",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "be-quiet-pure-power-12-m-750w",
@@ -334,6 +445,15 @@
         "pcie16": 1,
         "sata": null,
         "molex": null
+      },
+      "look": {
+        "style": "bequiet-power",
+        "colour": "black",
+        "accent": "orange",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
       }
     },
     {
@@ -358,6 +478,15 @@
         "pcie16": 1,
         "sata": null,
         "molex": null
+      },
+      "look": {
+        "style": "seasonic-focus",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
       }
     },
     {
@@ -384,7 +513,19 @@
         "molex": 4
       },
       "specSource": "https://lian-li.com/product/sp750/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "lianli-sp",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "corsair-sf750",
@@ -411,7 +552,16 @@
       },
       "specSource": "https://www.corsair.com/us/en/p/psu/cp-9020186-na/sf-series-sf750-750-watt-80-plus-platinum-certified-high-performance-sfx-psu-cp-9020186-na",
       "specSourceType": "official",
-      "sku": "CP-9020186-NA"
+      "sku": "CP-9020186-NA",
+      "look": {
+        "style": "corsair-sf",
+        "colour": "black",
+        "accent": "yellow",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "cooler-master-v850-sfx-gold",
@@ -437,7 +587,19 @@
         "molex": 4
       },
       "specSource": "https://www.coolermaster.com/en-us/products/v850-sfx-gold.html",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "cm-v-sfx",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "asus-rog-loki-sfx-l-850w-platinum",
@@ -463,7 +625,21 @@
         "molex": 4
       },
       "specSource": "https://rog.asus.com/power-supply-units/rog-loki/rog-loki-850p-sfx-l-gaming-model/spec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "rog-loki",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "fan"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "corsair-rm850e",
@@ -490,7 +666,16 @@
       },
       "specSource": "https://www.corsair.com/us/en/p/psu/CP-9020263-NA/rme-series-rm850e-fully-modular-low-noise-atx-power-supply-cp-9020263-na",
       "specSourceType": "official",
-      "sku": "CP-9020263-NA"
+      "sku": "CP-9020263-NA",
+      "look": {
+        "style": "corsair-rm",
+        "colour": "black",
+        "accent": "yellow",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "corsair-rm850x-2024",
@@ -517,7 +702,16 @@
       },
       "specSource": "https://www.corsair.com/us/en/p/psu/cp-9020270-ww/rm850x-fully-modular-atx-power-supply-cp-9020270-ww",
       "specSourceType": "official",
-      "sku": "CP-9020270-NA"
+      "sku": "CP-9020270-NA",
+      "look": {
+        "style": "corsair-rm",
+        "colour": "black",
+        "accent": "yellow",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-mpg-a850g-pcie5",
@@ -543,7 +737,16 @@
         "molex": 4
       },
       "specSource": "https://storage-asset.msi.com/datasheet/power-supply/au/MPG-A850G-PCIE5.pdf",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "msi-mpg",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "seasonic-focus-gx-850-atx-3-0",
@@ -567,6 +770,15 @@
         "pcie16": 1,
         "sata": null,
         "molex": null
+      },
+      "look": {
+        "style": "seasonic-focus",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
       }
     },
     {
@@ -593,7 +805,16 @@
         "molex": 4
       },
       "specSource": "https://www.coolermaster.com/en-us/products/mwe-gold-850-v2-full-modular.html",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "cm-mwe",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "fsp-hydro-g-pro-850w-atx-3-0",
@@ -620,7 +841,16 @@
       },
       "specSource": "https://www.fsplifestyle.com/jp/product/HYDROGPRO850W_GEN5.html",
       "specSourceType": "official",
-      "sku": "HG2-850 Gen5"
+      "sku": "HG2-850 Gen5",
+      "look": {
+        "style": "fsp-hydro",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "corsair-rm1000x-2024",
@@ -647,7 +877,16 @@
       },
       "specSource": "https://www.corsair.com/us/en/p/psu/cp-9020271-na/rmx-series-rm1000x-fully-modular-power-supply-cp-9020271-na",
       "specSourceType": "official",
-      "sku": "CP-9020271-NA"
+      "sku": "CP-9020271-NA",
+      "look": {
+        "style": "corsair-rm",
+        "colour": "black",
+        "accent": "yellow",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-mpg-a1000g-pcie5",
@@ -673,7 +912,16 @@
         "molex": 4
       },
       "specSource": "https://storage-asset.msi.com/datasheet/power-supply/global/MPG-A1000G-PCIE5.pdf",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "msi-mpg",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "seasonic-focus-gx-1000-atx-3-0",
@@ -697,6 +945,15 @@
         "pcie16": 1,
         "sata": null,
         "molex": null
+      },
+      "look": {
+        "style": "seasonic-focus",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
       }
     },
     {
@@ -721,6 +978,18 @@
         "pcie16": 1,
         "sata": null,
         "molex": null
+      },
+      "look": {
+        "style": "thermaltake-toughpower",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": [
+          "black",
+          "white"
+        ]
       }
     },
     {
@@ -745,6 +1014,15 @@
         "pcie16": 1,
         "sata": null,
         "molex": null
+      },
+      "look": {
+        "style": "bequiet-power",
+        "colour": "black",
+        "accent": "orange",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
       }
     },
     {
@@ -769,6 +1047,15 @@
         "pcie16": 1,
         "sata": null,
         "molex": null
+      },
+      "look": {
+        "style": "bequiet-dark-power",
+        "colour": "black",
+        "accent": "silver",
+        "finish": "metal",
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
       }
     },
     {
@@ -793,6 +1080,15 @@
         "pcie16": null,
         "sata": null,
         "molex": null
+      },
+      "look": {
+        "style": "seasonic-prime",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
       }
     },
     {
@@ -820,7 +1116,16 @@
       },
       "specSource": "https://www.corsair.com/us/en/p/psu/cp-9020307-na/hx1200i-fully-modular-ultra-low-noise-platinum-atx-1200-watt-pc-power-supply-cp-9020307-na",
       "specSourceType": "official",
-      "sku": "CP-9020307-NA"
+      "sku": "CP-9020307-NA",
+      "look": {
+        "style": "corsair-rm",
+        "colour": "black",
+        "accent": "yellow",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-rog-thor-1200w-platinum-ii",
@@ -847,7 +1152,19 @@
       },
       "specSource": "https://rog.asus.com/power-supply-units/rog-thor/rog-thor-1200p2-gaming-model/spec/",
       "specSourceType": "official",
-      "sku": "ROG-THOR-1200P2-GAMING"
+      "sku": "ROG-THOR-1200P2-GAMING",
+      "look": {
+        "style": "rog-thor",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": "metal",
+        "fans": null,
+        "rgbZones": [
+          "logo",
+          "screen"
+        ],
+        "colourOptions": null
+      }
     }
   ]
 }

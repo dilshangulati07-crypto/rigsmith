@@ -1,7 +1,9 @@
 // Power state, boot sequence, fan speed profiles and per-part lighting.
 // Fans: real rpm from the data (rpmMax) times the profile; on screen the rotation is scaled
 // down (real speeds alias at 60 fps) and a blur disc fades in with speed.
-// LEDs: each part owns its LED material (ledMaterial()); colour and mode per part or for all.
+// LEDs: each part owns its LED materials (ledMaterial(), frosted diffuserMaterial(), screens);
+// colour and mode per part or for all. At Ultra the lit pieces also carry a small point light
+// each, so the glow falls on nearby surfaces; at High it is emissive + bloom only.
 // Settings (profile, lighting) persist in localStorage; the PC always starts powered off.
 import * as THREE from 'three';
 import { mat } from './materials.js';
@@ -27,6 +29,11 @@ const BLOOM = 0.7;
 const ACCENT_LED = 6;
 const STORE = 'rigsmith.view.v1';
 const DEFAULT_RGB = { color: '#d8e4f2', mode: 'static' };
+const MAX_GLOW = 8;        // point lights (Ultra): each one costs every lit surface a little
+const GLOW_CD = 26;        // candela at full brightness; the scene is in cm, so this is a small LED strip
+const GLOW_REACH = 26;     // cm
+const GLOW_ORDER = ['fans', 'ram', 'cooler', 'gpu', 'motherboard', 'case', 'psu'];
+const SCREEN_LEVEL = 1.5;
 
 const smooth = (a, b, t) => {
   const x = Math.min(1, Math.max(0, (t - a) / (b - a)));
@@ -59,6 +66,48 @@ export function createEffects({ viewer, scene, reducedMotion = false, onStatus }
   let clock = 0;
   let models = [];
   const color = new THREE.Color();
+  const glows = [];        // { light, piece, at, model }
+  const glowOf = new Map(); // model -> { color, k } as last applied
+  let glowQuality = null;
+  const tmp = new THREE.Vector3();
+  const box = new THREE.Box3();
+
+  // Ultra: one point light at the middle of the lit meshes of each lit piece (fans first).
+  // The lights live in the scene, not in the models, so cloned or disposed models never carry them.
+  function rebuildGlow() {
+    for (const g of glows) { g.light.removeFromParent(); g.light.dispose(); }
+    glows.length = 0;
+    glowQuality = viewer.quality;
+    if (viewer.quality !== 'ultra') return;
+    for (const cat of GLOW_ORDER) {
+      for (const s of models) {
+        if (s.category !== cat || !s.model.userData.leds?.length) continue;
+        for (const piece of s.model.userData.units ?? [s.model]) {
+          if (glows.length >= MAX_GLOW) return;
+          piece.updateWorldMatrix(true, true);
+          box.makeEmpty();
+          piece.traverse((o) => { if (o.isMesh && o.material?.userData?.led && !o.material.userData.screen) box.expandByObject(o); });
+          if (box.isEmpty()) continue;
+          const light = new THREE.PointLight(0xffffff, 0, GLOW_REACH, 2);
+          light.name = 'led-glow';
+          viewer.scene.add(light);
+          glows.push({ light, piece, at: piece.worldToLocal(box.getCenter(new THREE.Vector3())), model: s.model });
+        }
+      }
+    }
+  }
+  function updateGlow() {
+    if (glowQuality !== viewer.quality) rebuildGlow();
+    for (const g of glows) {
+      const state = glowOf.get(g.model);
+      let shown = !!state && state.k > 0.001;
+      for (let o = g.piece; o && shown; o = o.parent) if (!o.visible) shown = false;
+      g.light.intensity = shown ? GLOW_CD * state.k : 0;
+      if (!shown) continue;
+      g.light.color.copy(state.color);
+      g.light.position.copy(g.piece.localToWorld(tmp.copy(g.at)));
+    }
+  }
 
   function save() {
     try { localStorage.setItem(STORE, JSON.stringify({ profile, rgb })); } catch { /* storage blocked */ }
@@ -98,9 +147,15 @@ export function createEffects({ viewer, scene, reducedMotion = false, onStatus }
       if (set.mode === 'breathe' && !reducedMotion) f = 0.15 + 0.85 * (0.5 - 0.5 * Math.cos((clock / 3.5) * Math.PI * 2));
       const intensity = intensityFor(color) * f * ledLevel;
       for (const m of leds) {
+        // Screens keep their own picture: the lighting controls only switch them on and off.
+        if (m.userData.screen) { m.emissiveIntensity = f > 0 ? SCREEN_LEVEL * ledLevel : 0; continue; }
         m.emissive.copy(color);
-        m.emissiveIntensity = intensity;
+        m.emissiveIntensity = intensity * (m.userData.gain ?? 1);
       }
+      const state = glowOf.get(s.model) ?? { color: new THREE.Color(), k: 0 };
+      state.color.copy(color);
+      state.k = f * ledLevel;
+      glowOf.set(s.model, state);
     });
   }
 
@@ -138,6 +193,7 @@ export function createEffects({ viewer, scene, reducedMotion = false, onStatus }
       }
     }
     applyLeds();
+    updateGlow();
   }
 
   return {
@@ -145,7 +201,9 @@ export function createEffects({ viewer, scene, reducedMotion = false, onStatus }
     /** Call after the scene's models change. */
     refresh() {
       models = scene.models;
+      glowOf.clear();
       applyLeds();
+      rebuildGlow();
       status();
     },
     setPower,

@@ -144,3 +144,35 @@ export function labelTexture(lines, { width = 256, height = 128, bg = '#15181c',
   tex.anisotropy = 4;
   return tex;
 }
+
+/** The shared unit cube, for instanced() lists that need rotated boxes. */
+export const BOX = UNIT_BOX;
+
+const FONT_COND = '"Barlow Condensed", "Arial Narrow", sans-serif';
+
+/**
+ * Printed text on a see-through plane (branding as plain text, silkscreen-style marks).
+ * The plane lies in local XY facing +Z, `w` x `h` cm; the texture is owned by the caller's model.
+ * @param {string} text
+ * @param {{fg?: string, weight?: number, align?: 'left'|'center', roughness?: number, metalness?: number}} o
+ */
+export function textPlane(text, w, h, { fg = '#c9ced6', weight = 700, align = 'left', roughness = 0.5, metalness = 0.1 } = {}) {
+  const px = 64;
+  const c = document.createElement('canvas');
+  c.width = Math.max(16, Math.round((w / h) * px));
+  c.height = px;
+  const g = c.getContext('2d');
+  g.fillStyle = fg;
+  g.textBaseline = 'middle';
+  g.textAlign = align;
+  g.font = `${weight} ${Math.round(px * 0.86)}px ${FONT_COND}`;
+  g.fillText(String(text).toUpperCase(), align === 'center' ? c.width / 2 : 1, px * 0.54, c.width - 2);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 4;
+  const m = new THREE.Mesh(PLANE, new THREE.MeshStandardMaterial({ map: tex, transparent: true, alphaTest: 0.35, roughness, metalness }));
+  m.scale.set(w, h, 1);
+  m.castShadow = false;
+  return m;
+}
+const PLANE = share(new THREE.PlaneGeometry(1, 1));

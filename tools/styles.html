@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <base href="../">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <title>Rigsmith: part styles</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono&family=IBM+Plex+Sans&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; padding: 24px; background: #0B0D10; color: #E7EAEE; font: 14px "IBM Plex Sans", sans-serif; }
+    h1, h2 { font-family: "Barlow Condensed", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; margin: 0; }
+    h1 { font-size: 26px; }
+    h2 { font-size: 18px; margin: 28px 0 10px; padding-bottom: 6px; border-bottom: 1px solid #262B33; }
+    p { color: #8A93A0; margin: 4px 0 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+    figure { margin: 0; background: #12151A; border: 1px solid #262B33; border-radius: 6px; overflow: hidden; }
+    img { display: block; width: 100%; aspect-ratio: 4 / 3; background: #181C22; }
+    figcaption { padding: 6px 8px 8px; }
+    .style { font: 12px "IBM Plex Mono", monospace; color: #FF5A1F; }
+    .name { font-size: 12px; color: #8A93A0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    canvas { position: fixed; left: -2000px; top: 0; width: 640px; height: 480px; }
+  </style>
+  <script type="importmap">
+    { "imports": { "three": "./vendor/three/three.module.min.js", "three/addons/": "./vendor/three/addons/" } }
+  </script>
+</head>
+<body>
+  <h1>Part styles</h1>
+  <p id="sub">Rendering</p>
+  <canvas id="c"></canvas>
+  <main id="out"></main>
+  <script type="module" src="tools/styles-page.js"></script>
+</body>
+</html>

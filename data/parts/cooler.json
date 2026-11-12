@@ -25,7 +25,16 @@
       "tdpRating": 220,
       "fans": 1,
       "fanSizeMM": 120,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "deepcool-ag",
+        "colour": "silver",
+        "accent": "black",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "deepcool-ak400",
@@ -49,7 +58,20 @@
       "tdpRating": 220,
       "fans": 1,
       "fanSizeMM": 120,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "deepcool-ak",
+        "colour": "silver",
+        "accent": "black",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": [
+          "silver",
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "deepcool-ak500",
@@ -73,7 +95,20 @@
       "tdpRating": 240,
       "fans": 1,
       "fanSizeMM": 120,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "deepcool-ak",
+        "colour": "silver",
+        "accent": "black",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": [
+          "silver",
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "deepcool-ak620",
@@ -97,7 +132,20 @@
       "tdpRating": 260,
       "fans": 2,
       "fanSizeMM": 120,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "deepcool-ak",
+        "colour": "silver",
+        "accent": "black",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": [
+          "silver",
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "thermalright-assassin-x-120-refined-se",
@@ -121,7 +169,16 @@
       "tdpRating": null,
       "fans": 1,
       "fanSizeMM": 120,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "thermalright",
+        "colour": "silver",
+        "accent": "grey",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "thermalright-peerless-assassin-120-se",
@@ -145,7 +202,20 @@
       "tdpRating": null,
       "fans": 2,
       "fanSizeMM": 120,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "thermalright",
+        "colour": "silver",
+        "accent": "grey",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": [
+          "silver",
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "thermalright-phantom-spirit-120-se",
@@ -169,7 +239,16 @@
       "tdpRating": null,
       "fans": 2,
       "fanSizeMM": 120,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "thermalright",
+        "colour": "silver",
+        "accent": "grey",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "arctic-freezer-36",
@@ -193,7 +272,19 @@
       "tdpRating": null,
       "fans": 2,
       "fanSizeMM": 120,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "arctic-freezer",
+        "colour": "silver",
+        "accent": "black",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": [
+          "silver",
+          "black"
+        ]
+      }
     },
     {
       "id": "cooler-master-hyper-212-spectrum-v3",
@@ -220,7 +311,18 @@
       "rgb": true,
       "specSource": "https://www.coolermaster.com/en-global/products/hyper-212-spectrum-v3.html",
       "specSourceType": "official",
-      "sku": "RR-S4NA-17PA-R1"
+      "sku": "RR-S4NA-17PA-R1",
+      "look": {
+        "style": "cm-hyper",
+        "colour": "silver",
+        "accent": "black",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "fans"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "id-cooling-se-224-xts",
@@ -246,7 +348,20 @@
       "fanSizeMM": 120,
       "rgb": false,
       "specSource": "https://www.idcooling.com/product/detail?id=318&name=SE-224-XTS",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "id-cooling",
+        "colour": "silver",
+        "accent": "black",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": [
+          "silver",
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "id-cooling-is-55",
@@ -270,7 +385,19 @@
       "tdpRating": null,
       "fans": 1,
       "fanSizeMM": 120,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "id-cooling",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "noctua-nh-l9a-am5",
@@ -292,7 +419,19 @@
       "tdpRating": null,
       "fans": 1,
       "fanSizeMM": 92,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "noctua",
+        "colour": "silver",
+        "accent": "beige",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": [
+          "silver",
+          "black"
+        ]
+      }
     },
     {
       "id": "noctua-nh-l12s",
@@ -316,7 +455,16 @@
       "tdpRating": null,
       "fans": 1,
       "fanSizeMM": 120,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "noctua",
+        "colour": "silver",
+        "accent": "beige",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "noctua-nh-u12s-redux",
@@ -340,7 +488,16 @@
       "tdpRating": null,
       "fans": 1,
       "fanSizeMM": 120,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "noctua-redux",
+        "colour": "silver",
+        "accent": "grey",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "noctua-nh-d15-g2",
@@ -364,7 +521,16 @@
       "tdpRating": null,
       "fans": 2,
       "fanSizeMM": 140,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "noctua",
+        "colour": "silver",
+        "accent": "beige",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "be-quiet-pure-rock-2",
@@ -388,7 +554,19 @@
       "tdpRating": 150,
       "fans": 1,
       "fanSizeMM": 120,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "bequiet-pure-rock",
+        "colour": "silver",
+        "accent": "black",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": [
+          "silver",
+          "black"
+        ]
+      }
     },
     {
       "id": "be-quiet-dark-rock-pro-5",
@@ -412,7 +590,16 @@
       "tdpRating": 270,
       "fans": 2,
       "fanSizeMM": 135,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "bequiet-dark-rock",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "corsair-icue-h60x-rgb-elite",
@@ -436,7 +623,19 @@
       "tdpRating": null,
       "fans": 1,
       "fanSizeMM": 120,
-      "rgb": true
+      "rgb": true,
+      "look": {
+        "style": "corsair-h",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "pump",
+          "fans"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "nzxt-kraken-120",
@@ -460,7 +659,16 @@
       "tdpRating": null,
       "fans": 1,
       "fanSizeMM": 120,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "nzxt-kraken-120",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "cooler-master-masterliquid-ml120l-v2-rgb",
@@ -484,7 +692,19 @@
       "tdpRating": null,
       "fans": 1,
       "fanSizeMM": 120,
-      "rgb": true
+      "rgb": true,
+      "look": {
+        "style": "cm-masterliquid",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "pump",
+          "fans"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "deepcool-le520",
@@ -508,7 +728,19 @@
       "tdpRating": null,
       "fans": 2,
       "fanSizeMM": 120,
-      "rgb": true
+      "rgb": true,
+      "look": {
+        "style": "deepcool-le",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "pump",
+          "fans"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "arctic-liquid-freezer-iii-240",
@@ -532,7 +764,20 @@
       "tdpRating": null,
       "fans": 2,
       "fanSizeMM": 120,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "arctic-liquid-freezer",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      },
+      "radiatorThicknessMM": 38
     },
     {
       "id": "msi-mag-coreliquid-a13-240",
@@ -556,7 +801,22 @@
       "tdpRating": null,
       "fans": 2,
       "fanSizeMM": 120,
-      "rgb": true
+      "rgb": true,
+      "look": {
+        "style": "msi-coreliquid",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "pump",
+          "fans"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "asus-tuf-gaming-lc-ii-240-argb",
@@ -580,7 +840,19 @@
       "tdpRating": null,
       "fans": 2,
       "fanSizeMM": 120,
-      "rgb": true
+      "rgb": true,
+      "look": {
+        "style": "asus-tuf-lc",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "pump",
+          "fans"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "nzxt-kraken-240",
@@ -604,7 +876,21 @@
       "tdpRating": null,
       "fans": 2,
       "fanSizeMM": 120,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "nzxt-kraken",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "screen"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "corsair-nautilus-240-rs",
@@ -628,7 +914,19 @@
       "tdpRating": null,
       "fans": 2,
       "fanSizeMM": 120,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "corsair-nautilus",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "arctic-liquid-freezer-iii-280",
@@ -652,7 +950,20 @@
       "tdpRating": null,
       "fans": 2,
       "fanSizeMM": 140,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "arctic-liquid-freezer",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      },
+      "radiatorThicknessMM": 38
     },
     {
       "id": "nzxt-kraken-280",
@@ -676,7 +987,21 @@
       "tdpRating": null,
       "fans": 2,
       "fanSizeMM": 140,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "nzxt-kraken",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "screen"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "corsair-icue-h115i-elite-capellix-xt",
@@ -700,7 +1025,22 @@
       "tdpRating": null,
       "fans": 2,
       "fanSizeMM": 140,
-      "rgb": true
+      "rgb": true,
+      "look": {
+        "style": "corsair-capellix",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "pump",
+          "fans"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "arctic-liquid-freezer-iii-360",
@@ -724,7 +1064,20 @@
       "tdpRating": null,
       "fans": 3,
       "fanSizeMM": 120,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "arctic-liquid-freezer",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      },
+      "radiatorThicknessMM": 38
     },
     {
       "id": "deepcool-lt720",
@@ -748,7 +1101,21 @@
       "tdpRating": null,
       "fans": 3,
       "fanSizeMM": 120,
-      "rgb": true
+      "rgb": true,
+      "look": {
+        "style": "deepcool-lt",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "pump"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "cooler-master-masterliquid-360l-core-argb",
@@ -772,7 +1139,19 @@
       "tdpRating": null,
       "fans": 3,
       "fanSizeMM": 120,
-      "rgb": true
+      "rgb": true,
+      "look": {
+        "style": "cm-masterliquid",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "pump",
+          "fans"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "corsair-icue-h150i-elite-capellix-xt",
@@ -796,7 +1175,22 @@
       "tdpRating": null,
       "fans": 3,
       "fanSizeMM": 120,
-      "rgb": true
+      "rgb": true,
+      "look": {
+        "style": "corsair-capellix",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "pump",
+          "fans"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "lian-li-galahad-ii-trinity-360",
@@ -820,7 +1214,22 @@
       "tdpRating": null,
       "fans": 3,
       "fanSizeMM": 120,
-      "rgb": true
+      "rgb": true,
+      "look": {
+        "style": "lianli-galahad",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "pump",
+          "fans"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "nzxt-kraken-elite-360",
@@ -844,7 +1253,22 @@
       "tdpRating": null,
       "fans": 3,
       "fanSizeMM": 120,
-      "rgb": true
+      "rgb": true,
+      "look": {
+        "style": "nzxt-kraken-elite",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "screen",
+          "ring"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "asus-rog-ryujin-iii-360",
@@ -868,7 +1292,22 @@
       "tdpRating": null,
       "fans": 3,
       "fanSizeMM": 120,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "rog-ryujin",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "screen"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      },
+      "radiatorThicknessMM": 30
     }
   ]
 }

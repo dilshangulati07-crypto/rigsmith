@@ -19,7 +19,16 @@
       "interface": "PCIe 4.0 x4 NVMe",
       "pcieGen": 4,
       "readMBs": 7450,
-      "writeMBs": 6900
+      "writeMBs": 6900,
+      "look": {
+        "style": "m2-label",
+        "colour": "black",
+        "accent": "red",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "samsung-990-pro-2tb",
@@ -37,7 +46,16 @@
       "interface": "PCIe 4.0 x4 NVMe",
       "pcieGen": 4,
       "readMBs": 7450,
-      "writeMBs": 6900
+      "writeMBs": 6900,
+      "look": {
+        "style": "m2-label",
+        "colour": "black",
+        "accent": "red",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "samsung-990-pro-4tb",
@@ -55,7 +73,16 @@
       "interface": "PCIe 4.0 x4 NVMe",
       "pcieGen": 4,
       "readMBs": 7450,
-      "writeMBs": 6900
+      "writeMBs": 6900,
+      "look": {
+        "style": "m2-label",
+        "colour": "black",
+        "accent": "red",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "samsung-990-evo-plus-1tb",
@@ -73,7 +100,16 @@
       "interface": "PCIe 4.0 x4 NVMe",
       "pcieGen": 4,
       "readMBs": 7150,
-      "writeMBs": 6300
+      "writeMBs": 6300,
+      "look": {
+        "style": "m2-label",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "samsung-990-evo-plus-2tb",
@@ -91,7 +127,16 @@
       "interface": "PCIe 4.0 x4 NVMe",
       "pcieGen": 4,
       "readMBs": 7250,
-      "writeMBs": 6300
+      "writeMBs": 6300,
+      "look": {
+        "style": "m2-label",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "samsung-980-1tb",
@@ -109,7 +154,16 @@
       "interface": "PCIe 3.0 x4 NVMe",
       "pcieGen": 3,
       "readMBs": 3500,
-      "writeMBs": 3000
+      "writeMBs": 3000,
+      "look": {
+        "style": "m2-label",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "samsung-870-evo-500gb",
@@ -126,7 +180,16 @@
       "formFactor": "2.5in",
       "interface": "SATA III",
       "readMBs": 560,
-      "writeMBs": 530
+      "writeMBs": 530,
+      "look": {
+        "style": "ssd-25",
+        "colour": "black",
+        "accent": "grey",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "samsung-870-evo-1tb",
@@ -143,7 +206,16 @@
       "formFactor": "2.5in",
       "interface": "SATA III",
       "readMBs": 560,
-      "writeMBs": 530
+      "writeMBs": 530,
+      "look": {
+        "style": "ssd-25",
+        "colour": "black",
+        "accent": "grey",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "western-digital-wd-black-sn850x-1tb",
@@ -161,7 +233,16 @@
       "interface": "PCIe 4.0 x4 NVMe",
       "pcieGen": 4,
       "readMBs": 7300,
-      "writeMBs": 6300
+      "writeMBs": 6300,
+      "look": {
+        "style": "m2-label",
+        "colour": "black",
+        "accent": "white",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "western-digital-wd-black-sn850x-2tb",
@@ -179,7 +260,16 @@
       "interface": "PCIe 4.0 x4 NVMe",
       "pcieGen": 4,
       "readMBs": 7300,
-      "writeMBs": 6600
+      "writeMBs": 6600,
+      "look": {
+        "style": "m2-label",
+        "colour": "black",
+        "accent": "white",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "western-digital-wd-blue-sn580-1tb",
@@ -197,7 +287,16 @@
       "interface": "PCIe 4.0 x4 NVMe",
       "pcieGen": 4,
       "readMBs": 4150,
-      "writeMBs": 4150
+      "writeMBs": 4150,
+      "look": {
+        "style": "m2-label",
+        "colour": "blue",
+        "accent": "white",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "crucial-t700-2tb",
@@ -215,7 +314,16 @@
       "interface": "PCIe 5.0 x4 NVMe",
       "pcieGen": 5,
       "readMBs": 12400,
-      "writeMBs": 11800
+      "writeMBs": 11800,
+      "look": {
+        "style": "m2-label",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "crucial-t705-2tb",
@@ -233,7 +341,16 @@
       "interface": "PCIe 5.0 x4 NVMe",
       "pcieGen": 5,
       "readMBs": 14500,
-      "writeMBs": 12700
+      "writeMBs": 12700,
+      "look": {
+        "style": "m2-label",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "crucial-p3-plus-1tb",
@@ -251,7 +368,16 @@
       "interface": "PCIe 4.0 x4 NVMe",
       "pcieGen": 4,
       "readMBs": 5000,
-      "writeMBs": 3600
+      "writeMBs": 3600,
+      "look": {
+        "style": "m2-label",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "crucial-p3-plus-2tb",
@@ -269,7 +395,16 @@
       "interface": "PCIe 4.0 x4 NVMe",
       "pcieGen": 4,
       "readMBs": 5000,
-      "writeMBs": 4200
+      "writeMBs": 4200,
+      "look": {
+        "style": "m2-label",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "crucial-p3-1tb",
@@ -287,7 +422,16 @@
       "interface": "PCIe 3.0 x4 NVMe",
       "pcieGen": 3,
       "readMBs": 3500,
-      "writeMBs": 3000
+      "writeMBs": 3000,
+      "look": {
+        "style": "m2-label",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "crucial-mx500-1tb",
@@ -304,7 +448,16 @@
       "formFactor": "2.5in",
       "interface": "SATA III",
       "readMBs": 560,
-      "writeMBs": 510
+      "writeMBs": 510,
+      "look": {
+        "style": "ssd-25",
+        "colour": "silver",
+        "accent": "blue",
+        "finish": "metal",
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "kingston-nv3-1tb",
@@ -322,7 +475,16 @@
       "interface": "PCIe 4.0 x4 NVMe",
       "pcieGen": 4,
       "readMBs": 6000,
-      "writeMBs": 4000
+      "writeMBs": 4000,
+      "look": {
+        "style": "m2-label",
+        "colour": "white",
+        "accent": "black",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "kingston-nv2-1tb",
@@ -340,7 +502,16 @@
       "interface": "PCIe 4.0 x4 NVMe",
       "pcieGen": 4,
       "readMBs": 3500,
-      "writeMBs": 2100
+      "writeMBs": 2100,
+      "look": {
+        "style": "m2-label",
+        "colour": "white",
+        "accent": "black",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "kingston-kc3000-1tb",
@@ -358,7 +529,16 @@
       "interface": "PCIe 4.0 x4 NVMe",
       "pcieGen": 4,
       "readMBs": 7000,
-      "writeMBs": 6000
+      "writeMBs": 6000,
+      "look": {
+        "style": "m2-spreader",
+        "colour": "black",
+        "accent": null,
+        "finish": "metal",
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "kingston-kc3000-2tb",
@@ -376,7 +556,16 @@
       "interface": "PCIe 4.0 x4 NVMe",
       "pcieGen": 4,
       "readMBs": 7000,
-      "writeMBs": 7000
+      "writeMBs": 7000,
+      "look": {
+        "style": "m2-spreader",
+        "colour": "black",
+        "accent": null,
+        "finish": "metal",
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "kingston-a400-480gb",
@@ -393,7 +582,16 @@
       "formFactor": "2.5in",
       "interface": "SATA III",
       "readMBs": 500,
-      "writeMBs": 450
+      "writeMBs": 450,
+      "look": {
+        "style": "ssd-25",
+        "colour": "grey",
+        "accent": "black",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "seagate-firecuda-530-2tb",
@@ -411,7 +609,16 @@
       "interface": "PCIe 4.0 x4 NVMe",
       "pcieGen": 4,
       "readMBs": 7300,
-      "writeMBs": 6900
+      "writeMBs": 6900,
+      "look": {
+        "style": "m2-label",
+        "colour": "black",
+        "accent": "orange",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "lexar-nm790-1tb",
@@ -429,7 +636,16 @@
       "interface": "PCIe 4.0 x4 NVMe",
       "pcieGen": 4,
       "readMBs": 7400,
-      "writeMBs": 6500
+      "writeMBs": 6500,
+      "look": {
+        "style": "m2-label",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "corsair-mp700-pro-2tb",
@@ -447,7 +663,16 @@
       "interface": "PCIe 5.0 x4 NVMe",
       "pcieGen": 5,
       "readMBs": 12400,
-      "writeMBs": 11800
+      "writeMBs": 11800,
+      "look": {
+        "style": "m2-label",
+        "colour": "black",
+        "accent": "yellow",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "seagate-barracuda-2tb-st2000dm008",
@@ -465,7 +690,16 @@
       "interface": "SATA III",
       "readMBs": 220,
       "writeMBs": 220,
-      "rpm": 7200
+      "rpm": 7200,
+      "look": {
+        "style": "hdd-35",
+        "colour": "silver",
+        "accent": "green",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "seagate-barracuda-4tb-st4000dm004",
@@ -483,7 +717,16 @@
       "interface": "SATA III",
       "readMBs": 190,
       "writeMBs": 190,
-      "rpm": 5400
+      "rpm": 5400,
+      "look": {
+        "style": "hdd-35",
+        "colour": "silver",
+        "accent": "green",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "western-digital-wd-blue-2tb-wd20ezbx",
@@ -504,7 +747,16 @@
       "rpm": 7200,
       "specSource": "https://www.westerndigital.com/content/dam/doc-library/en_us/assets/public/western-digital/product/internal-drives/wd-blue-hdd/data-sheet-western-digital-wd-blue-pc-hdd.pdf",
       "specSourceType": "official",
-      "sku": "WD20EZBX"
+      "sku": "WD20EZBX",
+      "look": {
+        "style": "hdd-35",
+        "colour": "silver",
+        "accent": "blue",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "western-digital-wd-red-plus-4tb-wd40efpx",
@@ -525,7 +777,16 @@
       "rpm": 5400,
       "specSource": "https://www.westerndigital.com/content/dam/doc-library/en_us/assets/public/western-digital/product/internal-drives/wd-red-plus-hdd/data-sheet-western-digital-wd-red-plus-hdd.pdf",
       "specSourceType": "official",
-      "sku": "WD40EFPX"
+      "sku": "WD40EFPX",
+      "look": {
+        "style": "hdd-35",
+        "colour": "silver",
+        "accent": "red",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     }
   ]
 }

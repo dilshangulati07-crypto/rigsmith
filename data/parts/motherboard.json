@@ -36,7 +36,16 @@
       "wifi": "none",
       "cpuPower": [
         "8-pin"
-      ]
+      ],
+      "look": {
+        "style": "budget",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-a520m-a-pro",
@@ -71,7 +80,16 @@
       "wifi": "none",
       "cpuPower": [
         "8-pin"
-      ]
+      ],
+      "look": {
+        "style": "budget",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "asrock-a520m-hdv",
@@ -106,7 +124,16 @@
       "wifi": "none",
       "cpuPower": [
         "8-pin"
-      ]
+      ],
+      "look": {
+        "style": "budget",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-b450m-pro-vdh-max",
@@ -129,7 +156,16 @@
       "sataPorts": 4,
       "wifi": "none",
       "specSource": "https://storage-asset.msi.com/datasheet/mb/global/B450M-PRO-VDH-MAX.pdf",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "budget",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-b550m-pro-vdh-wifi",
@@ -169,7 +205,16 @@
       "wifi": "wifi5",
       "cpuPower": [
         "8-pin"
-      ]
+      ],
+      "look": {
+        "style": "msi-pro",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "asrock-b550m-pro4",
@@ -206,7 +251,16 @@
       ],
       "m2Slots": 2,
       "sataPorts": 6,
-      "wifi": "none"
+      "wifi": "none",
+      "look": {
+        "style": "asrock-pro",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-prime-b550m-a-wifi-ii",
@@ -248,7 +302,16 @@
       "sataPorts": 4,
       "wifi": "wifi6",
       "specSource": "https://www.asus.com/motherboards-components/motherboards/prime/prime-b550m-a-wifi-ii/techspec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "prime",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-mag-b550-tomahawk",
@@ -294,7 +357,16 @@
       "cpuPower": [
         "8-pin",
         "4-pin"
-      ]
+      ],
+      "look": {
+        "style": "msi-tomahawk",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "gigabyte-b550-aorus-elite-v2",
@@ -315,7 +387,16 @@
       "pcieSlots": null,
       "m2Slots": 2,
       "sataPorts": 4,
-      "wifi": "none"
+      "wifi": "none",
+      "look": {
+        "style": "aorus",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-tuf-gaming-b550-plus-wifi-ii",
@@ -373,7 +454,18 @@
       "cpuPower": [
         "8-pin",
         "4-pin"
-      ]
+      ],
+      "look": {
+        "style": "tuf",
+        "colour": "black",
+        "accent": "yellow",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "edge"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-rog-strix-b550-f-gaming-wifi-ii",
@@ -431,7 +523,18 @@
       "cpuPower": [
         "8-pin",
         "4-pin"
-      ]
+      ],
+      "look": {
+        "style": "rog-strix",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": "mirror",
+        "fans": null,
+        "rgbZones": [
+          "io"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "gigabyte-b550i-aorus-pro-ax",
@@ -461,7 +564,16 @@
       "wifi": "wifi6",
       "cpuPower": [
         "8-pin"
-      ]
+      ],
+      "look": {
+        "style": "aorus",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-rog-strix-b550-i-gaming",
@@ -488,7 +600,18 @@
       ],
       "m2Slots": 2,
       "sataPorts": 4,
-      "wifi": "wifi6"
+      "wifi": "wifi6",
+      "look": {
+        "style": "rog-strix",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": "mirror",
+        "fans": null,
+        "rgbZones": [
+          "io"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-mpg-x570-gaming-plus",
@@ -511,7 +634,16 @@
       "sataPorts": 6,
       "wifi": "none",
       "specSource": "https://storage-asset.msi.com/datasheet/mb/global/MPG-X570-GAMING-PLUS.pdf",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "msi-mpg",
+        "colour": "black",
+        "accent": "red",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-pro-a620m-e",
@@ -546,7 +678,16 @@
       "wifi": "none",
       "cpuPower": [
         "8-pin"
-      ]
+      ],
+      "look": {
+        "style": "budget",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "asrock-b650m-pro-rs-wifi",
@@ -567,7 +708,16 @@
       "pcieSlots": null,
       "m2Slots": 3,
       "sataPorts": 4,
-      "wifi": "wifi6e"
+      "wifi": "wifi6e",
+      "look": {
+        "style": "asrock-pro",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-pro-b650m-a-wifi",
@@ -590,7 +740,16 @@
       "sataPorts": 4,
       "wifi": "wifi6e",
       "specSource": "https://storage-asset.msi.com/datasheet/mb/global/PRO-B650M-A-WIFI.pdf",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "msi-pro",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "gigabyte-b650m-aorus-elite-ax",
@@ -611,7 +770,16 @@
       "pcieSlots": null,
       "m2Slots": 2,
       "sataPorts": 4,
-      "wifi": "wifi6e"
+      "wifi": "wifi6e",
+      "look": {
+        "style": "aorus",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-tuf-gaming-b650-plus-wifi",
@@ -663,7 +831,16 @@
       "cpuPower": [
         "8-pin",
         "4-pin"
-      ]
+      ],
+      "look": {
+        "style": "tuf",
+        "colour": "black",
+        "accent": "grey",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "gigabyte-b650-aorus-elite-ax",
@@ -684,7 +861,16 @@
       "pcieSlots": null,
       "m2Slots": 3,
       "sataPorts": 4,
-      "wifi": "wifi6e"
+      "wifi": "wifi6e",
+      "look": {
+        "style": "aorus",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-mag-b650-tomahawk-wifi",
@@ -711,7 +897,16 @@
       "cpuPower": [
         "8-pin",
         "8-pin"
-      ]
+      ],
+      "look": {
+        "style": "msi-tomahawk",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-mpg-b650i-edge-wifi",
@@ -734,7 +929,16 @@
       "sataPorts": 4,
       "wifi": "wifi6e",
       "specSource": "https://storage-asset.msi.com/datasheet/mb/global/MPG-B650I-EDGE-WIFI.pdf",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "msi-mpg-edge",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-rog-strix-b650e-f-gaming-wifi",
@@ -786,7 +990,18 @@
       "cpuPower": [
         "8-pin",
         "8-pin"
-      ]
+      ],
+      "look": {
+        "style": "rog-strix",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": "mirror",
+        "fans": null,
+        "rgbZones": [
+          "io"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-rog-strix-b650e-i-gaming-wifi",
@@ -817,7 +1032,18 @@
       "cpuPower": [
         "8-pin",
         "4-pin"
-      ]
+      ],
+      "look": {
+        "style": "rog-strix",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": "mirror",
+        "fans": null,
+        "rgbZones": [
+          "io"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-tuf-gaming-b850-plus-wifi",
@@ -865,7 +1091,16 @@
       "sataPorts": 4,
       "wifi": "wifi7",
       "specSource": "https://www.asus.com/motherboards-components/motherboards/tuf-gaming/tuf-gaming-b850-plus-wifi/techspec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "tuf",
+        "colour": "black",
+        "accent": "grey",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "gigabyte-b850-aorus-elite-wifi7",
@@ -886,7 +1121,16 @@
       "pcieSlots": null,
       "m2Slots": null,
       "sataPorts": 4,
-      "wifi": "wifi7"
+      "wifi": "wifi7",
+      "look": {
+        "style": "aorus",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-mag-b850-tomahawk-max-wifi",
@@ -909,7 +1153,16 @@
       "sataPorts": 4,
       "wifi": "wifi7",
       "specSource": "https://storage-asset.msi.com/datasheet/mb/global/MAG-B850-TOMAHAWK-MAX-WIFI.pdf",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "msi-tomahawk",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-mag-x670e-tomahawk-wifi",
@@ -936,7 +1189,16 @@
       "cpuPower": [
         "8-pin",
         "8-pin"
-      ]
+      ],
+      "look": {
+        "style": "msi-tomahawk",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-rog-crosshair-x670e-hero",
@@ -982,7 +1244,18 @@
       "cpuPower": [
         "8-pin",
         "8-pin"
-      ]
+      ],
+      "look": {
+        "style": "rog-hero",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": "mirror",
+        "fans": null,
+        "rgbZones": [
+          "io"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-tuf-gaming-x870-plus-wifi",
@@ -1018,7 +1291,16 @@
       "sataPorts": 2,
       "wifi": "wifi7",
       "specSource": "https://www.asus.com/motherboards-components/motherboards/tuf-gaming/tuf-gaming-x870-plus-wifi/techspec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "tuf",
+        "colour": "black",
+        "accent": "grey",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "gigabyte-x870-aorus-elite-wifi7",
@@ -1039,7 +1321,16 @@
       "pcieSlots": null,
       "m2Slots": null,
       "sataPorts": null,
-      "wifi": "wifi7"
+      "wifi": "wifi7",
+      "look": {
+        "style": "aorus",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-mag-x870-tomahawk-wifi",
@@ -1066,7 +1357,16 @@
       "cpuPower": [
         "8-pin",
         "8-pin"
-      ]
+      ],
+      "look": {
+        "style": "msi-tomahawk",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-rog-strix-x870-i-gaming-wifi",
@@ -1096,7 +1396,18 @@
       "sataPorts": 2,
       "wifi": "wifi7",
       "specSource": "https://rog.asus.com/motherboards/rog-strix/rog-strix-x870-i-gaming-wifi/spec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "rog-strix",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": "mirror",
+        "fans": null,
+        "rgbZones": [
+          "io"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-rog-strix-x870e-e-gaming-wifi",
@@ -1136,7 +1447,18 @@
       "cpuPower": [
         "8-pin",
         "8-pin"
-      ]
+      ],
+      "look": {
+        "style": "rog-strix",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": "mirror",
+        "fans": null,
+        "rgbZones": [
+          "io"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "asrock-x870e-taichi",
@@ -1157,7 +1479,18 @@
       "pcieSlots": null,
       "m2Slots": null,
       "sataPorts": null,
-      "wifi": "wifi7"
+      "wifi": "wifi7",
+      "look": {
+        "style": "asrock-taichi",
+        "colour": "black",
+        "accent": "gold",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "io"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-rog-crosshair-x870e-hero",
@@ -1197,7 +1530,18 @@
       "cpuPower": [
         "8-pin",
         "8-pin"
-      ]
+      ],
+      "look": {
+        "style": "rog-hero",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": "mirror",
+        "fans": null,
+        "rgbZones": [
+          "io"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "gigabyte-h610m-s2h-ddr4",
@@ -1232,7 +1576,16 @@
       "wifi": "none",
       "cpuPower": [
         "8-pin"
-      ]
+      ],
+      "look": {
+        "style": "budget",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-prime-h610m-e-d4",
@@ -1267,7 +1620,16 @@
       "wifi": "none",
       "cpuPower": [
         "8-pin"
-      ]
+      ],
+      "look": {
+        "style": "budget",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "gigabyte-b760m-ds3h-ddr4",
@@ -1288,7 +1650,16 @@
       "pcieSlots": null,
       "m2Slots": 2,
       "sataPorts": 4,
-      "wifi": "none"
+      "wifi": "none",
+      "look": {
+        "style": "budget",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "asrock-b760m-pro-rs",
@@ -1309,7 +1680,16 @@
       "pcieSlots": null,
       "m2Slots": null,
       "sataPorts": 4,
-      "wifi": "none"
+      "wifi": "none",
+      "look": {
+        "style": "asrock-pro",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-prime-b760m-a-wifi-d4",
@@ -1351,7 +1731,16 @@
       "sataPorts": 4,
       "wifi": "wifi6",
       "specSource": "https://www.asus.com/motherboards-components/motherboards/prime/prime-b760m-a-wifi-d4/techspec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "prime",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-pro-b760m-a-wifi-ddr4",
@@ -1374,7 +1763,16 @@
       "sataPorts": 4,
       "wifi": "wifi6e",
       "specSource": "https://storage-asset.msi.com/datasheet/mb/global/PRO-B760M-A-WIFI-DDR4.pdf",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "msi-pro",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-pro-b760m-a-wifi",
@@ -1397,7 +1795,16 @@
       "sataPorts": 4,
       "wifi": "wifi6e",
       "specSource": "https://storage-asset.msi.com/datasheet/mb/global/PRO-B760M-A-WIFI.pdf",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "msi-pro",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "gigabyte-b760m-aorus-elite-ax",
@@ -1418,7 +1825,16 @@
       "pcieSlots": null,
       "m2Slots": 2,
       "sataPorts": 4,
-      "wifi": "wifi6e"
+      "wifi": "wifi6e",
+      "look": {
+        "style": "aorus",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-tuf-gaming-b760-plus-wifi",
@@ -1466,7 +1882,16 @@
       "sataPorts": 4,
       "wifi": "wifi6",
       "specSource": "https://www.asus.com/motherboards-components/motherboards/tuf-gaming/tuf-gaming-b760-plus-wifi/techspec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "tuf",
+        "colour": "black",
+        "accent": "grey",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-rog-strix-b760-i-gaming-wifi",
@@ -1496,7 +1921,18 @@
       "sataPorts": 4,
       "wifi": "wifi6e",
       "specSource": "https://rog.asus.com/motherboards/rog-strix/rog-strix-b760-i-gaming-wifi-model/spec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "rog-strix",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": "mirror",
+        "fans": null,
+        "rgbZones": [
+          "io"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-pro-z790-p-wifi-ddr4",
@@ -1519,7 +1955,16 @@
       "sataPorts": 6,
       "wifi": "wifi6e",
       "specSource": "https://storage-asset.msi.com/datasheet/mb/global/PRO-Z790-P-WIFI-DDR4.pdf",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "msi-pro",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-prime-z790-p-wifi",
@@ -1573,7 +2018,16 @@
       "sataPorts": 4,
       "wifi": "wifi6",
       "specSource": "https://www.asus.com/motherboards-components/motherboards/prime/prime-z790-p-wifi/techspec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "prime",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-pro-z790-a-max-wifi",
@@ -1596,7 +2050,16 @@
       "sataPorts": 6,
       "wifi": "wifi7",
       "specSource": "https://storage-asset.msi.com/datasheet/mb/global/PRO-Z790-A-MAX-WIFI.pdf",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "msi-pro",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "gigabyte-z790-aorus-elite-ax",
@@ -1617,7 +2080,16 @@
       "pcieSlots": null,
       "m2Slots": 4,
       "sataPorts": 6,
-      "wifi": "wifi6e"
+      "wifi": "wifi6e",
+      "look": {
+        "style": "aorus",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-mag-z790-tomahawk-wifi",
@@ -1640,7 +2112,16 @@
       "sataPorts": 7,
       "wifi": "wifi6e",
       "specSource": "https://storage-asset.msi.com/datasheet/mb/global/MAG-Z790-TOMAHAWK-WIFI.pdf",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "msi-tomahawk",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-mpg-z790i-edge-wifi",
@@ -1663,7 +2144,16 @@
       "sataPorts": 4,
       "wifi": "wifi6e",
       "specSource": "https://storage-asset.msi.com/datasheet/mb/global/MPG-Z790I-EDGE-WIFI.pdf",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "msi-mpg-edge",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-rog-strix-z790-e-gaming-wifi-ii",
@@ -1709,7 +2199,18 @@
       "cpuPower": [
         "8-pin",
         "8-pin"
-      ]
+      ],
+      "look": {
+        "style": "rog-strix",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": "mirror",
+        "fans": null,
+        "rgbZones": [
+          "io"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-rog-maximus-z790-hero",
@@ -1755,7 +2256,18 @@
       "cpuPower": [
         "8-pin",
         "8-pin"
-      ]
+      ],
+      "look": {
+        "style": "rog-hero",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": "mirror",
+        "fans": null,
+        "rgbZones": [
+          "io"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-pro-b860m-a-wifi",
@@ -1778,7 +2290,16 @@
       "sataPorts": 4,
       "wifi": "wifi7",
       "specSource": "https://storage-asset.msi.com/datasheet/mb/global/PRO-B860M-A-WIFI.pdf",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "msi-pro",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "gigabyte-b860m-aorus-elite-wifi6e",
@@ -1799,7 +2320,16 @@
       "pcieSlots": null,
       "m2Slots": null,
       "sataPorts": null,
-      "wifi": "wifi6e"
+      "wifi": "wifi6e",
+      "look": {
+        "style": "aorus",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-tuf-gaming-b860-plus-wifi",
@@ -1841,7 +2371,16 @@
       "sataPorts": 4,
       "wifi": "wifi7",
       "specSource": "https://www.asus.com/motherboards-components/motherboards/tuf-gaming/tuf-gaming-b860-plus-wifi/techspec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "tuf",
+        "colour": "black",
+        "accent": "grey",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-prime-z890-p-wifi",
@@ -1889,7 +2428,16 @@
       "sataPorts": 4,
       "wifi": "wifi7",
       "specSource": "https://www.asus.com/motherboards-components/motherboards/prime/prime-z890-p-wifi/techspec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "prime",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-pro-z890-a-wifi",
@@ -1912,7 +2460,16 @@
       "sataPorts": 4,
       "wifi": "wifi7",
       "specSource": "https://storage-asset.msi.com/datasheet/mb/global/PRO-Z890-A-WIFI.pdf",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "msi-pro",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "gigabyte-z890-aorus-elite-wifi7",
@@ -1933,7 +2490,16 @@
       "pcieSlots": null,
       "m2Slots": null,
       "sataPorts": null,
-      "wifi": "wifi7"
+      "wifi": "wifi7",
+      "look": {
+        "style": "aorus",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-tuf-gaming-z890-plus-wifi",
@@ -1987,7 +2553,16 @@
       "sataPorts": 4,
       "wifi": "wifi7",
       "specSource": "https://www.asus.com/motherboards-components/motherboards/tuf-gaming/tuf-gaming-z890-plus-wifi/techspec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "tuf",
+        "colour": "black",
+        "accent": "grey",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-mag-z890-tomahawk-wifi",
@@ -2010,7 +2585,16 @@
       "sataPorts": 4,
       "wifi": "wifi7",
       "specSource": "https://storage-asset.msi.com/datasheet/mb/global/MAG-Z890-TOMAHAWK-WIFI.pdf",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "msi-tomahawk",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": null,
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-rog-strix-z890-i-gaming-wifi",
@@ -2040,7 +2624,18 @@
       "sataPorts": 2,
       "wifi": "wifi7",
       "specSource": "https://rog.asus.com/motherboards/rog-strix/rog-strix-z890-i-gaming-wifi/spec/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "rog-strix",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": "mirror",
+        "fans": null,
+        "rgbZones": [
+          "io"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-rog-strix-z890-e-gaming-wifi",
@@ -2080,7 +2675,18 @@
       "cpuPower": [
         "8-pin",
         "8-pin"
-      ]
+      ],
+      "look": {
+        "style": "rog-strix",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": "mirror",
+        "fans": null,
+        "rgbZones": [
+          "io"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-rog-maximus-z890-hero",
@@ -2126,7 +2732,18 @@
       "cpuPower": [
         "8-pin",
         "8-pin"
-      ]
+      ],
+      "look": {
+        "style": "rog-hero",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": "mirror",
+        "fans": null,
+        "rgbZones": [
+          "io"
+        ],
+        "colourOptions": null
+      }
     }
   ]
 }

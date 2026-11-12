@@ -98,7 +98,7 @@ const OPTIONAL = {
   psu: { formFactor: 'enum:psuFormFactor', atxVersion: 'string?' },
   // psuFormFactors null = the maker page gives only a PSU length, not a type.
   case: { caseType: 'enum:caseType', psuFormFactors: 'enum:psuFormFactor[]?', sidePanel: 'enum:sidePanel', frontPanel: 'enum:frontPanel?', boardMount: 'enum:boardMount?', frontIO: 'object' },
-  cooler: { fans: 'int', fanSizeMM: 'int', rgb: 'bool' },
+  cooler: { fans: 'int', fanSizeMM: 'int', rgb: 'bool', radiatorThicknessMM: 'int' },
   storage: { interface: 'string', pcieGen: 'int', readMBs: 'int', writeMBs: 'int', rpm: 'int' },
   fans: { airflowCFM: 'number?', staticPressureMMH2O: 'number?', noiseDBA: 'number?' },
 };
@@ -110,6 +110,27 @@ const NULL_MEANS_NONE = {
   cooler: (p, f) => f === 'tdpRating' || (f === 'heightMM' && p.type === 'aio') || (f === 'radiatorSizeMM' && p.type === 'air'),
 };
 const nullIsNone = (p, f) => !!NULL_MEANS_NONE[p.category]?.(p, f);
+
+// Optional on every part: how the product looks (written by tools/set-looks.mjs, read by the 3D models).
+const LOOK_COLOURS = ['black', 'white', 'silver', 'grey', 'gunmetal', 'red', 'blue', 'green', 'yellow', 'orange', 'gold', 'beige', 'brown', 'walnut', 'oak'];
+const LOOK_FINISHES = ['matte', 'metal', 'gloss', 'mirror'];
+const LOOK_FIELDS = ['style', 'colour', 'accent', 'finish', 'fans', 'blades', 'rgbZones', 'colourOptions'];
+function checkLook(w, p) {
+  const k = p.look;
+  if (k === undefined || k === null) return;
+  if (typeof k !== 'object' || Array.isArray(k)) { err(w, '"look" must be an object'); return; }
+  for (const f of Object.keys(k)) if (!LOOK_FIELDS.includes(f)) err(w, `look.${f} unknown`);
+  const colour = (v) => LOOK_COLOURS.includes(v);
+  if (known(k.style) && !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(k.style)) err(w, `look.style "${k.style}" must be a lower-case slug`);
+  for (const f of ['colour', 'accent']) if (known(k[f]) && !colour(k[f])) err(w, `look.${f} "${k[f]}" is not one of ${LOOK_COLOURS.join(', ')}`);
+  if (known(k.finish) && !LOOK_FINISHES.includes(k.finish)) err(w, `look.finish "${k.finish}" is not one of ${LOOK_FINISHES.join(', ')}`);
+  if (known(k.fans) && !(Number.isInteger(k.fans) && k.fans >= 1 && k.fans <= 12)) err(w, 'look.fans must be a small whole number');
+  if (known(k.blades) && !(Number.isInteger(k.blades) && k.blades >= 3 && k.blades <= 15)) err(w, 'look.blades must be a whole number of blades');
+  if (known(k.rgbZones) && !(Array.isArray(k.rgbZones) && k.rgbZones.every((z) => typeof z === 'string'))) err(w, 'look.rgbZones must be a list of zone names');
+  if (known(k.colourOptions) && !(Array.isArray(k.colourOptions) && k.colourOptions.length && k.colourOptions.every(colour))) err(w, 'look.colourOptions must be a list of colours');
+  if (known(k.colour) && known(k.colourOptions) && !k.colourOptions.includes(k.colour)) err(w, 'look.colour is not in look.colourOptions');
+  if (p.rgb === false && known(k.rgbZones) && k.rgbZones.some((z) => z !== 'screen')) warn(w, 'look.rgbZones lists lighting but rgb is false');
+}
 
 // ---------------------------------------------------------------- helpers
 const errors = [];
@@ -166,6 +187,7 @@ function checkField(where, part, field, spec, required) {
 // Fields (and values one level down in objects) that are unknown nulls.
 function unknownFields(p) {
   return Object.entries(p).flatMap(([k, v]) => {
+    if (k === 'look') return []; // looks are optional per field: null = use the style's default
     if (v === null) return nullIsNone(p, k) ? [] : [k];
     if (v && typeof v === 'object' && !Array.isArray(v)) return Object.entries(v).filter(([, x]) => x === null).map(([s]) => `${k}.${s}`);
     return [];
@@ -360,6 +382,7 @@ for (const cat of categories) {
     if (names.has(p.name)) err(w, `duplicate name "${p.name}"`);
     names.add(p.name);
     if (p.specsVerified === false && !unknownFields(p).length) warn(w, 'specsVerified is false but no field is null');
+    checkLook(w, p);
     SANITY[cat]?.(p, w);
   });
 }

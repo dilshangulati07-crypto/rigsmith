@@ -20,7 +20,17 @@
       "rpmMax": 2000,
       "airflowCFM": 60.1,
       "staticPressureMMH2O": 2.34,
-      "noiseDBA": 22.6
+      "noiseDBA": 22.6,
+      "look": {
+        "style": "noctua",
+        "colour": "beige",
+        "accent": "brown",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null,
+        "blades": 9
+      }
     },
     {
       "id": "noctua-nf-a14-pwm",
@@ -39,7 +49,17 @@
       "rpmMax": 1500,
       "airflowCFM": 82.5,
       "staticPressureMMH2O": 2.08,
-      "noiseDBA": 24.6
+      "noiseDBA": 24.6,
+      "look": {
+        "style": "noctua",
+        "colour": "beige",
+        "accent": "brown",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null,
+        "blades": 7
+      }
     },
     {
       "id": "noctua-nf-p12-redux-1700-pwm",
@@ -58,7 +78,17 @@
       "rpmMax": 1700,
       "airflowCFM": 70.7,
       "staticPressureMMH2O": 2.83,
-      "noiseDBA": 25.1
+      "noiseDBA": 25.1,
+      "look": {
+        "style": "noctua-redux",
+        "colour": "grey",
+        "accent": "grey",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null,
+        "blades": 9
+      }
     },
     {
       "id": "arctic-p12-pwm-pst-5-pack",
@@ -77,7 +107,17 @@
       "rpmMax": 1800,
       "airflowCFM": 56.3,
       "staticPressureMMH2O": 2.2,
-      "noiseDBA": null
+      "noiseDBA": null,
+      "look": {
+        "style": "arctic-p",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null,
+        "blades": 5
+      }
     },
     {
       "id": "arctic-p14-pwm-pst-5-pack",
@@ -96,7 +136,17 @@
       "rpmMax": 1700,
       "airflowCFM": 72.8,
       "staticPressureMMH2O": 2.4,
-      "noiseDBA": null
+      "noiseDBA": null,
+      "look": {
+        "style": "arctic-p",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null,
+        "blades": 5
+      }
     },
     {
       "id": "lian-li-uni-fan-sl120-v2-3-pack",
@@ -118,7 +168,21 @@
       "noiseDBA": 29.2,
       "specSource": "https://lian-li.com/product/uni-fan-sl-v2/",
       "specSourceType": "official",
-      "sku": "UF-SL120V2-3B"
+      "sku": "UF-SL120V2-3B",
+      "look": {
+        "style": "lianli-unifan-sl",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "sides"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "lian-li-uni-fan-tl120-3-pack",
@@ -140,7 +204,22 @@
       "noiseDBA": 33,
       "specSource": "https://lian-li.com/product/uni-fan-tl/",
       "specSourceType": "official",
-      "sku": "12TL3B"
+      "sku": "12TL3B",
+      "look": {
+        "style": "lianli-unifan-tl",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "infinity",
+          "sides"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "corsair-icue-link-rx120-rgb-3-pack",
@@ -162,7 +241,21 @@
       "noiseDBA": 36,
       "specSource": "https://www.corsair.com/us/en/p/pc-components-accessories/co-9051018-ww/icue-link-rx120-rgb-120mm-pwm-fans-triple-fan-kit-co-9051018-ww",
       "specSourceType": "official",
-      "sku": "CO-9051018-WW"
+      "sku": "CO-9051018-WW",
+      "look": {
+        "style": "corsair-rx",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "blades"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "be-quiet-silent-wings-4-120mm-pwm-high-speed",
@@ -181,7 +274,17 @@
       "rpmMax": null,
       "airflowCFM": null,
       "staticPressureMMH2O": null,
-      "noiseDBA": null
+      "noiseDBA": null,
+      "look": {
+        "style": "bequiet-silent-wings",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null,
+        "blades": 7
+      }
     },
     {
       "id": "thermalright-tl-c12c-x3",
@@ -202,7 +305,21 @@
       "staticPressureMMH2O": 1.53,
       "noiseDBA": 25.6,
       "specSource": "https://www.thermalright.com/product/tl-c12c-x3/",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "thermalright-tl",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "blades"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "deepcool-fc120-3-in-1",
@@ -223,7 +340,21 @@
       "staticPressureMMH2O": 1.83,
       "noiseDBA": 28,
       "specSource": "https://www.deepcool.com/products/Cooling/fans/FC120-3-IN-1-Daisy-Chain-Performance-ARGB-Fan/2021/13582.shtml",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "deepcool-fc",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "blades"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "cooler-master-sickleflow-120-argb-3-in-1",
@@ -245,7 +376,21 @@
       "noiseDBA": 27,
       "specSource": "https://legacy.coolermaster.com/en-global/products/sickleflow-120-argb-3in1/?tab=tech_spec",
       "specSourceType": "official",
-      "sku": "MFX-B2DN-183PA-R1"
+      "sku": "MFX-B2DN-183PA-R1",
+      "look": {
+        "style": "cm-sickleflow",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "blades"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "phanteks-d30-120-3-pack",
@@ -267,7 +412,21 @@
       "noiseDBA": 30.2,
       "specSource": "https://phanteks.com/product/d30-120-black/",
       "specSourceType": "official",
-      "sku": "PH-F120D30_DRGB_PWM_BK01_3P"
+      "sku": "PH-F120D30_DRGB_PWM_BK01_3P",
+      "look": {
+        "style": "phanteks-d30",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "ring"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     }
   ]
 }

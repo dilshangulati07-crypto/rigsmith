@@ -21,7 +21,16 @@
       "speedMTs": 3200,
       "casLatency": 16,
       "heightMM": 34.1,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "fury-beast",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "kingston-fury-beast-ddr4-16gb-2x8gb-3200mt-s-cl16",
@@ -41,7 +50,16 @@
       "speedMTs": 3200,
       "casLatency": 16,
       "heightMM": 34.1,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "fury-beast",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "kingston-fury-beast-ddr4-32gb-2x16gb-3200mt-s-cl16",
@@ -61,7 +79,16 @@
       "speedMTs": 3200,
       "casLatency": 16,
       "heightMM": 34.1,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "fury-beast",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "kingston-fury-beast-ddr4-64gb-2x32gb-3200mt-s-cl16",
@@ -81,7 +108,16 @@
       "speedMTs": 3200,
       "casLatency": 16,
       "heightMM": 34.1,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "fury-beast",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "corsair-vengeance-lpx-ddr4-16gb-2x8gb-3200mt-s-cl16",
@@ -101,7 +137,19 @@
       "speedMTs": 3200,
       "casLatency": 16,
       "heightMM": 31,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "vengeance-lpx",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "corsair-vengeance-lpx-ddr4-32gb-2x16gb-3200mt-s-cl16",
@@ -121,7 +169,19 @@
       "speedMTs": 3200,
       "casLatency": 16,
       "heightMM": 31,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "vengeance-lpx",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "corsair-vengeance-lpx-ddr4-64gb-2x32gb-3200mt-s-cl16",
@@ -141,7 +201,19 @@
       "speedMTs": 3200,
       "casLatency": 16,
       "heightMM": 31,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "vengeance-lpx",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "corsair-vengeance-rgb-pro-ddr4-32gb-2x16gb-3600mt-s-cl18",
@@ -161,7 +233,21 @@
       "speedMTs": 3600,
       "casLatency": 18,
       "heightMM": 51,
-      "rgb": true
+      "rgb": true,
+      "look": {
+        "style": "vengeance-rgb-pro",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "bar"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "g-skill-ripjaws-v-ddr4-16gb-2x8gb-3600mt-s-cl16",
@@ -181,7 +267,16 @@
       "speedMTs": 3600,
       "casLatency": 16,
       "heightMM": 42,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "ripjaws-v",
+        "colour": null,
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "g-skill-ripjaws-v-ddr4-32gb-2x16gb-3600mt-s-cl18",
@@ -201,7 +296,16 @@
       "speedMTs": 3600,
       "casLatency": 18,
       "heightMM": 42,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "ripjaws-v",
+        "colour": null,
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "g-skill-trident-z-rgb-ddr4-32gb-2x16gb-3600mt-s-cl16",
@@ -221,7 +325,18 @@
       "speedMTs": 3600,
       "casLatency": 16,
       "heightMM": 44,
-      "rgb": true
+      "rgb": true,
+      "look": {
+        "style": "trident-z",
+        "colour": "black",
+        "accent": "silver",
+        "finish": "metal",
+        "fans": null,
+        "rgbZones": [
+          "bar"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "g-skill-trident-z-neo-ddr4-32gb-2x16gb-3600mt-s-cl16",
@@ -241,7 +356,18 @@
       "speedMTs": 3600,
       "casLatency": 16,
       "heightMM": 44,
-      "rgb": true
+      "rgb": true,
+      "look": {
+        "style": "trident-z",
+        "colour": "black",
+        "accent": "silver",
+        "finish": "metal",
+        "fans": null,
+        "rgbZones": [
+          "bar"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "teamgroup-t-force-vulcan-z-ddr4-16gb-2x8gb-3200mt-s-cl16",
@@ -261,7 +387,16 @@
       "speedMTs": 3200,
       "casLatency": 16,
       "heightMM": 32,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "tforce-vulcan",
+        "colour": null,
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "teamgroup-t-force-delta-rgb-ddr4-32gb-2x16gb-3600mt-s-cl18",
@@ -284,7 +419,21 @@
       "rgb": true,
       "specSource": "https://www.teamgroupinc.com/en/product-detail/memory/T-FORCE/delta-rgb-ddr4-black/delta-rgb-ddr4-black-TF3D432G3600HC18JDC01/",
       "specSourceType": "official",
-      "sku": "TF3D432G3600HC18JDC01"
+      "sku": "TF3D432G3600HC18JDC01",
+      "look": {
+        "style": "tforce-delta",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "bar"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "crucial-ddr4-16gb-1x16gb-3200mt-s-cl22",
@@ -304,7 +453,16 @@
       "speedMTs": 3200,
       "casLatency": 22,
       "heightMM": null,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "bare",
+        "colour": "green",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "kingston-fury-beast-ddr5-8gb-1x8gb-4800mt-s-cl38",
@@ -324,7 +482,19 @@
       "speedMTs": 4800,
       "casLatency": 38,
       "heightMM": 34.9,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "fury-beast",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "kingston-fury-beast-ddr5-16gb-2x8gb-5200mt-s-cl40",
@@ -344,7 +514,19 @@
       "speedMTs": 5200,
       "casLatency": 40,
       "heightMM": 34.9,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "fury-beast",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "kingston-fury-beast-ddr5-32gb-2x16gb-5600mt-s-cl36",
@@ -364,7 +546,19 @@
       "speedMTs": 5600,
       "casLatency": 36,
       "heightMM": 34.9,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "fury-beast",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "kingston-fury-beast-ddr5-64gb-2x32gb-5600mt-s-cl36",
@@ -384,7 +578,19 @@
       "speedMTs": 5600,
       "casLatency": 36,
       "heightMM": 34.9,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "fury-beast",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "kingston-fury-beast-rgb-ddr5-32gb-2x16gb-6000mt-s-cl30",
@@ -404,7 +610,21 @@
       "speedMTs": 6000,
       "casLatency": 30,
       "heightMM": 42.23,
-      "rgb": true
+      "rgb": true,
+      "look": {
+        "style": "fury-beast-rgb",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "bar"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "kingston-fury-renegade-ddr5-32gb-2x16gb-6400mt-s-cl32",
@@ -424,7 +644,16 @@
       "speedMTs": 6400,
       "casLatency": 32,
       "heightMM": null,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "fury-renegade",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "corsair-vengeance-ddr5-32gb-2x16gb-5600mt-s-cl36",
@@ -444,7 +673,19 @@
       "speedMTs": 5600,
       "casLatency": 36,
       "heightMM": 35,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "vengeance",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "corsair-vengeance-ddr5-32gb-2x16gb-6000mt-s-cl30",
@@ -464,7 +705,19 @@
       "speedMTs": 6000,
       "casLatency": 30,
       "heightMM": 35,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "vengeance",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "corsair-vengeance-ddr5-64gb-2x32gb-6000mt-s-cl30",
@@ -484,7 +737,19 @@
       "speedMTs": 6000,
       "casLatency": 30,
       "heightMM": 35,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "vengeance",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "corsair-vengeance-rgb-ddr5-32gb-2x16gb-6000mt-s-cl30",
@@ -507,7 +772,21 @@
       "rgb": true,
       "specSource": "https://www.corsair.com/us/en/p/memory/cmh32gx5m2b6000c30/vengeance-rgb-32gb-2x16gb-ddr5-dram-6000mts-cl30-memory-kit-black-cmh32gx5m2b6000c30",
       "specSourceType": "official",
-      "sku": "CMH32GX5M2B6000C30"
+      "sku": "CMH32GX5M2B6000C30",
+      "look": {
+        "style": "vengeance-rgb",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "bar"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "corsair-dominator-platinum-rgb-ddr5-32gb-2x16gb-6000mt-s-cl30",
@@ -527,7 +806,21 @@
       "speedMTs": 6000,
       "casLatency": 30,
       "heightMM": 56,
-      "rgb": true
+      "rgb": true,
+      "look": {
+        "style": "dominator",
+        "colour": "black",
+        "accent": "silver",
+        "finish": "metal",
+        "fans": null,
+        "rgbZones": [
+          "dots"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "g-skill-flare-x5-ddr5-32gb-2x16gb-6000mt-s-cl30",
@@ -547,7 +840,16 @@
       "speedMTs": 6000,
       "casLatency": 30,
       "heightMM": 33,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "flare-x5",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "g-skill-ripjaws-s5-ddr5-32gb-2x16gb-6000mt-s-cl30",
@@ -567,7 +869,19 @@
       "speedMTs": 6000,
       "casLatency": 30,
       "heightMM": 33,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "ripjaws-s5",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "g-skill-trident-z5-rgb-ddr5-32gb-2x16gb-6000mt-s-cl30",
@@ -590,7 +904,21 @@
       "rgb": true,
       "specSource": "https://www.gskill.com/faq",
       "specSourceType": "official",
-      "sku": "F5-6000J3040F16GX2-TZ5RK"
+      "sku": "F5-6000J3040F16GX2-TZ5RK",
+      "look": {
+        "style": "trident-z5",
+        "colour": null,
+        "accent": null,
+        "finish": "metal",
+        "fans": null,
+        "rgbZones": [
+          "bar"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "g-skill-trident-z5-neo-rgb-ddr5-64gb-2x32gb-6000mt-s-cl30",
@@ -613,7 +941,18 @@
       "rgb": true,
       "specSource": "https://www.gskill.com/faq",
       "specSourceType": "official",
-      "sku": "F5-6000J3040G32GX2-TZ5NR"
+      "sku": "F5-6000J3040G32GX2-TZ5NR",
+      "look": {
+        "style": "trident-z5",
+        "colour": "black",
+        "accent": "silver",
+        "finish": "metal",
+        "fans": null,
+        "rgbZones": [
+          "bar"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "teamgroup-t-force-delta-rgb-ddr5-32gb-2x16gb-6000mt-s-cl30",
@@ -636,7 +975,21 @@
       "rgb": true,
       "specSource": "https://www.teamgroupinc.com/en/product-detail/memory/T-FORCE/delta-rgb-ddr5-black/delta-rgb-ddr5-black-FF3D532G6000HC30DC01/",
       "specSourceType": "official",
-      "sku": "FF3D532G6000HC30DC01"
+      "sku": "FF3D532G6000HC30DC01",
+      "look": {
+        "style": "tforce-delta",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [
+          "bar"
+        ],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "crucial-pro-ddr5-32gb-2x16gb-6000mt-s-cl36",
@@ -656,7 +1009,16 @@
       "speedMTs": 6000,
       "casLatency": 36,
       "heightMM": null,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "crucial-pro",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "crucial-ddr5-16gb-1x16gb-5600mt-s-cl46",
@@ -676,7 +1038,16 @@
       "speedMTs": 5600,
       "casLatency": 46,
       "heightMM": null,
-      "rgb": false
+      "rgb": false,
+      "look": {
+        "style": "bare",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": null,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     }
   ]
 }

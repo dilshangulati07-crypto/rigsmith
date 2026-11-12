@@ -8,6 +8,7 @@ import { createViewer, isWebGL2Available, QUALITIES, QUALITY_LABEL } from '../sc
 import { setMaterialQuality } from '../scene/materials.js';
 import { createStage } from '../scene/stage.js';
 import { createBuildScene } from '../scene/build-scene.js';
+import { THEMES, loadTheme, saveTheme } from '../scene/look.js';
 import { createCameraRig, CAMERA_PRESETS } from '../scene/camera-rig.js';
 import { createEffects, FAN_PROFILES, RGB_MODES } from '../scene/effects.js';
 import { FOOT } from '../scene/layout.js';
@@ -59,6 +60,7 @@ export async function mountViewerPanel(el, app) {
     </div>
     <div class="viewer__tools viewer__tools--view">
       <button class="vbtn" type="button" data-v="panel" aria-pressed="true" aria-keyshortcuts="G">Side panel</button>
+      <button class="vbtn" type="button" data-v="theme" title="Draw parts in black or white where the real product is sold in that colour">Colour: As listed</button>
       <div class="vgroup" role="group" aria-label="Camera">
         ${CAMERA_PRESETS.map((p) => html`<button class="vbtn" type="button" data-v="cam" data-cam="${p.id}" aria-pressed="${String(p.id === 'angle')}">${p.label}</button>`)}
       </div>
@@ -156,6 +158,7 @@ export async function mountViewerPanel(el, app) {
     viewer,
     anisotropy: Math.min(8, viewer.maxAnisotropy),
     reducedMotion,
+    theme: loadTheme(),
     onChange: (layout) => {
       const c = layout.case;
       stage.fit(new THREE.Vector3(0, FOOT + c.H / 2, 0), 0.5 * Math.hypot(c.D, c.H, c.W));
@@ -279,6 +282,21 @@ export async function mountViewerPanel(el, app) {
     el.querySelector('[data-v="panel"]').setAttribute('aria-pressed', String(on));
   }
 
+  // ---- black / white build theme: parts sold in that colour are redrawn in it
+  function updateThemeUi() {
+    el.querySelector('[data-v="theme"]').textContent = `Colour: ${THEMES.find((t) => t.id === bscene.theme).label}`;
+  }
+  async function cycleTheme() {
+    if (modeNow() !== 'viewer') { app.toast('Leave Build by hand or Auto-build to change the colour theme.'); return; }
+    const next = THEMES[(THEMES.findIndex((t) => t.id === bscene.theme) + 1) % THEMES.length].id;
+    bscene.setTheme(next);
+    saveTheme(next);
+    updateThemeUi();
+    while (bscene.busy) await new Promise((r) => setTimeout(r, 16));
+    fx.refresh();
+    updateLighting();
+  }
+
   // ---- lighting panel
   let lightTarget = 'all';
   function updateLighting() {
@@ -292,7 +310,7 @@ export async function mountViewerPanel(el, app) {
     el.querySelector('[data-v="light-color"]').value = cur.color;
     for (const b of el.querySelectorAll('[data-v="light-mode"]')) b.setAttribute('aria-pressed', String(b.dataset.mode === cur.mode));
     ref('light-note').textContent = targets.length
-      ? `Lit parts: RGB fans, RGB memory, AIO pump ring, graphics card logo.${reducedMotion ? ' Breathe and rainbow stay still because reduced motion is on.' : ''}`
+      ? `Lit parts follow the real products: fan rings, bars or blades, memory light bars, pump caps and screens, graphics card zones.${reducedMotion ? ' Breathe and rainbow stay still because reduced motion is on.' : ''}`
       : 'No part in this build has LEDs. RGB fans, RGB memory, an RGB AIO and the graphics card logo can be lit.';
   }
   function toggleLighting(open) {
@@ -332,6 +350,7 @@ export async function mountViewerPanel(el, app) {
     const v = b.dataset.v;
     if (v === 'mode') setMode(b.dataset.mode);
     if (v === 'panel') setPanel(!bscene.sidePanel);
+    if (v === 'theme') cycleTheme();
     if (v === 'cam') rig.goTo(b.dataset.cam);
     if (v === 'quality') viewer.setQuality(QUALITIES[(QUALITIES.indexOf(viewer.quality) + 1) % QUALITIES.length], { manual: true });
     if (v === 'shot') screenshot();
@@ -445,6 +464,7 @@ export async function mountViewerPanel(el, app) {
   try { await viewer.compile(); } catch { /* compile is only a warm-up */ }
   ready = true;
   updateQualityUi();
+  updateThemeUi();
   fx.refresh();
   updateLighting();
   hand = mountHandPanel(ref('hand'), { app, viewer, bscene, rig, fx, reducedMotion, isShown: () => el.getClientRects().length > 0 });

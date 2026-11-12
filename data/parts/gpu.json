@@ -24,7 +24,18 @@
         "16-pin"
       ],
       "vramGB": 32,
-      "fans": 2
+      "fans": 2,
+      "look": {
+        "style": "fe-50",
+        "colour": "gunmetal",
+        "accent": "black",
+        "finish": "metal",
+        "fans": 2,
+        "rgbZones": [
+          "logo"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "nvidia-geforce-rtx-5080-founders-edition",
@@ -47,7 +58,18 @@
         "16-pin"
       ],
       "vramGB": 16,
-      "fans": 2
+      "fans": 2,
+      "look": {
+        "style": "fe-50",
+        "colour": "gunmetal",
+        "accent": "black",
+        "finish": "metal",
+        "fans": 2,
+        "rgbZones": [
+          "logo"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "nvidia-geforce-rtx-5070-founders-edition",
@@ -70,7 +92,18 @@
         "16-pin"
       ],
       "vramGB": 12,
-      "fans": 2
+      "fans": 2,
+      "look": {
+        "style": "fe-50",
+        "colour": "gunmetal",
+        "accent": "black",
+        "finish": "metal",
+        "fans": 2,
+        "rgbZones": [
+          "logo"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "nvidia-geforce-rtx-4090-founders-edition",
@@ -93,7 +126,18 @@
         "16-pin"
       ],
       "vramGB": 24,
-      "fans": 2
+      "fans": 2,
+      "look": {
+        "style": "fe-40",
+        "colour": "silver",
+        "accent": "black",
+        "finish": "metal",
+        "fans": 2,
+        "rgbZones": [
+          "logo"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "nvidia-geforce-rtx-4080-super-founders-edition",
@@ -116,7 +160,18 @@
         "16-pin"
       ],
       "vramGB": 16,
-      "fans": 2
+      "fans": 2,
+      "look": {
+        "style": "fe-40",
+        "colour": "black",
+        "accent": "black",
+        "finish": "metal",
+        "fans": 2,
+        "rgbZones": [
+          "logo"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "nvidia-geforce-rtx-4070-super-founders-edition",
@@ -139,7 +194,18 @@
         "16-pin"
       ],
       "vramGB": 12,
-      "fans": 2
+      "fans": 2,
+      "look": {
+        "style": "fe-40",
+        "colour": "black",
+        "accent": "black",
+        "finish": "metal",
+        "fans": 2,
+        "rgbZones": [
+          "logo"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "nvidia-geforce-rtx-4070-founders-edition",
@@ -162,7 +228,18 @@
         "16-pin"
       ],
       "vramGB": 12,
-      "fans": 2
+      "fans": 2,
+      "look": {
+        "style": "fe-40",
+        "colour": "silver",
+        "accent": "black",
+        "finish": "metal",
+        "fans": 2,
+        "rgbZones": [
+          "logo"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-rog-strix-geforce-rtx-4090-oc-edition",
@@ -185,7 +262,19 @@
         "16-pin"
       ],
       "vramGB": 24,
-      "fans": 3
+      "fans": 3,
+      "look": {
+        "style": "rog-strix",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": "metal",
+        "fans": 3,
+        "rgbZones": [
+          "tail",
+          "logo"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-rog-astral-geforce-rtx-5090-oc-edition",
@@ -212,7 +301,18 @@
       "thicknessMM": 76,
       "specSource": "https://rog.asus.com/graphics-cards/graphics-cards/rog-astral/rog-astral-rtx5090-o32g-gaming/spec/",
       "specSourceType": "official",
-      "sku": "ROG-ASTRAL-RTX5090-O32G-GAMING"
+      "sku": "ROG-ASTRAL-RTX5090-O32G-GAMING",
+      "look": {
+        "style": "rog-astral",
+        "colour": "black",
+        "accent": "gunmetal",
+        "finish": "metal",
+        "fans": 4,
+        "rgbZones": [
+          "tail"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-tuf-gaming-geforce-rtx-4070-ti-super-oc-edition",
@@ -235,7 +335,18 @@
         "16-pin"
       ],
       "vramGB": 16,
-      "fans": 3
+      "fans": 3,
+      "look": {
+        "style": "tuf",
+        "colour": "gunmetal",
+        "accent": "black",
+        "finish": "metal",
+        "fans": 3,
+        "rgbZones": [
+          "logo"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-prime-geforce-rtx-5070-ti-oc-edition",
@@ -258,7 +369,19 @@
         "16-pin"
       ],
       "vramGB": 16,
-      "fans": 3
+      "fans": 3,
+      "look": {
+        "style": "asus-prime",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": 3,
+        "rgbZones": [],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "msi-geforce-rtx-5070-ti-16g-ventus-3x-oc",
@@ -285,7 +408,16 @@
       "thicknessMM": 49,
       "specSource": "https://storage-asset.msi.com/datasheet/vga/global/GeForce-RTX-5070-Ti-16G-VENTUS-3X-OC.pdf",
       "specSourceType": "official",
-      "sku": "G507T-16V3C"
+      "sku": "G507T-16V3C",
+      "look": {
+        "style": "msi-ventus",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": 3,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "gigabyte-geforce-rtx-5070-windforce-oc-sff-12g",
@@ -306,7 +438,16 @@
       "recommendedPSU": null,
       "powerConnectors": null,
       "vramGB": 12,
-      "fans": 3
+      "fans": 3,
+      "look": {
+        "style": "gigabyte-windforce",
+        "colour": "black",
+        "accent": "grey",
+        "finish": null,
+        "fans": 3,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-geforce-rtx-4070-super-12g-ventus-2x-oc",
@@ -332,7 +473,16 @@
       "fans": 2,
       "thicknessMM": 43,
       "specSource": "https://storage-asset.msi.com/datasheet/vga/global/GeForce-RTX-4070-SUPER-12G-VENTUS-2X-OC.pdf",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "msi-ventus",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": 2,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "gigabyte-geforce-rtx-4070-super-windforce-oc-12g",
@@ -353,7 +503,16 @@
       "recommendedPSU": null,
       "powerConnectors": null,
       "vramGB": 12,
-      "fans": 3
+      "fans": 3,
+      "look": {
+        "style": "gigabyte-windforce",
+        "colour": "black",
+        "accent": "grey",
+        "finish": null,
+        "fans": 3,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "zotac-gaming-geforce-rtx-4070-super-twin-edge-oc",
@@ -374,7 +533,16 @@
       "recommendedPSU": null,
       "powerConnectors": null,
       "vramGB": 12,
-      "fans": 2
+      "fans": 2,
+      "look": {
+        "style": "zotac-twin-edge",
+        "colour": "gunmetal",
+        "accent": null,
+        "finish": null,
+        "fans": 2,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-dual-geforce-rtx-5060-ti-16gb-oc-edition",
@@ -401,7 +569,19 @@
       "thicknessMM": 50,
       "specSource": "https://www.asus.com/motherboards-components/graphics-cards/dual/dual-rtx5060ti-o16g/techspec/",
       "specSourceType": "official",
-      "sku": "DUAL-RTX5060TI-O16G"
+      "sku": "DUAL-RTX5060TI-O16G",
+      "look": {
+        "style": "asus-dual",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": 2,
+        "rgbZones": [],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "msi-geforce-rtx-5060-8g-ventus-2x-oc",
@@ -428,7 +608,16 @@
       "thicknessMM": 41,
       "specSource": "https://storage-asset.msi.com/datasheet/vga/global/GeForce-RTX-5060-8G-VENTUS-2X-OC.pdf",
       "specSourceType": "official",
-      "sku": "G5060-8V2C"
+      "sku": "G5060-8V2C",
+      "look": {
+        "style": "msi-ventus",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": 2,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-dual-geforce-rtx-4060-ti-oc-edition-8gb",
@@ -451,7 +640,19 @@
         "8-pin"
       ],
       "vramGB": 8,
-      "fans": 2
+      "fans": 2,
+      "look": {
+        "style": "asus-dual",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": 2,
+        "rgbZones": [],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "asus-dual-geforce-rtx-4060-oc-edition-8gb",
@@ -474,7 +675,19 @@
         "8-pin"
       ],
       "vramGB": 8,
-      "fans": 2
+      "fans": 2,
+      "look": {
+        "style": "asus-dual",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": 2,
+        "rgbZones": [],
+        "colourOptions": [
+          "black",
+          "white"
+        ]
+      }
     },
     {
       "id": "msi-geforce-rtx-4060-ventus-2x-black-8g-oc",
@@ -497,7 +710,16 @@
         "8-pin"
       ],
       "vramGB": 8,
-      "fans": 2
+      "fans": 2,
+      "look": {
+        "style": "msi-ventus",
+        "colour": "black",
+        "accent": "black",
+        "finish": null,
+        "fans": 2,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "gigabyte-geforce-rtx-4060-windforce-oc-8g",
@@ -520,7 +742,16 @@
         "8-pin"
       ],
       "vramGB": 8,
-      "fans": 2
+      "fans": 2,
+      "look": {
+        "style": "gigabyte-windforce",
+        "colour": "black",
+        "accent": "grey",
+        "finish": null,
+        "fans": 2,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-geforce-rtx-3060-ventus-2x-12g-oc",
@@ -543,7 +774,16 @@
         "8-pin"
       ],
       "vramGB": 12,
-      "fans": 2
+      "fans": 2,
+      "look": {
+        "style": "msi-ventus",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": 2,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "msi-geforce-rtx-3050-ventus-2x-6g-oc",
@@ -567,7 +807,16 @@
       "fans": 2,
       "thicknessMM": 42,
       "specSource": "https://storage-asset.msi.com/datasheet/vga/global/GeForce-RTX-3050-VENTUS-2X-6G-OC.pdf",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "msi-ventus",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": 2,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "amd-radeon-rx-7900-xtx",
@@ -591,7 +840,16 @@
         "8-pin"
       ],
       "vramGB": 24,
-      "fans": 3
+      "fans": 3,
+      "look": {
+        "style": "amd-reference",
+        "colour": "black",
+        "accent": "red",
+        "finish": "metal",
+        "fans": 3,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "amd-radeon-rx-7900-xt",
@@ -615,7 +873,16 @@
         "8-pin"
       ],
       "vramGB": 20,
-      "fans": 3
+      "fans": 3,
+      "look": {
+        "style": "amd-reference",
+        "colour": "black",
+        "accent": "red",
+        "finish": "metal",
+        "fans": 3,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "amd-radeon-rx-7800-xt",
@@ -639,7 +906,16 @@
         "8-pin"
       ],
       "vramGB": 16,
-      "fans": 2
+      "fans": 2,
+      "look": {
+        "style": "amd-reference",
+        "colour": "black",
+        "accent": "red",
+        "finish": "metal",
+        "fans": null,
+        "rgbZones": null,
+        "colourOptions": null
+      }
     },
     {
       "id": "sapphire-nitro-plus-amd-radeon-rx-7900-xtx-vapor-x-24gb",
@@ -667,7 +943,19 @@
       "fans": 3,
       "thicknessMM": 71.6,
       "specSource": "https://www.sapphiretech.com/en/consumer/nitro-radeon-rx-7900-xtx-vaporx-24g-gddr6",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "sapphire-nitro",
+        "colour": "silver",
+        "accent": "black",
+        "finish": "metal",
+        "fans": 3,
+        "rgbZones": [
+          "bar",
+          "logo"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "powercolor-hellhound-amd-radeon-rx-7900-xtx-24gb",
@@ -695,7 +983,18 @@
       "thicknessMM": 62,
       "specSource": "https://www.powercolor.com/product-detail72.htm",
       "specSourceType": "official",
-      "sku": "RX7900XTX 24G-L/OC"
+      "sku": "RX7900XTX 24G-L/OC",
+      "look": {
+        "style": "powercolor-hellhound",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": 3,
+        "rgbZones": [
+          "fans"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "sapphire-pulse-amd-radeon-rx-7800-xt-16gb",
@@ -722,7 +1021,16 @@
       "fans": 2,
       "thicknessMM": 52.57,
       "specSource": "https://www.sapphiretech.com/en/consumer/pulse-radeon-rx-7800-xt-16g-gddr6",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "sapphire-pulse",
+        "colour": "black",
+        "accent": "red",
+        "finish": null,
+        "fans": 2,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "xfx-speedster-qick-319-radeon-rx-7700-xt-black-edition",
@@ -750,7 +1058,16 @@
       "thicknessMM": 52,
       "specSource": "https://www.xfxforce.com/shop/xfx-speedster-qick-319-radeon-tm-rx-7700-xt-black-edition",
       "specSourceType": "official",
-      "sku": "RX-77TQICKB9"
+      "sku": "RX-77TQICKB9",
+      "look": {
+        "style": "xfx-qick",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": 3,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "sapphire-pulse-amd-radeon-rx-7600-xt-16gb",
@@ -777,7 +1094,16 @@
       "fans": 2,
       "thicknessMM": 44.56,
       "specSource": "https://www.sapphiretech.com/en/consumer/pulse-radeon-rx-7600-xt-16g-gddr6",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "sapphire-pulse",
+        "colour": "black",
+        "accent": "red",
+        "finish": null,
+        "fans": 2,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "sapphire-pulse-amd-radeon-rx-7600-8gb",
@@ -800,7 +1126,16 @@
         "8-pin"
       ],
       "vramGB": 8,
-      "fans": 2
+      "fans": 2,
+      "look": {
+        "style": "sapphire-pulse",
+        "colour": "black",
+        "accent": "red",
+        "finish": null,
+        "fans": 2,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "sapphire-pulse-amd-radeon-rx-9070-xt-16gb",
@@ -827,7 +1162,16 @@
       "fans": 3,
       "thicknessMM": 61.6,
       "specSource": "https://www.sapphiretech.com/en/consumer/pulse-radeon-rx-9070-xt-16g-gddr6",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "sapphire-pulse",
+        "colour": "black",
+        "accent": "red",
+        "finish": null,
+        "fans": 3,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "sapphire-nitro-plus-amd-radeon-rx-9070-xt-16gb",
@@ -853,7 +1197,18 @@
       "fans": 3,
       "thicknessMM": 65.68,
       "specSource": "https://www.sapphiretech.com/en/consumer/nitro-radeon-rx-9070-xt-16g-gddr6",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "sapphire-nitro",
+        "colour": "gunmetal",
+        "accent": "black",
+        "finish": "metal",
+        "fans": 3,
+        "rgbZones": [
+          "bar"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "powercolor-reaper-amd-radeon-rx-9070-xt-16gb",
@@ -881,7 +1236,16 @@
       "thicknessMM": 42,
       "specSource": "https://www.powercolor.com/product-detail212.htm",
       "specSourceType": "official",
-      "sku": "RX9070XT 16G-A"
+      "sku": "RX9070XT 16G-A",
+      "look": {
+        "style": "powercolor-reaper",
+        "colour": "black",
+        "accent": null,
+        "finish": null,
+        "fans": 3,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "asus-tuf-gaming-radeon-rx-9070-xt-oc-edition",
@@ -910,7 +1274,18 @@
       "thicknessMM": 62.5,
       "specSource": "https://www.asus.com/motherboards-components/graphics-cards/tuf-gaming/tuf-rx9070xt-o16g-gaming/techspec/",
       "specSourceType": "official",
-      "sku": "TUF-RX9070XT-O16G-GAMING"
+      "sku": "TUF-RX9070XT-O16G-GAMING",
+      "look": {
+        "style": "tuf",
+        "colour": "gunmetal",
+        "accent": "black",
+        "finish": "metal",
+        "fans": 3,
+        "rgbZones": [
+          "logo"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "sapphire-pulse-amd-radeon-rx-9070-16gb",
@@ -937,7 +1312,16 @@
       "fans": 3,
       "thicknessMM": 51.5,
       "specSource": "https://www.sapphiretech.com/en/consumer/pulse-radeon-rx-9070-16g-gddr6",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "sapphire-pulse",
+        "colour": "black",
+        "accent": "red",
+        "finish": null,
+        "fans": 3,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "sapphire-pulse-amd-radeon-rx-9060-xt-16gb",
@@ -963,7 +1347,16 @@
       "fans": 2,
       "thicknessMM": 46.08,
       "specSource": "https://www.sapphiretech.com/en/consumer/pulse-radeon-rx-9060-xt-16g-gddr6",
-      "specSourceType": "official"
+      "specSourceType": "official",
+      "look": {
+        "style": "sapphire-pulse",
+        "colour": "black",
+        "accent": "red",
+        "finish": null,
+        "fans": 2,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "asrock-radeon-rx-6600-challenger-d-8gb",
@@ -986,7 +1379,16 @@
         "8-pin"
       ],
       "vramGB": 8,
-      "fans": 2
+      "fans": 2,
+      "look": {
+        "style": "asrock-challenger",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": 2,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "intel-arc-a750-limited-edition",
@@ -1010,7 +1412,16 @@
         "6-pin"
       ],
       "vramGB": 8,
-      "fans": 2
+      "fans": 2,
+      "look": {
+        "style": "intel-le",
+        "colour": "black",
+        "accent": null,
+        "finish": "matte",
+        "fans": 2,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "intel-arc-a770-limited-edition-16gb",
@@ -1034,7 +1445,19 @@
         "6-pin"
       ],
       "vramGB": 16,
-      "fans": 2
+      "fans": 2,
+      "look": {
+        "style": "intel-le",
+        "colour": "black",
+        "accent": null,
+        "finish": "matte",
+        "fans": 2,
+        "rgbZones": [
+          "fans",
+          "bar"
+        ],
+        "colourOptions": null
+      }
     },
     {
       "id": "intel-arc-b580-limited-edition",
@@ -1057,7 +1480,16 @@
         "8-pin"
       ],
       "vramGB": 12,
-      "fans": 2
+      "fans": 2,
+      "look": {
+        "style": "intel-le",
+        "colour": "black",
+        "accent": null,
+        "finish": "matte",
+        "fans": 2,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     },
     {
       "id": "asrock-intel-arc-b580-challenger-12gb-oc",
@@ -1078,7 +1510,16 @@
       "recommendedPSU": null,
       "powerConnectors": null,
       "vramGB": 12,
-      "fans": 2
+      "fans": 2,
+      "look": {
+        "style": "asrock-challenger",
+        "colour": "black",
+        "accent": "silver",
+        "finish": null,
+        "fans": 2,
+        "rgbZones": [],
+        "colourOptions": null
+      }
     }
   ]
 }

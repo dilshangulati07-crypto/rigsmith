@@ -125,7 +125,7 @@ export function aioTubes(head, rad, f) {
   const { p: rp, ex } = rad.placement;
   const { spec, outward } = rad;
   // Core centre (the stack's panel side), then the end tank nearer the pump.
-  const core = add(rp, outward, rad.spec.stack / 2 - 2.7 / 2);
+  const core = add(rp, outward, rad.spec.stack / 2 - rad.spec.thick / 2);
   const ends = [1, -1].map((s) => add(core, ex, s * (spec.len / 2 - 1.4)));
   const dist = (a) => Math.hypot(a[0] - hp[0], a[1] - hp[1], a[2] - hp[2]);
   const end = dist(ends[0]) < dist(ends[1]) ? ends[0] : ends[1];
