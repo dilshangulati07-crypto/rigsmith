@@ -1,9 +1,9 @@
 // Right column: total price, power estimate, performance estimate, issues, verification.
-import { CATEGORIES, getCategory } from '../categories.js?v=733eefba1e';
-import { estimateDraw, getVerification, summarize, PSU_HEADROOM } from '../compat.js?v=733eefba1e';
-import { priceBuild, pricePerPerformance, formatTHB, PRICE_NOTE } from '../pricing.js?v=733eefba1e';
-import { estimatePerformance, WORKLOADS, PERF_LABEL } from '../perf.js?v=733eefba1e';
-import { html, render, num } from './dom.js?v=733eefba1e';
+import { CATEGORIES, getCategory } from '../categories.js?v=fe48996dc3';
+import { estimateDraw, getVerification, summarize, PSU_HEADROOM } from '../compat.js?v=fe48996dc3';
+import { priceBuild, pricePerPerformance, formatTHB, PRICE_NOTE } from '../pricing.js?v=fe48996dc3';
+import { estimatePerformance, WORKLOADS, PERF_LABEL } from '../perf.js?v=fe48996dc3';
+import { html, render, num } from './dom.js?v=fe48996dc3';
 
 const GROUPS = [
   { level: 'error', title: 'Errors', note: 'These parts will not work together.' },

@@ -1,7 +1,7 @@
 // Physical fit inside the case: board size, graphics card length and thickness,
 // PSU size, fan mounts.
-import { issue, unknown, known, gpuSlotWidth, gpuClearance, fanCount, plural } from './util.js?v=733eefba1e';
-import { radiatorPositions } from './cooling.js?v=733eefba1e';
+import { issue, unknown, known, gpuSlotWidth, gpuClearance, fanCount, plural } from './util.js?v=fe48996dc3';
+import { radiatorPositions } from './cooling.js?v=fe48996dc3';
 
 // A front radiator plus its fans takes about this much GPU length (27 mm radiator,
 // 25 mm fans, a little slack). Case limits are printed without one.

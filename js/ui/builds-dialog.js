@@ -1,8 +1,8 @@
 // Saved builds dialog: save the current build under a name; load, rename, duplicate, delete.
-import { priceBuild, formatTHB } from '../pricing.js?v=733eefba1e';
-import { BuildStore } from '../state.js?v=733eefba1e';
-import { allParts } from '../compat/util.js?v=733eefba1e';
-import { html, render } from './dom.js?v=733eefba1e';
+import { priceBuild, formatTHB } from '../pricing.js?v=fe48996dc3';
+import { BuildStore } from '../state.js?v=fe48996dc3';
+import { allParts } from '../compat/util.js?v=fe48996dc3';
+import { html, render } from './dom.js?v=fe48996dc3';
 
 const ARM_MS = 4000; // a destructive button stays armed this long after the first click
 

@@ -1,5 +1,5 @@
-import { unit } from '../dom.js?v=733eefba1e';
-import { gpuClearance } from '../../compat/util.js?v=733eefba1e';
+import { unit } from '../dom.js?v=fe48996dc3';
+import { gpuClearance } from '../../compat/util.js?v=fe48996dc3';
 
 const TYPE = { 'full-tower': 'Full tower', 'mid-tower': 'Mid tower', matx: 'mATX', itx: 'ITX' };
 const rads = (list) => (list ? list.map((r) => `${r.position} ${r.sizesMM ? r.sizesMM.join('/') : `up to ${r.maxMM}`}`).join(', ') : null);

@@ -4,9 +4,9 @@
 // Local +Z is the airflow (outflow) side. Rotate the returned group to orient it.
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import { mat, finish } from './materials.js?v=733eefba1e';
-import { share, detail } from './resources.js?v=733eefba1e';
-import { isPale } from './look.js?v=733eefba1e';
+import { mat, finish } from './materials.js?v=fe48996dc3';
+import { share, detail } from './resources.js?v=fe48996dc3';
+import { isPale } from './look.js?v=fe48996dc3';
 
 const geoCache = new Map();
 

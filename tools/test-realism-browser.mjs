@@ -2,7 +2,7 @@
 // Browser scenario for Phase R (rendering realism) in headless Chrome:
 // - quality levels: Low / High / Ultra cycle, studio HDRI lighting at High and Ultra with the
 //   built-in room at Low, detail layers per level, Ultra extras (ambient occlusion, SMAA,
-//   contact shadow, floor reflection, transmission glass) on only at Ultra;
+//   transmission glass) on only at Ultra, contact shadow and floor reflection from High;
 // - procedural materials and the motherboard's printed face are in place;
 // - photo mode: fills the window, backgrounds, depth of field with click-to-focus, hide
 //   controls, 2x export at the right pixel size, Esc restores the normal view;
@@ -49,7 +49,7 @@ try {
   await evaluate(`${R}.viewer.envReady`);
   s = await state();
   ok(s.quality === 'high' && s.label === 'Quality: High' && s.shadows && s.envIntensity === 1 && (s.layers & 0b1100) === 0b0100, 'High: shadows, studio HDRI lighting, first detail layer');
-  ok(!s.gtao && !s.smaa && !s.contact && s.reflection && s.transmission === 0 && s.shadowSize === 2048, `High: cheap floor reflection, none of the other Ultra extras (shadow ${s.shadowSize})`);
+  ok(!s.gtao && !s.smaa && s.contact && s.reflection && s.transmission === 0 && s.shadowSize === 2048, `High: contact shadow and cheap floor reflection, none of the other Ultra extras (shadow ${s.shadowSize})`);
   await sleep(600);
   await shot('realism-high');
 

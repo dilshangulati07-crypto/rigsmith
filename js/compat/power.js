@@ -1,5 +1,5 @@
 // Power rules: estimated peak draw vs PSU wattage, and GPU / CPU power plugs.
-import { issue, unknown, known, ramModules, fanCount, plural } from './util.js?v=733eefba1e';
+import { issue, unknown, known, ramModules, fanCount, plural } from './util.js?v=fe48996dc3';
 
 export const PSU_HEADROOM = 1.3; // PSU should be rated 30% above the estimated peak draw
 

@@ -4,7 +4,7 @@
 // Greyscale textures serve as roughness and bump maps; see detailUV() in materials.js for how
 // they keep the same density on parts of any size.
 import * as THREE from 'three';
-import { share } from './resources.js?v=733eefba1e';
+import { share } from './resources.js?v=fe48996dc3';
 
 const cache = new Map();
 

@@ -4,11 +4,11 @@
 // quality levels draw (capacitors, mounting screws, connector pins, port inserts, SMD parts).
 // Board space as in board-layout.js: u across, v down, z out of the board.
 import * as THREE from 'three';
-import { mat } from '../materials.js?v=733eefba1e';
-import { instancedBoxes, instanced, cylinderZ, detail } from '../resources.js?v=733eefba1e';
-import { pcbCanvas, canvas, rng } from '../textures.js?v=733eefba1e';
-import { STANDOFFS, BOARD_DIMS } from '../board-layout.js?v=733eefba1e';
-import { silkNames } from '../cable-plan.js?v=733eefba1e';
+import { mat } from '../materials.js?v=fe48996dc3';
+import { instancedBoxes, instanced, cylinderZ, detail } from '../resources.js?v=fe48996dc3';
+import { pcbCanvas, canvas, rng } from '../textures.js?v=fe48996dc3';
+import { STANDOFFS, BOARD_DIMS } from '../board-layout.js?v=fe48996dc3';
+import { silkNames } from '../cable-plan.js?v=fe48996dc3';
 
 const PX = 36; // texture pixels per cm
 const SILK = '#c5c9cf';

@@ -4,21 +4,21 @@
 // the "Auto-build" cinematic in cinematic-panel.js.
 // Loaded on demand the first time the panel is on screen, so the parts list never waits for three.js.
 import * as THREE from 'three';
-import { createViewer, isWebGL2Available, QUALITIES, QUALITY_LABEL } from '../scene/renderer.js?v=733eefba1e';
-import { setMaterialQuality } from '../scene/materials.js?v=733eefba1e';
-import { createStage } from '../scene/stage.js?v=733eefba1e';
-import { createBuildScene } from '../scene/build-scene.js?v=733eefba1e';
-import { THEMES, loadTheme, saveTheme } from '../scene/look.js?v=733eefba1e';
-import { createCameraRig, CAMERA_PRESETS } from '../scene/camera-rig.js?v=733eefba1e';
-import { createEffects, FAN_PROFILES, RGB_MODES } from '../scene/effects.js?v=733eefba1e';
-import { FOOT } from '../scene/layout.js?v=733eefba1e';
-import { getCategory } from '../categories.js?v=733eefba1e';
-import { CONFIG } from '../config.js?v=733eefba1e';
-import { assemblyProgress } from '../state.js?v=733eefba1e';
-import { html, render } from './dom.js?v=733eefba1e';
-import { mountHandPanel } from './hand-panel.js?v=733eefba1e';
-import { mountCinematicPanel } from './cinematic-panel.js?v=733eefba1e';
-import { mountPhotoPanel } from './photo-panel.js?v=733eefba1e';
+import { createViewer, isWebGL2Available, QUALITIES, QUALITY_LABEL } from '../scene/renderer.js?v=fe48996dc3';
+import { setMaterialQuality } from '../scene/materials.js?v=fe48996dc3';
+import { createStage } from '../scene/stage.js?v=fe48996dc3';
+import { createBuildScene } from '../scene/build-scene.js?v=fe48996dc3';
+import { THEMES, loadTheme, saveTheme } from '../scene/look.js?v=fe48996dc3';
+import { createCameraRig, CAMERA_PRESETS } from '../scene/camera-rig.js?v=fe48996dc3';
+import { createEffects, FAN_PROFILES, RGB_MODES } from '../scene/effects.js?v=fe48996dc3';
+import { FOOT } from '../scene/layout.js?v=fe48996dc3';
+import { getCategory } from '../categories.js?v=fe48996dc3';
+import { CONFIG } from '../config.js?v=fe48996dc3';
+import { assemblyProgress } from '../state.js?v=fe48996dc3';
+import { html, render } from './dom.js?v=fe48996dc3';
+import { mountHandPanel } from './hand-panel.js?v=fe48996dc3';
+import { mountCinematicPanel } from './cinematic-panel.js?v=fe48996dc3';
+import { mountPhotoPanel } from './photo-panel.js?v=fe48996dc3';
 
 const DRAWN = 'Every part is drawn at the size in the data. Where the data has no size (PSU length, graphics card height, radiator thickness) a typical size is used; hover a part to see which.';
 
@@ -184,29 +184,32 @@ export async function mountViewerPanel(el, app) {
   });
 
   // ---- small product shots of the chosen parts for the parts list (app.setPartThumb)
+  // One shot per idle slot, so the page stays responsive (each shot is a full render).
   let thumbnailer = null;
   let thumbTimer = 0;
   const shot = new Set();
+  const idle = (fn) => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: 500 }) : setTimeout(fn, 60));
   function queuePartThumbs() {
     if (!app.setPartThumb) return;
     clearTimeout(thumbTimer);
     thumbTimer = setTimeout(async () => {
-      if (bscene.busy) { queuePartThumbs(); return; }
-      const { createThumbnailer } = await import('../scene/thumbnails.js?v=733eefba1e');
+      const { createThumbnailer } = await import('../scene/thumbnails.js?v=fe48996dc3');
       thumbnailer ??= createThumbnailer(viewer, { width: 160, height: 160, background: '#DEE0E3' });
-      for (const m of bscene.models) {
-        if (shot.has(m.part.id)) continue;
+      const next = () => {
+        // Wait while the scene is loading or a part is being dragged in by hand.
+        if (bscene.busy || hand?.dragging) { thumbTimer = setTimeout(next, 400); return; }
+        const m = bscene.models.find((x) => !shot.has(x.part.id));
+        if (!m) { if (!running()) viewer.render(); return; }
+        shot.add(m.part.id);
         const copy = m.model.clone(true);
         copy.position.set(0, 0, 0);
         copy.quaternion.identity();
         copy.visible = true;
-        copy.traverse((o) => { o.visible = o.visible || o === copy; });
         const url = thumbnailer.shoot(copy, m.category === 'case' ? [0.7, 0.35, 0.8] : [0.45, 0.4, 1]);
-        if (!url) continue;
-        shot.add(m.part.id);
-        app.setPartThumb(m.part.id, url);
-      }
-      if (!running()) viewer.render();
+        if (url) app.setPartThumb(m.part.id, url);
+        idle(next);
+      };
+      idle(next);
     }, 120);
   }
   const running = () => viewer.running;

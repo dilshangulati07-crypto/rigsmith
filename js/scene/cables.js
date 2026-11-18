@@ -6,11 +6,11 @@
 // materials, the stripe texture and the marker/handle geometry are made once.
 // reveal() draws a cable only up to a fraction of its length (the Auto-build cinematic).
 import * as THREE from 'three';
-import { mat } from './materials.js?v=733eefba1e';
-import { weave, wireWeave } from './textures.js?v=733eefba1e';
-import { DETAIL_HIGH } from './resources.js?v=733eefba1e';
-import { NO_PICK_LAYER } from './case.js?v=733eefba1e';
-import { CABLE_SPECS } from './cable-plan.js?v=733eefba1e';
+import { mat } from './materials.js?v=fe48996dc3';
+import { weave, wireWeave } from './textures.js?v=fe48996dc3';
+import { DETAIL_HIGH } from './resources.js?v=fe48996dc3';
+import { NO_PICK_LAYER } from './case.js?v=fe48996dc3';
+import { CABLE_SPECS } from './cable-plan.js?v=fe48996dc3';
 
 const UNIT_BOX = new THREE.BoxGeometry(1, 1, 1);
 const PROFILE = 12;    // points around the cross-section

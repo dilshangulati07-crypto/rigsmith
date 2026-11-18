@@ -180,7 +180,8 @@ try {
     const csv = await readFile(join(dir, csvName), 'utf8');
     ok(csv.startsWith('﻿Category,Part,') && (csv.match(/https:\/\/www\.google\.com\/search\?tbm=shop/g) || []).length === 9 && /Share link: http/.test(csv), 'CSV has a header, a search link per part and the share link');
   }
-  await rm(dir, { recursive: true, force: true });
+  // Windows: Chrome can still hold the download open for a moment; cleanup never fails the run.
+  await rm(dir, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 }).catch(() => {});
 
   // ---------------------------------------------------------------- compare
   console.log('Compare');
@@ -196,7 +197,7 @@ try {
   // Sticky header while scrolling.
   await evaluate(`window.scrollTo(0, 1200)`);
   await sleep(150);
-  ok(Math.abs(await evaluate(`document.querySelector('.cmp__head').getBoundingClientRect().top`) - 56) < 2, 'header with thumbnails stays under the top bar while scrolling');
+  ok(Math.abs(await evaluate(`document.querySelector('.cmp__head').getBoundingClientRect().top - document.querySelector('.topbar').getBoundingClientRect().bottom`)) < 2, 'header with thumbnails stays under the top bar while scrolling');
   await evaluate(`window.scrollTo(0, 0)`);
 
   // Swap the graphics card in column C: live deltas, then the table follows.
@@ -254,8 +255,9 @@ try {
   await go('/builder.html', builderReady);
   await sleep(300);
   await noSideScroll('builder');
-  const barFits = await evaluate(`[...document.querySelectorAll('.builder__actions > *')].every((e) => e.getBoundingClientRect().right <= innerWidth + 1)`);
-  ok(barFits, 'builder action bar wraps inside 380 px');
+  // One row that scrolls sideways inside its own box (the page itself does not).
+  const barFits = await evaluate(`(() => { const bar = document.querySelector('.builder__actions'); const r = bar.getBoundingClientRect(); return r.left >= -1 && r.right <= innerWidth + 1 && getComputedStyle(bar).overflowX === 'auto'; })()`);
+  ok(barFits, 'builder action bar is one row that scrolls inside 380 px');
   await evaluate(`document.querySelector('[data-cmd="presets"]').click()`);
   await waitFor(`document.querySelectorAll('#presets-dialog .preset').length === 8`, 'dialog');
   ok(await evaluate(`[...document.querySelectorAll('#presets-dialog .preset')].every((e) => e.getBoundingClientRect().right <= innerWidth)`), 'Presets dialog fits');

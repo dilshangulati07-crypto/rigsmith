@@ -3,10 +3,10 @@
 // product line (look: label colour and accent; 'm2-spreader' = a metal heat spreader over the chips).
 // Local axes: +X = long side, +Y = short side, +Z = label face. Origin = centre of the drive.
 import * as THREE from 'three';
-import { mat, finish } from '../materials.js?v=733eefba1e';
-import { lookOf, COLOURS, isPale } from '../look.js?v=733eefba1e';
-import { boxMM, instancedBoxes, labelTexture } from '../resources.js?v=733eefba1e';
-import { DRIVE_DIMS } from '../layout.js?v=733eefba1e';
+import { mat, finish } from '../materials.js?v=fe48996dc3';
+import { lookOf, COLOURS, isPale } from '../look.js?v=fe48996dc3';
+import { boxMM, instancedBoxes, labelTexture } from '../resources.js?v=fe48996dc3';
+import { DRIVE_DIMS } from '../layout.js?v=fe48996dc3';
 
 const capacity = (gb) => (gb >= 1000 ? `${Math.round(gb / 100) / 10} TB` : `${gb} GB`);
 

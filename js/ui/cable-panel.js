@@ -5,12 +5,12 @@
 // score from js/scene/cable-route.js, the 3D cables from js/scene/cables.js; the cables
 // themselves live in js/state.js (assemblyProgress), so undo/redo and saving cover them.
 import * as THREE from 'three';
-import { planCables, CABLE_GROUPS, endsOf, powerReady } from '../scene/cable-plan.js?v=733eefba1e';
-import { routeContext, routeOf, autoRoute, checkCable, scoreCables, waypointsOf, clampToCase, routeEnds } from '../scene/cable-route.js?v=733eefba1e';
-import { createCables } from '../scene/cables.js?v=733eefba1e';
-import { CABLE_STYLES } from '../state.js?v=733eefba1e';
-import { CONFIG } from '../config.js?v=733eefba1e';
-import { html, render } from './dom.js?v=733eefba1e';
+import { planCables, CABLE_GROUPS, endsOf, powerReady } from '../scene/cable-plan.js?v=fe48996dc3';
+import { routeContext, routeOf, autoRoute, checkCable, scoreCables, waypointsOf, clampToCase, routeEnds } from '../scene/cable-route.js?v=fe48996dc3';
+import { createCables } from '../scene/cables.js?v=fe48996dc3';
+import { CABLE_STYLES } from '../state.js?v=fe48996dc3';
+import { CONFIG } from '../config.js?v=fe48996dc3';
+import { html, render } from './dom.js?v=fe48996dc3';
 
 const STYLE_LABEL = { black: 'Stock black', white: 'White', custom: 'Custom colour', sleeved: 'Sleeved' };
 const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'build';

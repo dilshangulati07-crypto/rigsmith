@@ -1,8 +1,8 @@
 // Shared PBR materials. Each one is created once and reused across meshes.
 import * as THREE from 'three';
-import { share } from './resources.js?v=733eefba1e';
-import * as tex from './textures.js?v=733eefba1e';
-import { COLOURS } from './look.js?v=733eefba1e';
+import { share } from './resources.js?v=fe48996dc3';
+import * as tex from './textures.js?v=fe48996dc3';
+import { COLOURS } from './look.js?v=fe48996dc3';
 
 /**
  * Give a material's maps the same density on every part, whatever the mesh's size. Most

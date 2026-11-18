@@ -7,7 +7,7 @@
 // ATX run: pause (time stops), Space, a timeline jump, arrow keys, skip, replay, Esc, "Open in
 // Build by hand", "Edit parts", "Take screenshot". Then 5 replays with GPU and JS memory flat,
 // "Save as video" (cancel, then a full recording that plays back with the overlay on it), the
-// reduced-motion crossfade version, the landing "Auto-build a PC" and Auto-fill "Watch it build"
+// reduced-motion crossfade version, the landing "Watch it build" and Auto-fill "Watch it build"
 // path, and the 380 px layout. Any console error fails the run.
 // Usage: node tools/test-cinematic-browser.mjs [--shots <dir>] [-v]
 import { BUILDS } from './test-builds.mjs';
@@ -124,7 +124,8 @@ try {
     }
 
     const total = await evaluate('__a.p().total');
-    const run = await playToEnd(Math.max(120000, (total / speed) * 12000));
+    // SwiftShader plays about 11x slower than real time here; 20x leaves room for slower machines.
+    const run = await playToEnd(Math.max(120000, (total / speed) * 20000));
     const caps = run.labels.map((l) => l.cap);
     const order = ['Fitting standoffs and I/O shield', 'Installing power supply', 'Installing motherboard', 'Installing processor', 'Installing memory', 'Installing graphics card', 'Connecting 24-pin ATX power — ', 'Closing the glass side panel', 'Power on', 'Finished'];
     const at = order.map((o) => caps.findIndex((c) => c.includes(o)));
@@ -285,12 +286,12 @@ try {
   await ESC();
   await reducedMotion(false);
 
-  // ---- landing page "Auto-build a PC" -> Auto-fill -> "Watch it build"
+  // ---- landing page "Watch it build" -> Auto-fill -> "Watch it build"
   console.log('Landing page and Auto-fill');
   await page('Page.navigate', { url: (await evaluate('location.origin')) + '/index.html' });
   await waitFor('document.readyState === "complete"', 'landing');
-  const href = await evaluate(`[...document.querySelectorAll('a')].find((a) => a.textContent.trim() === 'Auto-build a PC')?.getAttribute('href')`);
-  ok(href === 'builder.html?mode=auto', `landing "Auto-build a PC" goes to ${href}`);
+  const href = await evaluate(`[...document.querySelectorAll('a')].find((a) => a.textContent.trim() === 'Watch it build')?.getAttribute('href')`);
+  ok(href === 'builder.html?mode=auto', `landing "Watch it build" goes to ${href}`);
   await openAuto('/builder.html?mode=auto&debug3d');
   await waitFor(`document.getElementById('autofill-dialog').open`, 'Auto-fill dialog');
   ok(!/mode=auto/.test(await evaluate('location.search')), 'the dialog opens and the URL drops mode=auto (a reload will not reopen it)');

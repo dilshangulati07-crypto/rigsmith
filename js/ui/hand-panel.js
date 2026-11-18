@@ -5,14 +5,14 @@
 // js/state.js (assemblyProgress); the 3D side is js/scene/hand-build.js.
 import {
   planAssembly, canInstall, checkFit, freePieces, reconcile, progress as progressOf, currentStage,
-} from '../scene/assembly.js?v=733eefba1e';
-import { createHandBuild } from '../scene/hand-build.js?v=733eefba1e';
-import { createSound } from '../scene/sound.js?v=733eefba1e';
-import { mountCablePanel } from './cable-panel.js?v=733eefba1e';
-import { ramSlotNames } from '../scene/layout-board.js?v=733eefba1e';
-import { assemblyProgress } from '../state.js?v=733eefba1e';
-import { getCategory } from '../categories.js?v=733eefba1e';
-import { html, render } from './dom.js?v=733eefba1e';
+} from '../scene/assembly.js?v=fe48996dc3';
+import { createHandBuild } from '../scene/hand-build.js?v=fe48996dc3';
+import { createSound } from '../scene/sound.js?v=fe48996dc3';
+import { mountCablePanel } from './cable-panel.js?v=fe48996dc3';
+import { ramSlotNames } from '../scene/layout-board.js?v=fe48996dc3';
+import { assemblyProgress } from '../state.js?v=fe48996dc3';
+import { getCategory } from '../categories.js?v=fe48996dc3';
+import { html, render } from './dom.js?v=fe48996dc3';
 
 const typing = (el) => el?.closest?.('input, select, textarea, [contenteditable="true"]');
 
@@ -298,7 +298,7 @@ export function mountHandPanel(el, { app, viewer, bscene, rig, fx, reducedMotion
 
   // ---------------------------------------------------------------- drag from the tray
   const canvas = viewer.renderer.domElement;
-  let press = null; // { id, x, y, group, started, blocked }
+  let press = null; // { id, x, y, group, started, blocked (refusal text or false) }
   let suppressClick = false;
   function ndc(e) {
     const r = canvas.getBoundingClientRect();
@@ -318,8 +318,9 @@ export function mountHandPanel(el, { app, viewer, bscene, rig, fx, reducedMotion
       suppressClick = true;
       const order = canInstall(plan, installedSet(), press.group);
       if (!order.ok) {
-        press.blocked = true;
-        setMsg(order.reason, 'warn', 5000);
+        // Stays up while the locked item is held; fades 5 s after release.
+        press.blocked = order.reason;
+        setMsg(order.reason, 'warn');
         return;
       }
       press.started = hb.beginDrag(press.group, ndc(e));
@@ -341,6 +342,7 @@ export function mountHandPanel(el, { app, viewer, bscene, rig, fx, reducedMotion
     press = null;
     el.dataset.dragging = 'false';
     if (p.el.hasPointerCapture?.(e.pointerId)) p.el.releasePointerCapture(e.pointerId);
+    if (p.blocked) setMsg(p.blocked, 'warn', 5000);
     if (!p.started) return;
     if (cancelled) { hb.cancelDrag(); setMsg(null); return; }
     const r = hb.endDrag();
@@ -445,6 +447,8 @@ export function mountHandPanel(el, { app, viewer, bscene, rig, fx, reducedMotion
     /** True when every required cable is in (the PC may power on). */
     canPower: () => active && cab.canPower(),
     get cabling() { return active && cab.active; },
+    /** True while a part or a cable is being dragged or animated in. */
+    get dragging() { return active && (busy || hb.animating || hb.dragging || cab.dragging); },
     // For tools/test-browser.mjs (exposed with ?debug3d).
     test: {
       get plan() { return plan; },

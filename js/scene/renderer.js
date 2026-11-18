@@ -7,10 +7,10 @@
 // Units: 1 unit = 1 cm. Physically based lights, so point light intensity is in candela.
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { CONFIG } from '../config.js?v=733eefba1e';
-import { createEnvironment } from './environment.js?v=733eefba1e';
-import { createPost } from './post.js?v=733eefba1e';
-import { DETAIL_HIGH, DETAIL_ULTRA } from './resources.js?v=733eefba1e';
+import { CONFIG } from '../config.js?v=fe48996dc3';
+import { createEnvironment } from './environment.js?v=fe48996dc3';
+import { createPost } from './post.js?v=fe48996dc3';
+import { DETAIL_HIGH, DETAIL_ULTRA } from './resources.js?v=fe48996dc3';
 
 export const QUALITIES = Object.freeze(['low', 'high', 'ultra']);
 export const QUALITY_LABEL = Object.freeze({ low: 'Low', high: 'High', ultra: 'Ultra' });
@@ -274,6 +274,9 @@ export function createViewer(canvas, opts = {}) {
    * The size is capped by what the GPU can allocate; the real pixel size comes back too.
    */
   async function captureScaled(scale) {
+    // The ResizeObserver can lag a layout change (photo mode just opened): measure now.
+    const box = canvas.getBoundingClientRect();
+    if (box.width && box.height && (Math.floor(box.width) !== width || Math.floor(box.height) !== height)) resize(box.width, box.height);
     const gl = renderer.getContext();
     const maxSide = Math.min(8192, gl.getParameter(gl.MAX_RENDERBUFFER_SIZE));
     const maxPixels = 16e6;
@@ -287,8 +290,9 @@ export function createViewer(canvas, opts = {}) {
       resize(width, height);
       invalidateShadows();
       render();
+      const size = { width: canvas.width, height: canvas.height };
       const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
-      return { blob, width: Math.floor(width * ratio), height: Math.floor(height * ratio) };
+      return { blob, ...size };
     } finally {
       if (big) post.setSamples(4);
       renderer.setPixelRatio(before);

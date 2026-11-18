@@ -54,7 +54,7 @@ export function thumbFor(build, code) {
   const job = queue.then(async () => {
     const again = cachedThumb(code);
     if (again) return again;
-    thumbs ??= import('../scene/build-thumbs.js?v=733eefba1e').then((m) => m.createBuildThumbs());
+    thumbs ??= import('../scene/build-thumbs.js?v=fe48996dc3').then((m) => m.createBuildThumbs());
     const url = await (await thumbs).render(build);
     memory.set(code, url);
     writeStore(code, url);

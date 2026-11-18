@@ -1,8 +1,8 @@
 // Build pricing from refPriceTHB. These are hand-entered reference prices, never live:
 // every result carries `note` and the UI must show it next to any price.
-import { CONFIG } from './config.js?v=733eefba1e';
-import { CATEGORIES } from './categories.js?v=733eefba1e';
-import { estimatePerformance, WORKLOADS } from './perf.js?v=733eefba1e';
+import { CONFIG } from './config.js?v=fe48996dc3';
+import { CATEGORIES } from './categories.js?v=fe48996dc3';
+import { estimatePerformance, WORKLOADS } from './perf.js?v=fe48996dc3';
 
 export const PRICE_NOTE = CONFIG.priceNote; // 'Reference price, not live'
 

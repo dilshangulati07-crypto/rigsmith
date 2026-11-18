@@ -1,4 +1,4 @@
-import { unit } from '../dom.js?v=733eefba1e';
+import { unit } from '../dom.js?v=fe48996dc3';
 
 const kit = (p) => `${p.modules ?? p.kit.split('x')[0]} × ${p.moduleGB ?? p.kit.split('x')[1]} GB`;
 
