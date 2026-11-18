@@ -1,13 +1,13 @@
 // Printable one-page spec sheet for a build (shown only by css/print.css): parts with key
 // specs and reference prices, estimates, power, size, compatibility and verification, and
 // a QR code of the share link (drawn by js/qr.js; left out if it can't be drawn).
-import { CONFIG } from '../config.js?v=5b4c14becb';
-import { buildReport, partRows, WORKLOADS } from '../build-report.js?v=5b4c14becb';
-import { formatTHB, PRICE_NOTE } from '../pricing.js?v=5b4c14becb';
-import { PERF_LABEL } from '../perf.js?v=5b4c14becb';
-import { partType } from './part-types/index.js?v=5b4c14becb';
-import { qrSvg } from '../qr.js?v=5b4c14becb';
-import { html, raw, num } from './dom.js?v=5b4c14becb';
+import { CONFIG } from '../config.js?v=733eefba1e';
+import { buildReport, partRows, WORKLOADS } from '../build-report.js?v=733eefba1e';
+import { formatTHB, PRICE_NOTE } from '../pricing.js?v=733eefba1e';
+import { PERF_LABEL } from '../perf.js?v=733eefba1e';
+import { partType } from './part-types/index.js?v=733eefba1e';
+import { qrSvg } from '../qr.js?v=733eefba1e';
+import { html, raw, num } from './dom.js?v=733eefba1e';
 
 const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
 

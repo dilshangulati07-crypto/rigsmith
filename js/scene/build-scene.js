@@ -5,13 +5,13 @@
 // Build-by-hand sets a visibility mask (setMask) so only installed pieces show; every piece
 // still sits at its layoutBuild() placement for the whole build.
 import * as THREE from 'three';
-import { layoutBuild, cross, FOOT } from './layout.js?v=5b4c14becb';
-import { createModel, MODELLED } from './parts.js?v=5b4c14becb';
-import { partSlots, pieceKey } from './assembly.js?v=5b4c14becb';
-import { buildGhostCase, NO_PICK_LAYER } from './case.js?v=5b4c14becb';
-import { disposeTree } from './resources.js?v=5b4c14becb';
-import { mat, finish } from './materials.js?v=5b4c14becb';
-import { tubeLook } from './models/cooler.js?v=5b4c14becb';
+import { layoutBuild, cross, FOOT } from './layout.js?v=733eefba1e';
+import { createModel, MODELLED } from './parts.js?v=733eefba1e';
+import { partSlots, pieceKey } from './assembly.js?v=733eefba1e';
+import { buildGhostCase, NO_PICK_LAYER } from './case.js?v=733eefba1e';
+import { disposeTree } from './resources.js?v=733eefba1e';
+import { mat, finish } from './materials.js?v=733eefba1e';
+import { tubeLook } from './models/cooler.js?v=733eefba1e';
 
 const PANEL_SECONDS = 0.35;
 const EXPLODE_RATE = 5;     // 1/s: exponential approach to the slider value

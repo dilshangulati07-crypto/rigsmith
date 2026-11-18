@@ -1,4 +1,4 @@
-import { capacity, num } from '../dom.js?v=5b4c14becb';
+import { capacity, num } from '../dom.js?v=733eefba1e';
 
 const TYPE = { nvme: 'NVMe SSD', sata: 'SATA SSD', hdd: 'Hard drive' };
 

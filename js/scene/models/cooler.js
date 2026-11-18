@@ -7,13 +7,13 @@
 // (units[1]); the layout places the radiator in the case and build-scene draws the tubes.
 // Head local: origin = socket centre on the board, +X = board u (case front), +Y = up the board, +Z = out.
 import * as THREE from 'three';
-import { mat, finish, ledMaterial, diffuserMaterial, screenMaterial } from '../materials.js?v=5b4c14becb';
-import { boxMM, instancedBoxes, instanced, cylinderZ, detail, share } from '../resources.js?v=5b4c14becb';
-import { makeFan, fanLook } from '../fan-model.js?v=5b4c14becb';
-import { IHS_TOP } from './cpu.js?v=5b4c14becb';
-import { AIO_HEAD_H } from '../layout-board.js?v=5b4c14becb';
-import { radiatorSpec } from '../layout-fans.js?v=5b4c14becb';
-import { lookOf, isPale } from '../look.js?v=5b4c14becb';
+import { mat, finish, ledMaterial, diffuserMaterial, screenMaterial } from '../materials.js?v=733eefba1e';
+import { boxMM, instancedBoxes, instanced, cylinderZ, detail, share } from '../resources.js?v=733eefba1e';
+import { makeFan, fanLook } from '../fan-model.js?v=733eefba1e';
+import { IHS_TOP } from './cpu.js?v=733eefba1e';
+import { AIO_HEAD_H } from '../layout-board.js?v=733eefba1e';
+import { radiatorSpec } from '../layout-fans.js?v=733eefba1e';
+import { lookOf, isPale } from '../look.js?v=733eefba1e';
 
 const DEFAULT_H = 15.5;
 

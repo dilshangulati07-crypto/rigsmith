@@ -4,16 +4,16 @@
 
 /* ---------- Tokens ---------- */
 :root {
-  --bg: #F5F6F8;
-  --panel: #FFFFFF;
-  --panel-2: #F0F2F5;
-  --line: #E6E9EE;
-  --line-strong: #D4D9E1;
-  --text: #0E1420;
-  --muted: #5E6878;
+  --bg: #E9EAEC;
+  --panel: #F3F4F6;
+  --panel-2: #E5E7EA;
+  --line: #D9DBDF;
+  --line-strong: #C6C9CF;
+  --text: #1A1C20;
+  --muted: #5A5F68;
   --accent: #2F6BFF;
   --accent-hover: #1F58E8;
-  --accent-soft: #EAF0FF;
+  --accent-soft: #DCE4F5;
   --accent-ink: #FFFFFF;
 
   --navy: #0B1222;
@@ -40,9 +40,9 @@
   --r-lg: 20px;
   --r-pill: 999px;
 
-  --shadow-sm: 0 1px 2px rgb(14 20 32 / .05), 0 1px 1px rgb(14 20 32 / .03);
-  --shadow: 0 1px 2px rgb(14 20 32 / .04), 0 8px 24px -8px rgb(14 20 32 / .10);
-  --shadow-lg: 0 2px 4px rgb(14 20 32 / .04), 0 24px 48px -16px rgb(14 20 32 / .18);
+  --shadow-sm: 0 1px 2px rgb(26 28 32 / .04);
+  --shadow: 0 1px 2px rgb(26 28 32 / .03), 0 6px 20px -10px rgb(26 28 32 / .10);
+  --shadow-lg: 0 2px 4px rgb(26 28 32 / .03), 0 18px 40px -18px rgb(26 28 32 / .16);
 
   --s-1: 4px;
   --s-2: 8px;
@@ -752,7 +752,7 @@ select.input { padding-right: 6px; }
   display: grid;
   place-items: center;
   aspect-ratio: 4 / 3;
-  background: radial-gradient(120% 90% at 50% 30%, #EEF1F5, #DADEE5);
+  background: radial-gradient(120% 90% at 50% 30%, #DEE0E3, #C9CCD1);
   border-radius: var(--r-sm);
   overflow: hidden;
 }

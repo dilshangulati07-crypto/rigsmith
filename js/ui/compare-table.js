@@ -2,14 +2,14 @@
 // one column per build. Differences between columns are marked: parts and specs that
 // differ, the best value per metric, and the change against the first column.
 // Head and body scroll sideways together on narrow screens; the row labels stay put.
-import { CATEGORIES } from '../categories.js?v=5b4c14becb';
-import { buildReport } from '../build-report.js?v=5b4c14becb';
-import { WORKLOADS, PERF_LABEL } from '../perf.js?v=5b4c14becb';
-import { formatTHB, PRICE_NOTE } from '../pricing.js?v=5b4c14becb';
-import { encodeBuild } from '../share.js?v=5b4c14becb';
-import { partType } from './part-types/index.js?v=5b4c14becb';
-import { html, render, num } from './dom.js?v=5b4c14becb';
-import { fillThumb, thumbAlt } from './build-thumb.js?v=5b4c14becb';
+import { CATEGORIES } from '../categories.js?v=733eefba1e';
+import { buildReport } from '../build-report.js?v=733eefba1e';
+import { WORKLOADS, PERF_LABEL } from '../perf.js?v=733eefba1e';
+import { formatTHB, PRICE_NOTE } from '../pricing.js?v=733eefba1e';
+import { encodeBuild } from '../share.js?v=733eefba1e';
+import { partType } from './part-types/index.js?v=733eefba1e';
+import { html, render, num } from './dom.js?v=733eefba1e';
+import { fillThumb, thumbAlt } from './build-thumb.js?v=733eefba1e';
 
 export const MAX_COLUMNS = 3;
 

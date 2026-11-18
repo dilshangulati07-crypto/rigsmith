@@ -12,10 +12,10 @@
 //    score minus SERIOUS_COST per serious issue; within SCORE_TOLERANCE the cheapest wins.
 // 3. Spend leftover budget on the plan's upgrades (more RAM, bigger drive) when they fit.
 // Every result is checked with checkBuild(); a build with any error is never returned.
-import { checkBuild, isPartCompatible, summarize, estimateDraw } from './compat.js?v=5b4c14becb';
-import { estimatePerformance } from './perf.js?v=5b4c14becb';
-import { priceBuild, formatTHB } from './pricing.js?v=5b4c14becb';
-import { emptyBuild } from './state.js?v=5b4c14becb';
+import { checkBuild, isPartCompatible, summarize, estimateDraw } from './compat.js?v=733eefba1e';
+import { estimatePerformance } from './perf.js?v=733eefba1e';
+import { priceBuild, formatTHB } from './pricing.js?v=733eefba1e';
+import { emptyBuild } from './state.js?v=733eefba1e';
 
 const SCORE_TOLERANCE = 1; // points: no paying for a 1-point gain
 // A serious issue (warning, weak board or cooler) costs this many score points when

@@ -8,16 +8,16 @@
 // request per part. To add a part type: write a builder in js/scene/models/ and register it in TYPES.
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { disposeTree } from './resources.js?v=5b4c14becb';
-import { buildCase } from './case.js?v=5b4c14becb';
-import { buildMotherboard } from './models/motherboard.js?v=5b4c14becb';
-import { buildPSU } from './models/psu.js?v=5b4c14becb';
-import { buildStorage } from './models/storage.js?v=5b4c14becb';
-import { buildFans, fansFromGLB } from './models/fans.js?v=5b4c14becb';
-import { buildCPU } from './models/cpu.js?v=5b4c14becb';
-import { buildCooler } from './models/cooler.js?v=5b4c14becb';
-import { buildRAM } from './models/ram.js?v=5b4c14becb';
-import { buildGPU } from './models/gpu.js?v=5b4c14becb';
+import { disposeTree } from './resources.js?v=733eefba1e';
+import { buildCase } from './case.js?v=733eefba1e';
+import { buildMotherboard } from './models/motherboard.js?v=733eefba1e';
+import { buildPSU } from './models/psu.js?v=733eefba1e';
+import { buildStorage } from './models/storage.js?v=733eefba1e';
+import { buildFans, fansFromGLB } from './models/fans.js?v=733eefba1e';
+import { buildCPU } from './models/cpu.js?v=733eefba1e';
+import { buildCooler } from './models/cooler.js?v=733eefba1e';
+import { buildRAM } from './models/ram.js?v=733eefba1e';
+import { buildGPU } from './models/gpu.js?v=733eefba1e';
 
 // build(part, ctx): procedural. fromGLB(scene, part, ctx): optional adapter for a loaded model.
 // ctx = { caseLayout, anisotropy, theme } (theme: the viewer's black / white build theme, see look.js)

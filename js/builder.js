@@ -1,20 +1,20 @@
 // Builder page controller: loads the catalogue, owns UI state (not build state, which
 // lives in js/state.js), routes actions between panels and re-renders on every change.
-import { loadCatalog } from './catalog.js?v=5b4c14becb';
-import { CATEGORIES, getCategory } from './categories.js?v=5b4c14becb';
-import { buildStore, assemblyProgress } from './state.js?v=5b4c14becb';
-import { checkBuild, summarize, estimateDraw } from './compat.js?v=5b4c14becb';
-import { priceBuild, formatTHB } from './pricing.js?v=5b4c14becb';
-import { SavedBuilds } from './saved-builds.js?v=5b4c14becb';
-import { allParts } from './compat/util.js?v=5b4c14becb';
-import { mountCategoryList } from './ui/category-list.js?v=5b4c14becb';
-import { mountPartBrowser } from './ui/part-browser.js?v=5b4c14becb';
-import { mountPartDetail } from './ui/part-detail.js?v=5b4c14becb';
-import { mountSummary } from './ui/summary.js?v=5b4c14becb';
-import { mountAutofill } from './ui/autofill-dialog.js?v=5b4c14becb';
-import { mountBuildsDialog } from './ui/builds-dialog.js?v=5b4c14becb';
-import { mountPresetsDialog } from './ui/presets-dialog.js?v=5b4c14becb';
-import { mountBuilderShare } from './ui/builder-share.js?v=5b4c14becb';
+import { loadCatalog } from './catalog.js?v=733eefba1e';
+import { CATEGORIES, getCategory } from './categories.js?v=733eefba1e';
+import { buildStore, assemblyProgress } from './state.js?v=733eefba1e';
+import { checkBuild, summarize, estimateDraw } from './compat.js?v=733eefba1e';
+import { priceBuild, formatTHB } from './pricing.js?v=733eefba1e';
+import { SavedBuilds } from './saved-builds.js?v=733eefba1e';
+import { allParts } from './compat/util.js?v=733eefba1e';
+import { mountCategoryList } from './ui/category-list.js?v=733eefba1e';
+import { mountPartBrowser } from './ui/part-browser.js?v=733eefba1e';
+import { mountPartDetail } from './ui/part-detail.js?v=733eefba1e';
+import { mountSummary } from './ui/summary.js?v=733eefba1e';
+import { mountAutofill } from './ui/autofill-dialog.js?v=733eefba1e';
+import { mountBuildsDialog } from './ui/builds-dialog.js?v=733eefba1e';
+import { mountPresetsDialog } from './ui/presets-dialog.js?v=733eefba1e';
+import { mountBuilderShare } from './ui/builder-share.js?v=733eefba1e';
 
 const $ = (s) => document.querySelector(s);
 const UI_KEY = 'rigsmith.ui.v1';
@@ -218,7 +218,7 @@ function watchViewer() {
     loading = true;
     io.disconnect();
     try {
-      const { mountViewerPanel } = await import('./ui/viewer-panel.js?v=5b4c14becb');
+      const { mountViewerPanel } = await import('./ui/viewer-panel.js?v=733eefba1e');
       viewer = await mountViewerPanel(el, app);
       viewer?.sync(app.store.build);
       markHover(hover3d);

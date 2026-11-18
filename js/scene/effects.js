@@ -8,8 +8,8 @@
 // bloom (each point light cost High ~5 % of the frame on integrated graphics).
 // Settings (profile, lighting) persist in localStorage; the PC always starts powered off.
 import * as THREE from 'three';
-import { mat } from './materials.js?v=5b4c14becb';
-import { BLOOM_THRESHOLD } from './post.js?v=5b4c14becb';
+import { mat } from './materials.js?v=733eefba1e';
+import { BLOOM_THRESHOLD } from './post.js?v=733eefba1e';
 
 export const FAN_PROFILES = Object.freeze([
   { id: 'quiet', label: 'Quiet', k: 0.45 },
@@ -29,7 +29,7 @@ const VISUAL = 0.13;      // on-screen revolutions per real revolution
 const MAX_VISUAL_RPS = 4.5;
 const SPIN_RATE = 1.4;    // 1/s: fans approach their target speed
 const BOOT_SECONDS = 2.4;
-const BLOOM = 0.85;
+const BLOOM = 1.05;
 const ACCENT_LED = 9;
 const STORE = 'rigsmith.view.v1';
 const DEFAULT_RGB = { color: '#7c6bff', mode: 'aurora' };

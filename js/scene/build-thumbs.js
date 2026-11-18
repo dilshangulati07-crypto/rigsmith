@@ -4,13 +4,13 @@
 // Builds render one at a time, in the viewer's colour theme, powered on with the lighting lit;
 // js/ui/build-thumb.js caches the images.
 import * as THREE from 'three';
-import { createViewer } from './renderer.js?v=5b4c14becb';
-import { createStage } from './stage.js?v=5b4c14becb';
-import { createBuildScene } from './build-scene.js?v=5b4c14becb';
-import { FOOT } from './layout.js?v=5b4c14becb';
-import { emptyBuild } from '../state.js?v=5b4c14becb';
-import { createEffects } from './effects.js?v=5b4c14becb';
-import { loadTheme } from './look.js?v=5b4c14becb';
+import { createViewer } from './renderer.js?v=733eefba1e';
+import { createStage } from './stage.js?v=733eefba1e';
+import { createBuildScene } from './build-scene.js?v=733eefba1e';
+import { FOOT } from './layout.js?v=733eefba1e';
+import { emptyBuild } from '../state.js?v=733eefba1e';
+import { createEffects } from './effects.js?v=733eefba1e';
+import { loadTheme } from './look.js?v=733eefba1e';
 
 const VIEW_DIR = new THREE.Vector3(0.62, 0.32, 0.72).normalize(); // the viewer's 3/4 preset
 

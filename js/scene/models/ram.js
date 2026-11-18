@@ -3,10 +3,10 @@
 // top edge, the shape of the light bar on RGB kits, colour, and bare sticks for kits without one.
 // Stick local: +X along the module, +Y = up out of the slot (height), +Z across; origin = slot centre on the board.
 import * as THREE from 'three';
-import { mat, finish, ledMaterial, diffuserMaterial } from '../materials.js?v=5b4c14becb';
-import { boxMM, instancedBoxes, share, detail, textPlane } from '../resources.js?v=5b4c14becb';
-import { RAM_LENGTH, ramModules } from '../layout-board.js?v=5b4c14becb';
-import { lookOf, isPale } from '../look.js?v=5b4c14becb';
+import { mat, finish, ledMaterial, diffuserMaterial } from '../materials.js?v=733eefba1e';
+import { boxMM, instancedBoxes, share, detail, textPlane } from '../resources.js?v=733eefba1e';
+import { RAM_LENGTH, ramModules } from '../layout-board.js?v=733eefba1e';
+import { lookOf, isPale } from '../look.js?v=733eefba1e';
 
 const DEFAULT_H = 3.4;
 const SEAT = 0.3; // the module's bottom edge sits this far into the slot's height

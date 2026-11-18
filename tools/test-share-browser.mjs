@@ -60,7 +60,7 @@ try {
   ok(await evaluate(`document.querySelectorAll('canvas').length`) === 2, 'one extra WebGL canvas renders every thumbnail (hero + thumbnails)');
   await evaluate(`window.scrollTo(0, document.body.scrollHeight)`);
   await waitFor(`[...document.querySelectorAll('.preset .thumb')].every((t) => t.dataset.state === 'ready')`, 'all thumbnails', 90000);
-  const cached = await evaluate(`Object.keys(JSON.parse(sessionStorage.getItem('rigsmith.thumbs.v2') || '{}')).length`);
+  const cached = await evaluate(`Object.keys(JSON.parse(sessionStorage.getItem('rigsmith.thumbs.v3') || '{}')).length`);
   ok(cached === 8, `thumbnails cached (${cached})`);
   await shot('landing-presets');
   await go('/index.html');

@@ -1,6 +1,6 @@
 // Case fans and AIO radiators: mount rails per position, packing, and the radiator stack.
 // Pure maths (no three.js); used by layout.js.
-import { WALL, SIDE, X, Y, Z, neg, add, clamp, r2, worldExtent, basisFromNormal, zFitIn, shellOf, boxOf, hits } from './layout-math.js?v=5b4c14becb';
+import { WALL, SIDE, X, Y, Z, neg, add, clamp, r2, worldExtent, basisFromNormal, zFitIn, shellOf, boxOf, hits } from './layout-math.js?v=733eefba1e';
 
 // Panel side of each mount (radiators sit against it) and the direction parts move in the exploded view.
 const OUTWARD = { front: X, top: Y, rear: neg(X), bottom: neg(Y), side: neg(Z), shroud: neg(Y) };

@@ -10,21 +10,21 @@
 // level: High and Ultra add a contact shadow under the case and a soft reflection in the
 // floor (a smaller mirror without the fine detail at High). Photo mode can swap the backdrop.
 import * as THREE from 'three';
-import { CONFIG } from '../config.js?v=5b4c14becb';
-import { detailUV } from './materials.js?v=5b4c14becb';
-import * as tex from './textures.js?v=5b4c14becb';
-import { createContactShadow } from './contact-shadow.js?v=5b4c14becb';
-import { DETAIL_HIGH } from './resources.js?v=5b4c14becb';
+import { CONFIG } from '../config.js?v=733eefba1e';
+import { detailUV } from './materials.js?v=733eefba1e';
+import * as tex from './textures.js?v=733eefba1e';
+import { createContactShadow } from './contact-shadow.js?v=733eefba1e';
+import { DETAIL_HIGH } from './resources.js?v=733eefba1e';
 
 // Key light: intensity, and where it sits as multiples of the subject's radius (the matching
 // softbox in environment.js is in the same direction).
-const KEY = 2.2;
+const KEY = 1.6;
 const KEY_DIR = [1.0, 1.7, 1.9];
 
 const INSIDE = 0.3; // inside light, as a share of the key's illuminance on the board
 
 export const BACKDROPS = Object.freeze([
-  { id: 'studio', label: 'Studio', background: CONFIG.scene.background, floor: 0xcfd4dc, roughness: 0.34, reflect: 0.26 },
+  { id: 'studio', label: 'Studio', background: CONFIG.scene.background, floor: 0xc2c5ca, roughness: 0.34, reflect: 0.26 },
   { id: 'light', label: 'Studio white', background: 0xf3f4f6, floor: 0xeceef1, roughness: 0.4, reflect: 0.16 },
   { id: 'dark', label: 'Studio navy', background: 0x0d1424, floor: 0x161e30, roughness: 0.5, reflect: 0.3 },
   { id: 'desk', label: 'Desk', background: 0x1a1e26, floor: 0xffffff, roughness: 0.48, wood: true, reflect: 0.12 },

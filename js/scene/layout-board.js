@@ -1,8 +1,8 @@
 // Parts that sit on the motherboard: CPU, cooler head, memory and graphics card, placed from
 // the board frame (see layout-math.js) so the same code serves standard towers and cases that
 // mount the board with its I/O facing down. Pure maths (no three.js).
-import { PCIE_PITCH } from './board-layout.js?v=5b4c14becb';
-import { Z, neg, add, r2, boardPoint, boardBasis, boxOfLocal, shellOf } from './layout-math.js?v=5b4c14becb';
+import { PCIE_PITCH } from './board-layout.js?v=733eefba1e';
+import { Z, neg, add, r2, boardPoint, boardBasis, boxOfLocal, shellOf } from './layout-math.js?v=733eefba1e';
 
 export const GPU_HEIGHT = 12.5;   // typical card height (bracket edge to top edge); not in the data
 export const RAM_LENGTH = 13.335; // DIMM length

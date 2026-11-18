@@ -1,8 +1,8 @@
 // Share and export helpers shared by builder.html and compare.html: copy a link with a
 // "Copied" confirmation, CSV download, printing spec sheets, and a small disclosure menu.
-import { buildCSV, downloadText, fileSlug } from '../export.js?v=5b4c14becb';
-import { specSheet, printSheets } from './spec-sheet.js?v=5b4c14becb';
-import { CONFIG } from '../config.js?v=5b4c14becb';
+import { buildCSV, downloadText, fileSlug } from '../export.js?v=733eefba1e';
+import { specSheet, printSheets } from './spec-sheet.js?v=733eefba1e';
+import { CONFIG } from '../config.js?v=733eefba1e';
 
 /** Copy text to the clipboard. Resolves true on success. */
 export async function copyText(text) {

@@ -105,7 +105,7 @@
   width: 52px; height: 52px;
   border-radius: 10px;
   overflow: hidden;
-  background: radial-gradient(120% 90% at 50% 30%, #F1F3F6, #DFE3E9);
+  background: radial-gradient(120% 90% at 50% 30%, #DEE0E3, #CACDD2);
   display: grid;
   place-items: center;
 }
@@ -160,7 +160,7 @@
   display: inline-flex;
   padding: 4px;
   gap: 2px;
-  background: #E7EAF0;
+  background: var(--panel-2);
   border-radius: var(--r-pill);
 }
 .viewswitch__btn {
@@ -305,7 +305,7 @@
 .viewer__stage {
   position: relative;
   height: var(--viewer-h);
-  background: radial-gradient(120% 90% at 50% 35%, #E3E7EC, #D2D7DF);
+  background: radial-gradient(120% 90% at 50% 35%, #D5D7DB, #BDC0C6);
 }
 .viewer__canvas { display: block; width: 100%; height: 100%; touch-action: none; outline: none; }
 .viewer__frame { --bracket: 18px; position: absolute; inset: 8px; pointer-events: none; }
@@ -974,12 +974,13 @@ html.is-photo { overflow: hidden; }
   .photo__group .vbtn { padding-inline: 8px; }
 }
 
-/* High quality: the vignette is drawn here instead of as a render pass (Ultra renders it). */
+/* Gentle studio vignette: edges a little darker so the white case stands out. At Ultra the
+   render pass draws its own on top. */
 .viewer[data-quality="high"] .viewer__stage::after {
   content: '';
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, .3) 100%);
+  background: radial-gradient(ellipse at center, transparent 48%, rgb(26 28 32 / .26) 100%);
 }
 .viewer[data-quality="high"] .viewer__stage > :not(canvas) { z-index: 1; }

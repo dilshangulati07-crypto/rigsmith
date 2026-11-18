@@ -4,21 +4,21 @@
 // the "Auto-build" cinematic in cinematic-panel.js.
 // Loaded on demand the first time the panel is on screen, so the parts list never waits for three.js.
 import * as THREE from 'three';
-import { createViewer, isWebGL2Available, QUALITIES, QUALITY_LABEL } from '../scene/renderer.js?v=5b4c14becb';
-import { setMaterialQuality } from '../scene/materials.js?v=5b4c14becb';
-import { createStage } from '../scene/stage.js?v=5b4c14becb';
-import { createBuildScene } from '../scene/build-scene.js?v=5b4c14becb';
-import { THEMES, loadTheme, saveTheme } from '../scene/look.js?v=5b4c14becb';
-import { createCameraRig, CAMERA_PRESETS } from '../scene/camera-rig.js?v=5b4c14becb';
-import { createEffects, FAN_PROFILES, RGB_MODES } from '../scene/effects.js?v=5b4c14becb';
-import { FOOT } from '../scene/layout.js?v=5b4c14becb';
-import { getCategory } from '../categories.js?v=5b4c14becb';
-import { CONFIG } from '../config.js?v=5b4c14becb';
-import { assemblyProgress } from '../state.js?v=5b4c14becb';
-import { html, render } from './dom.js?v=5b4c14becb';
-import { mountHandPanel } from './hand-panel.js?v=5b4c14becb';
-import { mountCinematicPanel } from './cinematic-panel.js?v=5b4c14becb';
-import { mountPhotoPanel } from './photo-panel.js?v=5b4c14becb';
+import { createViewer, isWebGL2Available, QUALITIES, QUALITY_LABEL } from '../scene/renderer.js?v=733eefba1e';
+import { setMaterialQuality } from '../scene/materials.js?v=733eefba1e';
+import { createStage } from '../scene/stage.js?v=733eefba1e';
+import { createBuildScene } from '../scene/build-scene.js?v=733eefba1e';
+import { THEMES, loadTheme, saveTheme } from '../scene/look.js?v=733eefba1e';
+import { createCameraRig, CAMERA_PRESETS } from '../scene/camera-rig.js?v=733eefba1e';
+import { createEffects, FAN_PROFILES, RGB_MODES } from '../scene/effects.js?v=733eefba1e';
+import { FOOT } from '../scene/layout.js?v=733eefba1e';
+import { getCategory } from '../categories.js?v=733eefba1e';
+import { CONFIG } from '../config.js?v=733eefba1e';
+import { assemblyProgress } from '../state.js?v=733eefba1e';
+import { html, render } from './dom.js?v=733eefba1e';
+import { mountHandPanel } from './hand-panel.js?v=733eefba1e';
+import { mountCinematicPanel } from './cinematic-panel.js?v=733eefba1e';
+import { mountPhotoPanel } from './photo-panel.js?v=733eefba1e';
 
 const DRAWN = 'Every part is drawn at the size in the data. Where the data has no size (PSU length, graphics card height, radiator thickness) a typical size is used; hover a part to see which.';
 
@@ -192,8 +192,8 @@ export async function mountViewerPanel(el, app) {
     clearTimeout(thumbTimer);
     thumbTimer = setTimeout(async () => {
       if (bscene.busy) { queuePartThumbs(); return; }
-      const { createThumbnailer } = await import('../scene/thumbnails.js?v=5b4c14becb');
-      thumbnailer ??= createThumbnailer(viewer, { width: 160, height: 160, background: '#E9ECF1' });
+      const { createThumbnailer } = await import('../scene/thumbnails.js?v=733eefba1e');
+      thumbnailer ??= createThumbnailer(viewer, { width: 160, height: 160, background: '#DEE0E3' });
       for (const m of bscene.models) {
         if (shot.has(m.part.id)) continue;
         const copy = m.model.clone(true);

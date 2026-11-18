@@ -27,8 +27,8 @@ const SOFTBOXES = [
   { name: 'fill', dir: [0.15, 0.35, 1], w: 9, h: 6, k: 1.5 },
   { name: 'fill-back', dir: [0.2, 0.4, -1], w: 8, h: 6, k: 0.6 },
   { name: 'front', dir: [1, 0.1, 0.25], w: 6, h: 3, k: 0.7 },
-  { name: 'rim-left', dir: [-1, 0.35, 0.75], w: 2.2, h: 8, k: 8, c: 0x5f8cff },
-  { name: 'rim-right', dir: [-1, 0.35, -0.75], w: 2.2, h: 8, k: 4, c: 0xffd9bd },
+  { name: 'rim-left', dir: [-1, 0.35, 0.75], w: 2.2, h: 8, k: 10, c: 0x5f8cff },
+  { name: 'rim-right', dir: [-1, 0.35, -0.75], w: 2.2, h: 8, k: 5, c: 0xffd9bd },
   { name: 'rim-top', dir: [-0.6, 1, 0], w: 8, h: 0.9, k: 6 },
 ];
 

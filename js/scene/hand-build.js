@@ -7,11 +7,11 @@
 // the viewer's PC. Proxies and ghosts are clones that share geometry and materials.
 // The Auto-build cinematic (cinematic.js) drives the same seat() with `from: 'tray'`.
 import * as THREE from 'three';
-import { mat } from './materials.js?v=5b4c14becb';
-import { place } from './build-scene.js?v=5b4c14becb';
-import { NO_PICK_LAYER } from './case.js?v=5b4c14becb';
-import { createThumbnailer } from './thumbnails.js?v=5b4c14becb';
-import { freePieces } from './assembly.js?v=5b4c14becb';
+import { mat } from './materials.js?v=733eefba1e';
+import { place } from './build-scene.js?v=733eefba1e';
+import { NO_PICK_LAYER } from './case.js?v=733eefba1e';
+import { createThumbnailer } from './thumbnails.js?v=733eefba1e';
+import { freePieces } from './assembly.js?v=733eefba1e';
 
 const HOVER = 3.2;          // cm a snapped part hovers above its spot
 const SNAP_ANGLE = 0.075;   // rad: how close the pointer ray must pass a snap point

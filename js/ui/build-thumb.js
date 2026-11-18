@@ -3,7 +3,7 @@
 // three.js and the renderer load only when a thumbnail isn't cached yet.
 //
 // Markup: <div class="thumb" data-thumb-code="<build code>"></div>, then fillThumb(el, build, alt).
-const KEY = 'rigsmith.thumbs.v2'; // v2: light studio, white theme, powered on
+const KEY = 'rigsmith.thumbs.v3'; // v3: toned-down studio grey
 const BUDGET = 3_000_000; // characters of data URLs kept in sessionStorage
 const memory = new Map();
 let store = null;
@@ -54,7 +54,7 @@ export function thumbFor(build, code) {
   const job = queue.then(async () => {
     const again = cachedThumb(code);
     if (again) return again;
-    thumbs ??= import('../scene/build-thumbs.js?v=5b4c14becb').then((m) => m.createBuildThumbs());
+    thumbs ??= import('../scene/build-thumbs.js?v=733eefba1e').then((m) => m.createBuildThumbs());
     const url = await (await thumbs).render(build);
     memory.set(code, url);
     writeStore(code, url);

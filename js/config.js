@@ -16,10 +16,10 @@ export const CONFIG = Object.freeze({
 
   scene: {
     // Light-grey photo studio behind the 3D view (the 'studio' backdrop in js/scene/stage.js).
-    background: 0xdadee5,
+    background: 0xd5d7db,
     maxPixelRatio: 2,
     // Tone-mapping exposure: lifts black parts to a dark grey with visible detail.
-    exposure: 0.92,
+    exposure: 0.74,
     // Below this average frame rate the viewer drops to low quality.
     lowFpsThreshold: 35,
     // Preset build (data/presets.json) shown powered on in the landing-page hero.
