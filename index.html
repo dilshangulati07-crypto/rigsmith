@@ -5,14 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Rigsmith: 3D PC builder with compatibility checks</title>
   <meta name="description" content="Pick real PC parts with THB reference prices, get live compatibility checks, then build the machine in 3D part by part or let it assemble itself.">
+  <link rel="canonical" href="https://rigsmith.netlify.app/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Rigsmith">
+  <meta property="og:title" content="Rigsmith: build your next PC in 3D">
+  <meta property="og:description" content="Pick real PC parts with THB reference prices, get live compatibility checks, then build the machine in 3D part by part or let it assemble itself.">
+  <meta property="og:url" content="https://rigsmith.netlify.app/">
+  <meta property="og:image" content="https://rigsmith.netlify.app/img/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A white PC build with RGB lighting in the Rigsmith 3D viewer, next to the headline Build your next PC in 3D.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Rigsmith: build your next PC in 3D">
+  <meta name="twitter:description" content="Pick real PC parts with THB reference prices, get live compatibility checks, then build the machine in 3D part by part or let it assemble itself.">
+  <meta name="twitter:image" content="https://rigsmith.netlify.app/img/og-image.jpg">
   <meta name="theme-color" content="#E9EAEC">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
-  <link rel="stylesheet" href="css/style.css?v=fe48996dc3">
-  <link rel="stylesheet" href="css/landing.css?v=fe48996dc3">
-  <link rel="stylesheet" href="css/presets.css?v=fe48996dc3">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
+  <link rel="stylesheet" href="css/style.css?v=00a22f4faf">
+  <link rel="stylesheet" href="css/landing.css?v=00a22f4faf">
+  <!-- Preset cards are below the fold: their styles load without blocking first paint. -->
+  <link rel="stylesheet" href="css/presets.css?v=00a22f4faf" media="print" onload="this.media='all'">
+  <link rel="preload" as="image" href="img/hero-poster.webp" type="image/webp" fetchpriority="high">
   <script type="importmap">
     {
       "imports": {
@@ -21,8 +39,8 @@
       }
     }
   </script>
-  <script type="module" src="js/ui/shell.js?v=fe48996dc3"></script>
-  <script type="module" src="js/landing.js?v=fe48996dc3"></script>
+  <script type="module" src="js/ui/shell.js?v=00a22f4faf"></script>
+  <script type="module" src="js/landing.js?v=00a22f4faf"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -82,7 +100,7 @@
       </div>
       <div class="features__grid">
         <a class="feature" href="builder.html">
-          <img class="feature__img" src="img/feature-hand.jpg" width="800" height="600" loading="lazy" alt="Close-up of a motherboard in an open white case, with the graphics card being fitted.">
+          <picture><source srcset="img/feature-hand.webp" type="image/webp"><img class="feature__img" src="img/feature-hand.jpg" width="800" height="600" loading="lazy" decoding="async" alt="Close-up of a motherboard in an open white case, with the graphics card being fitted."></picture>
           <div class="feature__body">
             <h3>Build by hand</h3>
             <p>Drag each part into the case in the real order, then plug in every cable.</p>
@@ -90,7 +108,7 @@
           </div>
         </a>
         <a class="feature" href="builder.html?mode=auto">
-          <img class="feature__img" src="img/feature-auto.jpg" width="800" height="600" loading="lazy" alt="Exploded view of a PC, every part floating just out of its place.">
+          <picture><source srcset="img/feature-auto.webp" type="image/webp"><img class="feature__img" src="img/feature-auto.jpg" width="800" height="600" loading="lazy" decoding="async" alt="Exploded view of a PC, every part floating just out of its place."></picture>
           <div class="feature__body">
             <h3>Watch it build</h3>
             <p>Press Auto-build and the PC assembles itself, step by step, then powers on.</p>
@@ -98,7 +116,7 @@
           </div>
         </a>
         <a class="feature" href="compare.html">
-          <img class="feature__img" src="img/feature-compare.jpg" width="800" height="600" loading="lazy" alt="Three finished PC builds side by side.">
+          <picture><source srcset="img/feature-compare.webp" type="image/webp"><img class="feature__img" src="img/feature-compare.jpg" width="800" height="600" loading="lazy" decoding="async" alt="Three finished PC builds side by side."></picture>
           <div class="feature__body">
             <h3>Compare</h3>
             <p>Put up to three builds side by side: price, performance, power and size.</p>

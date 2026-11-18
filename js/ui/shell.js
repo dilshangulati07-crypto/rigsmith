@@ -1,6 +1,6 @@
 // Renders the shared top bar and footer from CONFIG so every page stays in sync.
 // Usage: <header id="site-header" data-page="builder"></header> ... <footer id="site-footer"></footer>
-import { CONFIG } from '../config.js?v=fe48996dc3';
+import { CONFIG } from '../config.js?v=00a22f4faf';
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -28,10 +28,9 @@ function renderHeader(el) {
         aria-expanded="false" aria-controls="site-nav">Menu</button>
       <nav class="nav" id="site-nav" aria-label="Main">
         <ul class="nav__list">${CONFIG.nav.map((i) => navItem(i, page)).join('')}</ul>
-        <div class="nav__end">
-          <button class="btn btn--sm" type="button" aria-disabled="true"
-            data-tooltip="Accounts are not available yet" data-tooltip-pos="left">Sign in</button>
-        </div>
+        ${page === 'builder' ? '' : `<div class="nav__end">
+          <a class="btn btn--sm btn--primary" href="builder.html">Start building</a>
+        </div>`}
       </nav>
     </div>`;
 

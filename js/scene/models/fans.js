@@ -2,9 +2,9 @@
 // blade and lighting style of the product line (look.style, see fan-model.js). The layout
 // positions each unit separately.
 import * as THREE from 'three';
-import { makeFan, fanLook } from '../fan-model.js?v=fe48996dc3';
-import { ledMaterial, diffuserMaterial } from '../materials.js?v=fe48996dc3';
-import { lookOf } from '../look.js?v=fe48996dc3';
+import { makeFan, fanLook } from '../fan-model.js?v=00a22f4faf';
+import { ledMaterial, diffuserMaterial } from '../materials.js?v=00a22f4faf';
+import { lookOf } from '../look.js?v=00a22f4faf';
 
 export function buildFans(part, { theme } = {}) {
   const g = new THREE.Group();

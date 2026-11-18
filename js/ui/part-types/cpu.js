@@ -1,5 +1,5 @@
-import { unit } from '../dom.js?v=fe48996dc3';
-import { cpuScores } from '../../perf.js?v=fe48996dc3';
+import { unit } from '../dom.js?v=00a22f4faf';
+import { cpuScores } from '../../perf.js?v=00a22f4faf';
 
 export default {
   keySpecs: (p) => [

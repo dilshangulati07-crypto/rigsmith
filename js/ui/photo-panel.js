@@ -3,10 +3,10 @@
 // field (click the PC to choose what is sharp) and a high-resolution PNG at 2x or 4x.
 // H hides the bar too; Esc leaves. Depth of field needs High or Ultra quality.
 import * as THREE from 'three';
-import { CAMERA_PRESETS } from '../scene/camera-rig.js?v=fe48996dc3';
-import { BACKDROPS, DEFAULT_BACKDROP } from '../scene/stage.js?v=fe48996dc3';
-import { CONFIG } from '../config.js?v=fe48996dc3';
-import { html, render } from './dom.js?v=fe48996dc3';
+import { CAMERA_PRESETS } from '../scene/camera-rig.js?v=00a22f4faf';
+import { BACKDROPS, DEFAULT_BACKDROP } from '../scene/stage.js?v=00a22f4faf';
+import { CONFIG } from '../config.js?v=00a22f4faf';
+import { html, render } from './dom.js?v=00a22f4faf';
 
 const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'build';
 

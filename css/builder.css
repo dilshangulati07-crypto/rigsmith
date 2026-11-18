@@ -298,7 +298,7 @@
 .col--parts[data-view="3d"] > .viewer { --viewer-h: max(460px, calc(100vh - var(--topbar-h) - 420px)); }
 /* Advanced viewer controls and notes stay behind "More options". */
 .viewer:not([data-more="on"]) .viewer__adv { display: none; }
-.vbtn--more[aria-expanded="true"] { color: var(--accent); }
+.vbtn--more[aria-expanded="true"] { color: var(--accent-text); }
 /* Build by hand: the case and the tray must both be on screen to drag between them. */
 .viewer { scroll-margin-top: calc(var(--topbar-h) + 8px); }
 .col--parts > .viewer[data-mode="hand"] { --viewer-h: max(300px, calc(100vh - var(--topbar-h) - 400px)); }
@@ -397,7 +397,7 @@
 .vgroup .vbtn { border: 0; height: 28px; }
 .vbtn:hover { color: var(--text); border-color: var(--line-strong); }
 .vgroup .vbtn:hover { background: color-mix(in srgb, var(--text) 5%, transparent); }
-.vbtn[aria-pressed="true"] { color: var(--accent); background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+.vbtn[aria-pressed="true"] { color: var(--accent-text); background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
 .vgroup .vbtn[aria-pressed="true"] { color: var(--text); background: var(--panel); box-shadow: var(--shadow-sm); }
 .vbtn:disabled { opacity: .45; cursor: not-allowed; }
 .vbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
@@ -830,7 +830,7 @@ details.issues-group .issues { margin-top: var(--s-2); }
 /* Keep anything scrolled into view (keyboard focus, tray items) clear of the sticky bar. */
 html:has(.mbar) { scroll-padding-top: calc(var(--topbar-h) + 12px); scroll-padding-bottom: 104px; }
 @media (max-width: 1023px) { html:has(.mbar) { scroll-padding-bottom: calc(170px + env(safe-area-inset-bottom)); } }
-.mbar__more[aria-expanded="true"] { --btn-text: var(--accent); --btn-border: var(--accent); }
+.mbar__more[aria-expanded="true"] { --btn-text: var(--accent-text); --btn-border: var(--accent); }
 
 @media (max-width: 1023px) {
   .builder { padding-bottom: var(--s-4); }
@@ -881,7 +881,7 @@ html:has(.mbar) { scroll-padding-top: calc(var(--topbar-h) + 12px); scroll-paddi
   .col--build, .col--summary { position: static; max-height: none; overflow: visible; }
 
   .mbar {
-    bottom: calc(76px + env(safe-area-inset-bottom));
+    bottom: var(--s-3);
     gap: var(--s-4);
     padding: var(--s-2) var(--s-2) var(--s-2) var(--s-4);
     border-radius: 18px;
@@ -890,6 +890,17 @@ html:has(.mbar) { scroll-padding-top: calc(var(--topbar-h) + 12px); scroll-paddi
   .mbar__note, .mbar__item--power { display: none; }
   .mbar__status { font-size: 13px; }
   .mbar__check { width: 22px; height: 22px; }
+  .toast { bottom: calc(80px + env(safe-area-inset-bottom)); }
+}
+
+/* Tablets (no bottom navigation): size the 3D view so its controls and the bar both fit on
+   the first screen. */
+@media (min-width: 721px) and (max-width: 1023px) {
+  .builder__grid[data-tab="3d"] > .col--parts > .viewer { --viewer-h: max(300px, calc(100dvh - var(--topbar-h) - 450px)); }
+}
+/* Phones: the bottom navigation is shown, so the bar floats above it. */
+@media (max-width: 720px) {
+  .mbar { bottom: calc(76px + env(safe-area-inset-bottom)); }
   .toast { bottom: calc(150px + env(safe-area-inset-bottom)); }
 }
 

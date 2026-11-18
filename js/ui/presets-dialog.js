@@ -1,10 +1,10 @@
 // Builder: the Presets dialog. Cards from preset-cards.js; "Open in builder" applies the
 // preset, "Watch it build" applies it and plays the Auto-build cinematic. Replacing unsaved
 // parts asks twice, like loading a saved build.
-import { loadPresets, presetBuild } from '../presets.js?v=fe48996dc3';
-import { allParts } from '../compat/util.js?v=fe48996dc3';
-import { html, render } from './dom.js?v=fe48996dc3';
-import { renderPresetCards, presetCompareUrl } from './preset-cards.js?v=fe48996dc3';
+import { loadPresets, presetBuild } from '../presets.js?v=00a22f4faf';
+import { allParts } from '../compat/util.js?v=00a22f4faf';
+import { html, render } from './dom.js?v=00a22f4faf';
+import { renderPresetCards, presetCompareUrl } from './preset-cards.js?v=00a22f4faf';
 
 const ARM_MS = 4000;
 

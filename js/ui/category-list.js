@@ -1,8 +1,8 @@
 // Left column: one row per category with the chosen part(s), price and status.
 // Doubles as the text alternative to the 3D view.
-import { CATEGORIES } from '../categories.js?v=fe48996dc3';
-import { formatTHB } from '../pricing.js?v=fe48996dc3';
-import { html, render } from './dom.js?v=fe48996dc3';
+import { CATEGORIES } from '../categories.js?v=00a22f4faf';
+import { formatTHB } from '../pricing.js?v=00a22f4faf';
+import { html, render } from './dom.js?v=00a22f4faf';
 
 const LEVEL_RANK = { error: 3, warn: 2, info: 1 };
 const STATUS_TEXT = { error: 'has an error', warn: 'has a warning' };

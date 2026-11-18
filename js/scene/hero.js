@@ -3,16 +3,16 @@
 // (CONFIG.scene.heroTheme), powered on with its lighting lit. The camera frames the machine
 // close, turns slowly around it and tilts a little towards the pointer.
 import * as THREE from 'three';
-import { CONFIG } from '../config.js?v=fe48996dc3';
-import { loadCatalog } from '../catalog.js?v=fe48996dc3';
-import { loadPresets, presetBuild, findPreset } from '../presets.js?v=fe48996dc3';
-import { createViewer } from './renderer.js?v=fe48996dc3';
-import { createStage } from './stage.js?v=fe48996dc3';
-import { createBuildScene } from './build-scene.js?v=fe48996dc3';
-import { createEffects } from './effects.js?v=fe48996dc3';
-import { setMaterialQuality } from './materials.js?v=fe48996dc3';
-import { partsFrame, fitDistance } from './camera-rig.js?v=fe48996dc3';
-import { FOOT } from './layout.js?v=fe48996dc3';
+import { CONFIG } from '../config.js?v=00a22f4faf';
+import { loadCatalog } from '../catalog.js?v=00a22f4faf';
+import { loadPresets, presetBuild, findPreset } from '../presets.js?v=00a22f4faf';
+import { createViewer } from './renderer.js?v=00a22f4faf';
+import { createStage } from './stage.js?v=00a22f4faf';
+import { createBuildScene } from './build-scene.js?v=00a22f4faf';
+import { createEffects } from './effects.js?v=00a22f4faf';
+import { setMaterialQuality } from './materials.js?v=00a22f4faf';
+import { partsFrame, fitDistance } from './camera-rig.js?v=00a22f4faf';
+import { FOOT } from './layout.js?v=00a22f4faf';
 
 // Camera direction: front-left of the case, looking through the glass side.
 const VIEW_DIR = new THREE.Vector3(0.6, 0.3, 0.74).normalize();

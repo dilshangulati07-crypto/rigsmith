@@ -3,7 +3,7 @@
 // The default 3/4 view frames the parts (board, graphics card), not the whole case; "Full"
 // shows the whole case from the same side.
 import * as THREE from 'three';
-import { FOOT, SIDE } from './layout.js?v=fe48996dc3';
+import { FOOT, SIDE } from './layout.js?v=00a22f4faf';
 
 export const CAMERA_PRESETS = Object.freeze([
   { id: 'angle', label: '3/4', dir: [0.6, 0.3, 0.74], parts: true },

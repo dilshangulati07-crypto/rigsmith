@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Screenshots for design review: landing page, builder and the 3D view at 1280 px and 380 px
 // wide, plus a frame-rate sample of the hero at High. Runs on the real GPU unless --soft.
-// Usage: node tools/render-makeover.mjs [--out docs/makeover] [--only landing,builder,view,compare] [--soft]
+// Usage: node tools/render-makeover.mjs [--out docs/makeover] [--only landing,builder,view,compare,404] [--widths 1280,768,380] [--soft]
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
@@ -14,7 +14,9 @@ const { page, evaluate, waitFor, viewport, sleep, consoleErrors, BASE, finish, o
 
 const out = arg('out', 'docs/makeover');
 const only = arg('only', 'landing,builder,view,compare,404').split(',');
-const WIDTHS = [[1280, 860], [380, 800]];
+// --widths 1280,768,380 (heights are a typical window for each).
+const HEIGHTS = { 1280: 860, 768: 1000, 380: 800 };
+const WIDTHS = arg('widths', '1280,380').split(',').map(Number).map((w) => [w, HEIGHTS[w] ?? 860]);
 
 async function save(name, full = false) {
   await mkdir(out, { recursive: true });

@@ -2,7 +2,7 @@
 // Holds part objects in memory; saves part ids to localStorage and resolves them
 // against the catalogue on load. Fires a 'change' event after every edit:
 //   detail = { action: 'add'|'remove'|'replace'|'clear'|'load', category?, part?, previous? }
-import { CATEGORIES, getCategory } from './categories.js?v=fe48996dc3';
+import { CATEGORIES, getCategory } from './categories.js?v=00a22f4faf';
 
 const STORAGE_KEY = 'rigsmith.build.v1';
 const SAVE_VERSION = 1;

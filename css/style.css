@@ -15,6 +15,9 @@
   --accent-hover: #1F58E8;
   --accent-soft: #DCE4F5;
   --accent-ink: #FFFFFF;
+  /* The accent for small text on light surfaces: same blue, deep enough for 4.5:1 contrast. */
+  --accent-text: #1F58E8;
+  --accent-strong: #2A64F5; /* primary button fill: white text at 4.95:1 */
 
   --navy: #0B1222;
   --navy-2: #121C33;
@@ -102,7 +105,7 @@ h3 { font-size: 21px; font-weight: 700; letter-spacing: -.015em; }
 
 p { margin: 0 0 var(--s-4); }
 
-a { color: var(--accent); text-underline-offset: 3px; text-decoration-color: color-mix(in srgb, var(--accent) 35%, transparent); }
+a { color: var(--accent-text); text-underline-offset: 3px; text-decoration-color: color-mix(in srgb, var(--accent) 35%, transparent); }
 a:hover { text-decoration-color: var(--accent); }
 
 img, svg, canvas { display: block; max-width: 100%; }
@@ -137,7 +140,7 @@ img, svg, canvas { display: block; max-width: 100%; }
   margin: 0 0 var(--s-3);
   font-size: 14px;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--accent-text);
 }
 .mono { font-family: var(--font-mono); font-size: .9em; letter-spacing: 0; font-variant-numeric: tabular-nums; }
 .muted { color: var(--muted); }
@@ -219,8 +222,8 @@ img, svg, canvas { display: block; max-width: 100%; }
 .btn:active { transform: translateY(1px); }
 
 .btn--primary {
-  --btn-bg: var(--accent);
-  --btn-border: var(--accent);
+  --btn-bg: var(--accent-strong);
+  --btn-border: var(--accent-strong);
   --btn-text: var(--accent-ink);
   box-shadow: 0 1px 2px rgb(47 107 255 / .3), 0 8px 20px -8px rgb(47 107 255 / .6);
 }
@@ -271,7 +274,7 @@ img, svg, canvas { display: block; max-width: 100%; }
 .tag--ok { color: var(--ok); background: color-mix(in srgb, var(--ok) 12%, white); }
 .tag--warn { color: var(--warn); background: color-mix(in srgb, var(--warn) 14%, white); }
 .tag--error { color: var(--error); background: color-mix(in srgb, var(--error) 11%, white); }
-.tag--accent { color: var(--accent); background: var(--accent-soft); }
+.tag--accent { color: var(--accent-text); background: var(--accent-soft); }
 
 /* ---------- Spec table ---------- */
 .spec-table {
@@ -468,7 +471,7 @@ kbd, .kbd {
   .nav[data-open="true"] { display: flex; }
   .nav__list { flex-direction: column; gap: 2px; }
   .nav__link { height: 46px; width: 100%; border-radius: var(--r-sm); }
-  .nav__link[aria-current="page"] { background: var(--accent-soft); color: var(--accent); box-shadow: none; }
+  .nav__link[aria-current="page"] { background: var(--accent-soft); color: var(--accent-text); box-shadow: none; }
   .nav__end { margin: var(--s-3) 0 0; }
 }
 
@@ -501,7 +504,7 @@ kbd, .kbd {
     text-decoration: none;
   }
   .bottom-nav__link svg { width: 22px; height: 22px; }
-  .bottom-nav__link[aria-current="page"] { color: var(--accent); }
+  .bottom-nav__link[aria-current="page"] { color: var(--accent-text); }
   /* The top bar's menu duplicates the bottom navigation on phones. */
   .nav-toggle, .nav { display: none !important; }
 }
@@ -600,7 +603,7 @@ kbd, .kbd {
   text-underline-offset: 3px;
   cursor: pointer;
 }
-.linkbtn:hover { color: var(--accent); text-decoration-color: var(--accent); }
+.linkbtn:hover { color: var(--accent-text); text-decoration-color: var(--accent); }
 .linkbtn--danger:hover { color: var(--error); text-decoration-color: var(--error); }
 
 .field { display: grid; gap: 6px; min-width: 0; margin: 0; padding: 0; border: 0; }

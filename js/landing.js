@@ -1,6 +1,6 @@
 // Landing page: loading screen, WebGL check, lazy-loads the 3D hero; preset cards load
 // when their section comes near the screen.
-import { CONFIG } from './config.js?v=fe48996dc3';
+import { CONFIG } from './config.js?v=00a22f4faf';
 
 const loader = document.getElementById('loader');
 const loaderStep = document.getElementById('loader-step');
@@ -42,7 +42,7 @@ async function init() {
 
   try {
     progress('Loading 3D engine', 0.1);
-    const { startHero } = await import('./scene/hero.js?v=fe48996dc3');
+    const { startHero } = await import('./scene/hero.js?v=00a22f4faf');
     const hero = await startHero(canvas, {
       reducedMotion,
       onProgress: progress,
@@ -72,7 +72,14 @@ async function init() {
   }
 }
 
-init();
+// Start the 3D only after the page has painted (the poster image stands in until then), so the
+// headline and buttons show at once and the engine's start-up doesn't hold up first paint.
+function afterFirstPaint(fn) {
+  const go = () => requestAnimationFrame(() => setTimeout(fn, 0));
+  if (document.readyState === 'complete') go();
+  else addEventListener('load', go, { once: true });
+}
+afterFirstPaint(init);
 
 // ---------------------------------------------------------------- presets
 const presetEl = document.getElementById('preset-cards');
@@ -81,7 +88,7 @@ const presetIO = new IntersectionObserver(async ([e]) => {
   presetIO.disconnect();
   try {
     const [{ loadCatalog }, { loadPresets }, cards, { html }] = await Promise.all([
-      import('./catalog.js?v=fe48996dc3'), import('./presets.js?v=fe48996dc3'), import('./ui/preset-cards.js?v=fe48996dc3'), import('./ui/dom.js?v=fe48996dc3'),
+      import('./catalog.js?v=00a22f4faf'), import('./presets.js?v=00a22f4faf'), import('./ui/preset-cards.js?v=00a22f4faf'), import('./ui/dom.js?v=00a22f4faf'),
     ]);
     const [catalog, presets] = await Promise.all([loadCatalog(), loadPresets()]);
     cards.renderPresetCards(presetEl, {

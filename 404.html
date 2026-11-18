@@ -4,14 +4,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Page not found · Rigsmith</title>
+  <meta name="robots" content="noindex">
   <!-- Netlify serves this page for any missing path, also nested ones: resolve the shell's relative links from the site root. -->
   <base href="/">
   <meta name="theme-color" content="#E9EAEC">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
-  <link rel="stylesheet" href="/css/style.css?v=fe48996dc3">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
+  <link rel="stylesheet" href="/css/style.css?v=00a22f4faf">
   <style>
     .nf { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s-7); align-items: center; padding-top: var(--s-8); }
     .nf__art { aspect-ratio: 1; border-radius: 28px; background: var(--navy); display: grid; place-items: center;
@@ -21,7 +24,7 @@
     .nf__actions { display: flex; flex-wrap: wrap; gap: var(--s-3); margin-top: var(--s-5); }
     @media (max-width: 760px) { .nf { grid-template-columns: 1fr; padding-top: var(--s-6); } .nf__art { order: -1; max-width: 320px; } }
   </style>
-  <script type="module" src="/js/ui/shell.js?v=fe48996dc3"></script>
+  <script type="module" src="/js/ui/shell.js?v=00a22f4faf"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>

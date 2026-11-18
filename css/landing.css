@@ -80,11 +80,19 @@
 .hero__readout { right: 16px; font-size: 11px; }
 .hero__readout:empty { display: none; }
 
+/* Until the live 3D starts: a still of the same view (img/hero-poster.webp, made by
+   tools/render-share.mjs). The first rendered frame covers it. */
+.hero__stage[data-mode="loading"] .hero__canvas,
+.hero__stage[data-mode="live"] .hero__canvas {
+  background: url('../img/hero-poster.webp') center / cover no-repeat;
+}
 .loader--stage {
   position: absolute;
   z-index: 3;
   border-radius: inherit;
   background: transparent;
+  place-items: end center;
+  padding-bottom: 64px;
 }
 .loader--stage .loader__row { color: var(--muted); }
 
@@ -135,10 +143,11 @@
   transition: transform 500ms var(--ease);
 }
 .feature:hover .feature__img { transform: scale(1.03); }
+.feature picture { display: contents; } /* WebP wrapper: the img stays the flex item */
 .feature__body { position: relative; padding: var(--s-5); background: var(--panel); }
 .feature__body h3 { margin: 0 0 var(--s-2); font-size: 22px; }
 .feature__body p { margin: 0 0 var(--s-4); color: var(--muted); }
-.feature__link { font-weight: 600; font-size: 15px; color: var(--accent); }
+.feature__link { font-weight: 600; font-size: 15px; color: var(--accent-text); }
 
 /* ---------- Presets ---------- */
 .preset-section { padding-top: var(--s-8); }
@@ -150,6 +159,12 @@
   .hero__stage { order: -1; aspect-ratio: 1 / 1; max-height: 70vh; }
   .features__grid { grid-template-columns: 1fr; }
   .features, .preset-section { padding-top: var(--s-7); }
+}
+/* Tablets: one card per row, picture beside the text, so the section isn't three screens tall. */
+@media (min-width: 601px) and (max-width: 960px) {
+  .feature { flex-direction: row; align-items: center; }
+  .feature__img { width: 46%; height: auto; flex: none; }
+  .feature__body { flex: 1; }
 }
 @media (max-width: 600px) {
   .hero__stage { border-radius: 22px; }

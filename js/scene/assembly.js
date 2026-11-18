@@ -6,11 +6,11 @@
 // piece:  one thing that snaps into one place (a RAM stick, one fan of a pack, the GPU)
 // group:  one tray item: identical pieces of one part in one stage (a 2-stick kit, a 3-fan pack)
 // stage:  a step of the real install order; a stage opens once every earlier stage is done
-import { layoutBuild, m2Placement } from './layout.js?v=fe48996dc3';
-import { ramSlotNames, ramSlotPlacement, pcieSlotPlacement } from './layout-board.js?v=fe48996dc3';
-import { Z } from './layout-math.js?v=fe48996dc3';
-import { checkBuild } from '../compat.js?v=fe48996dc3';
-import { INCOMPLETE_RULES } from '../compat/essentials.js?v=fe48996dc3';
+import { layoutBuild, m2Placement } from './layout.js?v=00a22f4faf';
+import { ramSlotNames, ramSlotPlacement, pcieSlotPlacement } from './layout-board.js?v=00a22f4faf';
+import { Z } from './layout-math.js?v=00a22f4faf';
+import { checkBuild } from '../compat.js?v=00a22f4faf';
+import { INCOMPLETE_RULES } from '../compat/essentials.js?v=00a22f4faf';
 
 export const STAGES = Object.freeze([
   { id: 'prep', label: 'Standoffs and I/O shield', short: 'Prep', need: 'standoffs and I/O shield' },

@@ -7,10 +7,10 @@
 //
 // port:  one end a plug fits: { id, kind, at, owner, label, p: [x,y,z], dir: [x,y,z], multi }
 // item:  one connection: { id, group, name, target, fromKind, toKind, from, to, required, cable, note }
-import { psuSockets, driveSockets, WALL, cross } from './layout.js?v=fe48996dc3';
-import { gpuPowerSockets, AIO_HEAD_H } from './layout-board.js?v=fe48996dc3';
-import { boardPoint, Z, neg } from './layout-math.js?v=fe48996dc3';
-import { adapterPlugs } from '../compat/power.js?v=fe48996dc3';
+import { psuSockets, driveSockets, WALL, cross } from './layout.js?v=00a22f4faf';
+import { gpuPowerSockets, AIO_HEAD_H } from './layout-board.js?v=00a22f4faf';
+import { boardPoint, Z, neg } from './layout-math.js?v=00a22f4faf';
+import { adapterPlugs } from '../compat/power.js?v=00a22f4faf';
 
 export const CABLE_GROUPS = Object.freeze([
   { id: 'power', label: 'Power' },
