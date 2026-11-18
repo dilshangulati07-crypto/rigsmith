@@ -4,3 +4,18 @@ desktop.ini
 node_modules/
 .netlify/
 *.log
+
+# Test and render output (docs/makeover is kept on purpose: design review shots)
+shots/
+screenshots/
+tools/shots/
+
+# Secrets: never commit keys (Supabase service_role etc.)
+.env
+.env.*
+*.pem
+*.key
+
+# Editors / tools
+.vscode/
+.idea/
