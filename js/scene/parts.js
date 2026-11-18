@@ -8,16 +8,16 @@
 // request per part. To add a part type: write a builder in js/scene/models/ and register it in TYPES.
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { disposeTree } from './resources.js';
-import { buildCase } from './case.js';
-import { buildMotherboard } from './models/motherboard.js';
-import { buildPSU } from './models/psu.js';
-import { buildStorage } from './models/storage.js';
-import { buildFans, fansFromGLB } from './models/fans.js';
-import { buildCPU } from './models/cpu.js';
-import { buildCooler } from './models/cooler.js';
-import { buildRAM } from './models/ram.js';
-import { buildGPU } from './models/gpu.js';
+import { disposeTree } from './resources.js?v=5b4c14becb';
+import { buildCase } from './case.js?v=5b4c14becb';
+import { buildMotherboard } from './models/motherboard.js?v=5b4c14becb';
+import { buildPSU } from './models/psu.js?v=5b4c14becb';
+import { buildStorage } from './models/storage.js?v=5b4c14becb';
+import { buildFans, fansFromGLB } from './models/fans.js?v=5b4c14becb';
+import { buildCPU } from './models/cpu.js?v=5b4c14becb';
+import { buildCooler } from './models/cooler.js?v=5b4c14becb';
+import { buildRAM } from './models/ram.js?v=5b4c14becb';
+import { buildGPU } from './models/gpu.js?v=5b4c14becb';
 
 // build(part, ctx): procedural. fromGLB(scene, part, ctx): optional adapter for a loaded model.
 // ctx = { caseLayout, anisotropy, theme } (theme: the viewer's black / white build theme, see look.js)
@@ -41,7 +41,7 @@ export const canModel = (category) => category in TYPES;
 
 let manifest = null;
 function loadManifest() {
-  manifest ??= fetch('models/index.json')
+  manifest ??= fetch('models/index.json', { cache: 'no-cache' })
     .then((r) => (r.ok ? r.json() : {}))
     .then((j) => ({
       ids: new Set(Array.isArray(j.models) ? j.models : []),

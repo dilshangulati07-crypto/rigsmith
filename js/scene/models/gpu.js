@@ -5,12 +5,12 @@
 // Local axes (see layout-board.js): +X from the bracket along the card, +Y = top edge (away
 // from the board), +Z = cooler side. PCB centre plane at z = 0.
 import * as THREE from 'three';
-import { mat, finish, ledMaterial, diffuserMaterial } from '../materials.js';
-import { boxMM, instancedBoxes, instanced, cylinderZ, detail, textPlane, BOX } from '../resources.js';
-import { makeFan } from '../fan-model.js';
-import { gpuDims, gpuPowerSockets } from '../layout-board.js';
-import { PCIE_PITCH } from '../board-layout.js';
-import { lookOf, isPale } from '../look.js';
+import { mat, finish, ledMaterial, diffuserMaterial } from '../materials.js?v=5b4c14becb';
+import { boxMM, instancedBoxes, instanced, cylinderZ, detail, textPlane, BOX } from '../resources.js?v=5b4c14becb';
+import { makeFan } from '../fan-model.js?v=5b4c14becb';
+import { gpuDims, gpuPowerSockets } from '../layout-board.js?v=5b4c14becb';
+import { PCIE_PITCH } from '../board-layout.js?v=5b4c14becb';
+import { lookOf, isPale } from '../look.js?v=5b4c14becb';
 
 // kind: shroud finish. fans: 'row' (all on the front), 'ends' (one at each end, solid middle),
 // 'flow' (one front fan by the bracket, one on the back at the tail, fins open between),

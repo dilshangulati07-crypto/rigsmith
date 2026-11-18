@@ -3,16 +3,16 @@
 // (CONFIG.scene.heroTheme), powered on with its lighting lit. The camera frames the machine
 // close, turns slowly around it and tilts a little towards the pointer.
 import * as THREE from 'three';
-import { CONFIG } from '../config.js';
-import { loadCatalog } from '../catalog.js';
-import { loadPresets, presetBuild, findPreset } from '../presets.js';
-import { createViewer } from './renderer.js';
-import { createStage } from './stage.js';
-import { createBuildScene } from './build-scene.js';
-import { createEffects } from './effects.js';
-import { setMaterialQuality } from './materials.js';
-import { partsFrame, fitDistance } from './camera-rig.js';
-import { FOOT } from './layout.js';
+import { CONFIG } from '../config.js?v=5b4c14becb';
+import { loadCatalog } from '../catalog.js?v=5b4c14becb';
+import { loadPresets, presetBuild, findPreset } from '../presets.js?v=5b4c14becb';
+import { createViewer } from './renderer.js?v=5b4c14becb';
+import { createStage } from './stage.js?v=5b4c14becb';
+import { createBuildScene } from './build-scene.js?v=5b4c14becb';
+import { createEffects } from './effects.js?v=5b4c14becb';
+import { setMaterialQuality } from './materials.js?v=5b4c14becb';
+import { partsFrame, fitDistance } from './camera-rig.js?v=5b4c14becb';
+import { FOOT } from './layout.js?v=5b4c14becb';
 
 // Camera direction: front-left of the case, looking through the glass side.
 const VIEW_DIR = new THREE.Vector3(0.6, 0.3, 0.74).normalize();

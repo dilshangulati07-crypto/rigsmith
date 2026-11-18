@@ -1,6 +1,6 @@
 // Preset builds from data/presets.json. Each preset lists part ids; presetBuild() resolves
 // them against the catalogue. tools/test-presets.mjs checks every preset has zero errors.
-import { buildFromIds } from './share.js';
+import { buildFromIds } from './share.js?v=5b4c14becb';
 
 export async function loadPresets({ url = 'data/presets.json', fetchFn = globalThis.fetch } = {}) {
   const res = await fetchFn(url);

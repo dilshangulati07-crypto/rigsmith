@@ -1,7 +1,7 @@
 // Completeness rules: missing essential parts and a working display output.
 // Missing parts are 'warn' (the build is unfinished, not wrong).
-import { CATEGORIES } from '../categories.js';
-import { issue } from './util.js';
+import { CATEGORIES } from '../categories.js?v=5b4c14becb';
+import { issue } from './util.js?v=5b4c14becb';
 
 export const INCOMPLETE_RULES = new Set(['missing-part', 'display-output']);
 

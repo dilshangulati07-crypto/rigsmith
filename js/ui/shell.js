@@ -1,6 +1,6 @@
 // Renders the shared top bar and footer from CONFIG so every page stays in sync.
 // Usage: <header id="site-header" data-page="builder"></header> ... <footer id="site-footer"></footer>
-import { CONFIG } from '../config.js';
+import { CONFIG } from '../config.js?v=5b4c14becb';
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 

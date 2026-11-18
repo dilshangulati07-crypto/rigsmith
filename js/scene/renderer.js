@@ -7,10 +7,10 @@
 // Units: 1 unit = 1 cm. Physically based lights, so point light intensity is in candela.
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { CONFIG } from '../config.js';
-import { createEnvironment } from './environment.js';
-import { createPost } from './post.js';
-import { DETAIL_HIGH, DETAIL_ULTRA } from './resources.js';
+import { CONFIG } from '../config.js?v=5b4c14becb';
+import { createEnvironment } from './environment.js?v=5b4c14becb';
+import { createPost } from './post.js?v=5b4c14becb';
+import { DETAIL_HIGH, DETAIL_ULTRA } from './resources.js?v=5b4c14becb';
 
 export const QUALITIES = Object.freeze(['low', 'high', 'ultra']);
 export const QUALITY_LABEL = Object.freeze({ low: 'Low', high: 'High', ultra: 'Ultra' });

@@ -4,15 +4,15 @@
 //   filters        -> [{ id, label, kind: 'select'|'min'|'max', get(part), format?(v) }]
 //   sorts          -> [{ id, label, compare(a, b) }]
 // A new part type adds one module here; the browser, drawer and list need no changes.
-import cpu from './cpu.js';
-import motherboard from './motherboard.js';
-import ram from './ram.js';
-import gpu from './gpu.js';
-import storage from './storage.js';
-import psu from './psu.js';
-import pcCase from './case.js';
-import cooler from './cooler.js';
-import fans from './fans.js';
+import cpu from './cpu.js?v=5b4c14becb';
+import motherboard from './motherboard.js?v=5b4c14becb';
+import ram from './ram.js?v=5b4c14becb';
+import gpu from './gpu.js?v=5b4c14becb';
+import storage from './storage.js?v=5b4c14becb';
+import psu from './psu.js?v=5b4c14becb';
+import pcCase from './case.js?v=5b4c14becb';
+import cooler from './cooler.js?v=5b4c14becb';
+import fans from './fans.js?v=5b4c14becb';
 
 const TYPES = { cpu, motherboard, ram, gpu, storage, psu, case: pcCase, cooler, fans };
 

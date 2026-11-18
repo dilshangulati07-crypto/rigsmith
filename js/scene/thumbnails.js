@@ -3,7 +3,7 @@
 // main canvas with the scissor test, copied out in the same task, and the caller redraws the
 // main frame afterwards, so nothing is ever shown on screen.
 import * as THREE from 'three';
-import { compensateToneMapping } from './renderer.js';
+import { compensateToneMapping } from './renderer.js?v=5b4c14becb';
 
 const box = new THREE.Box3();
 const sphere = new THREE.Sphere();

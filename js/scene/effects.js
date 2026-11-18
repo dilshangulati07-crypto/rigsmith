@@ -8,8 +8,8 @@
 // bloom (each point light cost High ~5 % of the frame on integrated graphics).
 // Settings (profile, lighting) persist in localStorage; the PC always starts powered off.
 import * as THREE from 'three';
-import { mat } from './materials.js';
-import { BLOOM_THRESHOLD } from './post.js';
+import { mat } from './materials.js?v=5b4c14becb';
+import { BLOOM_THRESHOLD } from './post.js?v=5b4c14becb';
 
 export const FAN_PROFILES = Object.freeze([
   { id: 'quiet', label: 'Quiet', k: 0.45 },

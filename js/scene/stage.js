@@ -10,11 +10,11 @@
 // level: High and Ultra add a contact shadow under the case and a soft reflection in the
 // floor (a smaller mirror without the fine detail at High). Photo mode can swap the backdrop.
 import * as THREE from 'three';
-import { CONFIG } from '../config.js';
-import { detailUV } from './materials.js';
-import * as tex from './textures.js';
-import { createContactShadow } from './contact-shadow.js';
-import { DETAIL_HIGH } from './resources.js';
+import { CONFIG } from '../config.js?v=5b4c14becb';
+import { detailUV } from './materials.js?v=5b4c14becb';
+import * as tex from './textures.js?v=5b4c14becb';
+import { createContactShadow } from './contact-shadow.js?v=5b4c14becb';
+import { DETAIL_HIGH } from './resources.js?v=5b4c14becb';
 
 // Key light: intensity, and where it sits as multiples of the subject's radius (the matching
 // softbox in environment.js is in the same direction).

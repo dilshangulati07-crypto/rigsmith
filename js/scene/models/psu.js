@@ -4,11 +4,11 @@
 // the unit is sold in white), the brand's label accent, and lit zones on the few units with them.
 // Local axes: +X = inside face (toward the case front), -X = rear, -Y = fan side, +Z = label side.
 import * as THREE from 'three';
-import { mat, finish, meshPanelMaterial, diffuserMaterial } from '../materials.js';
-import { lookOf, COLOURS } from '../look.js';
-import { boxMM, instancedBoxes, instanced, cylinderZ, labelTexture, detail } from '../resources.js';
-import { makeFan } from '../fan-model.js';
-import { psuDims, psuSockets } from '../layout.js';
+import { mat, finish, meshPanelMaterial, diffuserMaterial } from '../materials.js?v=5b4c14becb';
+import { lookOf, COLOURS } from '../look.js?v=5b4c14becb';
+import { boxMM, instancedBoxes, instanced, cylinderZ, labelTexture, detail } from '../resources.js?v=5b4c14becb';
+import { makeFan } from '../fan-model.js?v=5b4c14becb';
+import { psuDims, psuSockets } from '../layout.js?v=5b4c14becb';
 
 export function buildPSU(part, { anisotropy = 4, theme } = {}) {
   const look = lookOf(part, theme);

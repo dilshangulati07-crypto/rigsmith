@@ -8,12 +8,12 @@
 // Moving parts for the hands-on build (userData.mechanisms): the socket lever on its hinge and
 // the M.2 heatsink covers. The rear I/O plate is named "io-shield" (it goes in before the board).
 import * as THREE from 'three';
-import { mat, finish, diffuserMaterial } from '../materials.js';
-import { boxMM, instancedBoxes, cylinderZ, detail, textPlane } from '../resources.js';
-import { lookOf } from '../look.js';
-import { boardLayout } from '../board-layout.js';
-import { PCB } from '../layout.js';
-import { boardFace, addBoardDetail } from './board-detail.js';
+import { mat, finish, diffuserMaterial } from '../materials.js?v=5b4c14becb';
+import { boxMM, instancedBoxes, cylinderZ, detail, textPlane } from '../resources.js?v=5b4c14becb';
+import { lookOf } from '../look.js?v=5b4c14becb';
+import { boardLayout } from '../board-layout.js?v=5b4c14becb';
+import { PCB } from '../layout.js?v=5b4c14becb';
+import { boardFace, addBoardDetail } from './board-detail.js?v=5b4c14becb';
 
 // sink: heatsink colour. io: false = no cover over the rear ports (entry boards). small: low,
 // short heatsinks. strip: accent strip finish on the covers ('mirror' or a colour). text: the

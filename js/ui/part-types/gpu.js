@@ -1,6 +1,6 @@
-import { unit } from '../dom.js';
-import { gpuSlotWidth } from '../../compat/util.js';
-import { GPU_INDEX } from '../../perf.js';
+import { unit } from '../dom.js?v=5b4c14becb';
+import { gpuSlotWidth } from '../../compat/util.js?v=5b4c14becb';
+import { GPU_INDEX } from '../../perf.js?v=5b4c14becb';
 
 const power = (p) => (Array.isArray(p.powerConnectors) ? (p.powerConnectors.length ? p.powerConnectors.join(' + ') : 'Slot only') : null);
 const slotText = (p) => {

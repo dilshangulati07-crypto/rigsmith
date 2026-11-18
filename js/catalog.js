@@ -1,6 +1,6 @@
 // Parts catalogue: loads data/parts/*.json and looks parts up by id.
 // createCatalog() is pure so Node tools can build one from files on disk.
-import { CATEGORY_IDS } from './categories.js';
+import { CATEGORY_IDS } from './categories.js?v=5b4c14becb';
 
 export function createCatalog(partsByCategory) {
   const byId = new Map();
@@ -19,7 +19,7 @@ export function createCatalog(partsByCategory) {
 // Browser loader. `base` is relative to the page.
 export async function loadCatalog({ base = 'data/parts/', fetchFn = globalThis.fetch } = {}) {
   const entries = await Promise.all(CATEGORY_IDS.map(async (cat) => {
-    const res = await fetchFn(`${base}${cat}.json`);
+    const res = await fetchFn(`${base}${cat}.json`, { cache: 'no-cache' });
     if (!res.ok) throw new Error(`Could not load ${cat}.json (${res.status})`);
     const json = await res.json();
     return [cat, json.parts];

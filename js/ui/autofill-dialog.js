@@ -1,8 +1,8 @@
 // Auto-fill dialog: budget, use and size in; a checked build with reasons out.
-import { CATEGORIES } from '../categories.js';
-import { autoBuild, USES, SIZES } from '../autobuild.js';
-import { formatTHB, PRICE_NOTE } from '../pricing.js';
-import { html, render, num } from './dom.js';
+import { CATEGORIES } from '../categories.js?v=5b4c14becb';
+import { autoBuild, USES, SIZES } from '../autobuild.js?v=5b4c14becb';
+import { formatTHB, PRICE_NOTE } from '../pricing.js?v=5b4c14becb';
+import { html, render, num } from './dom.js?v=5b4c14becb';
 
 const PRESETS = [25000, 40000, 60000, 100000, 150000];
 const USE_NOTES = {

@@ -5,12 +5,12 @@
 // score from js/scene/cable-route.js, the 3D cables from js/scene/cables.js; the cables
 // themselves live in js/state.js (assemblyProgress), so undo/redo and saving cover them.
 import * as THREE from 'three';
-import { planCables, CABLE_GROUPS, endsOf, powerReady } from '../scene/cable-plan.js';
-import { routeContext, routeOf, autoRoute, checkCable, scoreCables, waypointsOf, clampToCase, routeEnds } from '../scene/cable-route.js';
-import { createCables } from '../scene/cables.js';
-import { CABLE_STYLES } from '../state.js';
-import { CONFIG } from '../config.js';
-import { html, render } from './dom.js';
+import { planCables, CABLE_GROUPS, endsOf, powerReady } from '../scene/cable-plan.js?v=5b4c14becb';
+import { routeContext, routeOf, autoRoute, checkCable, scoreCables, waypointsOf, clampToCase, routeEnds } from '../scene/cable-route.js?v=5b4c14becb';
+import { createCables } from '../scene/cables.js?v=5b4c14becb';
+import { CABLE_STYLES } from '../state.js?v=5b4c14becb';
+import { CONFIG } from '../config.js?v=5b4c14becb';
+import { html, render } from './dom.js?v=5b4c14becb';
 
 const STYLE_LABEL = { black: 'Stock black', white: 'White', custom: 'Custom colour', sleeved: 'Sleeved' };
 const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'build';

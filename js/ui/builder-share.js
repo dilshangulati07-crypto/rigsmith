@@ -3,13 +3,13 @@
 //              [&play=1] on load. Unknown ids are reported and the rest loads. Unsaved work
 //              in progress is kept in Saved builds before a link replaces it.
 //   commands:  copy-link (L), csv, print, compare.
-import { assemblyProgress } from '../state.js';
-import { encodeBuild, decodeBuild, buildFromIds, missingMessage, shareUrl, compareUrl, readShareParams } from '../share.js';
-import { encodeHand, decodeHand, plansFor } from '../share-hand.js';
-import { loadPresets, findPreset, presetBuild } from '../presets.js';
-import { allParts } from '../compat/util.js';
-import { setPrintSheets, specSheet } from './spec-sheet.js';
-import { copyWithFeedback, downloadCSV, printBuilds, wireMenus } from './share-tools.js';
+import { assemblyProgress } from '../state.js?v=5b4c14becb';
+import { encodeBuild, decodeBuild, buildFromIds, missingMessage, shareUrl, compareUrl, readShareParams } from '../share.js?v=5b4c14becb';
+import { encodeHand, decodeHand, plansFor } from '../share-hand.js?v=5b4c14becb';
+import { loadPresets, findPreset, presetBuild } from '../presets.js?v=5b4c14becb';
+import { allParts } from '../compat/util.js?v=5b4c14becb';
+import { setPrintSheets, specSheet } from './spec-sheet.js?v=5b4c14becb';
+import { copyWithFeedback, downloadCSV, printBuilds, wireMenus } from './share-tools.js?v=5b4c14becb';
 
 const LINK_PARAMS = ['b', 'h', 'n', 'preset', 'play'];
 

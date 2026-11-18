@@ -1,10 +1,10 @@
 // Part detail drawer: full spec table, how the part fits the current build, links.
-import { getCategory } from '../categories.js';
-import { isPartCompatible } from '../compat.js';
-import { unknownFields } from '../compat/util.js';
-import { formatTHB, PRICE_NOTE } from '../pricing.js';
-import { partType, commonSpecs } from './part-types/index.js';
-import { html, render } from './dom.js';
+import { getCategory } from '../categories.js?v=5b4c14becb';
+import { isPartCompatible } from '../compat.js?v=5b4c14becb';
+import { unknownFields } from '../compat/util.js?v=5b4c14becb';
+import { formatTHB, PRICE_NOTE } from '../pricing.js?v=5b4c14becb';
+import { partType, commonSpecs } from './part-types/index.js?v=5b4c14becb';
+import { html, render } from './dom.js?v=5b4c14becb';
 
 const LEVEL = { error: 'Error', warn: 'Warning', info: 'Note' };
 

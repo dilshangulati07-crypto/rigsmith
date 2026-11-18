@@ -1,5 +1,5 @@
 // CPU cooler rules: socket, tower height, AIO radiator mounts, cooling capacity.
-import { issue, unknown, known, list } from './util.js';
+import { issue, unknown, known, list } from './util.js?v=5b4c14becb';
 
 // Radiators come in 120 mm and 140 mm fan families; a mount for one family
 // does not imply the other (a 360 mount may not take a 280).

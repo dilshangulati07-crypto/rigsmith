@@ -1,13 +1,13 @@
 // compare.html: "Swap this part". Lists the catalogue for one category with what each choice
 // would change in that column: reference price, the two workloads that move most, power,
 // and new compatibility errors. Choosing one updates the column (and the table) live.
-import { getCategory } from '../categories.js';
-import { checkBuild, estimateDraw } from '../compat.js';
-import { INCOMPLETE_RULES } from '../compat/essentials.js';
-import { priceBuild, formatTHB, PRICE_NOTE } from '../pricing.js';
-import { estimatePerformance, WORKLOADS } from '../perf.js';
-import { partType } from './part-types/index.js';
-import { html, render, num, debounce } from './dom.js';
+import { getCategory } from '../categories.js?v=5b4c14becb';
+import { checkBuild, estimateDraw } from '../compat.js?v=5b4c14becb';
+import { INCOMPLETE_RULES } from '../compat/essentials.js?v=5b4c14becb';
+import { priceBuild, formatTHB, PRICE_NOTE } from '../pricing.js?v=5b4c14becb';
+import { estimatePerformance, WORKLOADS } from '../perf.js?v=5b4c14becb';
+import { partType } from './part-types/index.js?v=5b4c14becb';
+import { html, render, num, debounce } from './dom.js?v=5b4c14becb';
 
 const sign = (n, fmt = String) => (n > 0 ? `+${fmt(n)}` : n < 0 ? `−${fmt(-n)}` : '±0');
 

@@ -10,9 +10,9 @@
 // Reduced motion: each step crossfades in (a snapshot of the last frame fading out) instead
 // of moving, and the camera cuts.
 import * as THREE from 'three';
-import { planAssembly } from './assembly.js';
-import { planCinematic, stateAt, startOf, TIMING } from './cinematic-plan.js';
-import { createCables } from './cables.js';
+import { planAssembly } from './assembly.js?v=5b4c14becb';
+import { planCinematic, stateAt, startOf, TIMING } from './cinematic-plan.js?v=5b4c14becb';
+import { createCables } from './cables.js?v=5b4c14becb';
 
 export const SPEEDS = Object.freeze([1, 2, 4]);
 const HERO_RATE = (Math.PI * 2) / 46;   // rad/s of the closing orbit at 1x
