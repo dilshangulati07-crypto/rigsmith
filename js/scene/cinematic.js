@@ -67,7 +67,7 @@ export function createCinematic({ viewer, bscene, rig, fx, hb, sound, reducedMot
     label = text;
     onStep?.(index, label);
   }
-  const setExposure = (v) => { viewer.renderer.toneMappingExposure = v; };
+  const setExposure = (v) => { viewer.renderer.toneMappingExposure = v * (viewer.exposure ?? 1); };
 
   // ---- the case at a step
   function apply(i) {

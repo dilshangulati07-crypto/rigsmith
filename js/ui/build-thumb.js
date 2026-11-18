@@ -3,7 +3,7 @@
 // three.js and the renderer load only when a thumbnail isn't cached yet.
 //
 // Markup: <div class="thumb" data-thumb-code="<build code>"></div>, then fillThumb(el, build, alt).
-const KEY = 'rigsmith.thumbs.v1';
+const KEY = 'rigsmith.thumbs.v2'; // v2: light studio, white theme, powered on
 const BUDGET = 3_000_000; // characters of data URLs kept in sessionStorage
 const memory = new Map();
 let store = null;

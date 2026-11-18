@@ -54,7 +54,7 @@ export async function mountViewerPanel(el, app) {
         <button class="vbtn" type="button" data-v="mode" data-mode="auto" aria-pressed="false">Auto-build</button>
       </div>
       <span class="viewer__spacer"></span>
-      <button class="vbtn viewer__opt" type="button" data-v="quality">Quality: High</button>
+      <button class="vbtn viewer__opt viewer__adv" type="button" data-v="quality">Quality: High</button>
       <button class="vbtn viewer__opt" type="button" data-v="shot" aria-keyshortcuts="P">Screenshot</button>
       <button class="vbtn viewer__opt" type="button" data-v="photo" aria-keyshortcuts="F">Photo mode</button>
     </div>
@@ -67,12 +67,13 @@ export async function mountViewerPanel(el, app) {
     </div>
     <div class="viewer__tools viewer__tools--fx">
       <button class="vbtn vbtn--power" type="button" data-v="power" aria-pressed="false" aria-keyshortcuts="O">Power on</button>
-      <div class="vgroup" role="group" aria-label="Fan speed">
+      <div class="vgroup viewer__adv" role="group" aria-label="Fan speed">
         ${FAN_PROFILES.map((p) => html`<button class="vbtn" type="button" data-v="profile" data-profile="${p.id}" aria-pressed="false">${p.label}</button>`)}
       </div>
       <button class="vbtn" type="button" data-v="lighting" aria-expanded="false" aria-controls="viewer-lighting">Lighting</button>
       <span class="viewer__spacer"></span>
-      <label class="viewer__range">
+      <button class="vbtn vbtn--more" type="button" data-v="more" aria-expanded="false" aria-controls="viewer-more">More options</button>
+      <label class="viewer__range viewer__adv">
         <span class="label">Explode</span>
         <input type="range" min="0" max="100" step="1" value="0" data-v="explode" aria-keyshortcuts="E">
         <output class="mono" data-ref="explode">0%</output>
@@ -92,7 +93,7 @@ export async function mountViewerPanel(el, app) {
     </div>
     <div class="hand" data-ref="hand" hidden></div>
     <div class="auto" data-ref="auto" hidden></div>
-    <div class="viewer__notes">
+    <div class="viewer__notes viewer__adv" id="viewer-more">
       <p data-ref="notes"></p>
       <p class="muted">${DRAWN} Positions follow the real case and board sizes; internal layouts are approximate.</p>
     </div>`);
@@ -146,7 +147,7 @@ export async function mountViewerPanel(el, app) {
     return null;
   }
   const stage = createStage(viewer.scene, { shadowMapSize: 2048, viewer });
-  // Stage extras and glass follow the quality level (Ultra: contact shadow, reflection, real glass).
+  // Stage extras and glass follow the quality level (High: contact shadow; Ultra: floor reflection, real glass).
   function applyQuality() {
     setMaterialQuality(viewer.quality);
     stage.setQuality(viewer.quality);
@@ -176,10 +177,39 @@ export async function mountViewerPanel(el, app) {
       if (lastTarget) showTarget(lastTarget, lastTarget.id ? app.catalog.get(lastTarget.id) : null, ref('hover').classList.contains('is-docked') === false);
       fx?.refresh();
       updateLighting();
+      queuePartThumbs();
       hand?.onLayout();
       auto?.onLayout();
     },
   });
+
+  // ---- small product shots of the chosen parts for the parts list (app.setPartThumb)
+  let thumbnailer = null;
+  let thumbTimer = 0;
+  const shot = new Set();
+  function queuePartThumbs() {
+    if (!app.setPartThumb) return;
+    clearTimeout(thumbTimer);
+    thumbTimer = setTimeout(async () => {
+      if (bscene.busy) { queuePartThumbs(); return; }
+      const { createThumbnailer } = await import('../scene/thumbnails.js');
+      thumbnailer ??= createThumbnailer(viewer, { width: 160, height: 160, background: '#E9ECF1' });
+      for (const m of bscene.models) {
+        if (shot.has(m.part.id)) continue;
+        const copy = m.model.clone(true);
+        copy.position.set(0, 0, 0);
+        copy.quaternion.identity();
+        copy.visible = true;
+        copy.traverse((o) => { o.visible = o.visible || o === copy; });
+        const url = thumbnailer.shoot(copy, m.category === 'case' ? [0.7, 0.35, 0.8] : [0.45, 0.4, 1]);
+        if (!url) continue;
+        shot.add(m.part.id);
+        app.setPartThumb(m.part.id, url);
+      }
+      if (!running()) viewer.render();
+    }, 120);
+  }
+  const running = () => viewer.running;
 
   // ---- power, fans, lighting
   let fx = null;
@@ -359,12 +389,18 @@ export async function mountViewerPanel(el, app) {
     if (v === 'power') fx.togglePower();
     if (v === 'profile') fx.setProfile(b.dataset.profile);
     if (v === 'lighting') toggleLighting();
+    if (v === 'more') {
+      const on = el.dataset.more !== 'on';
+      el.dataset.more = on ? 'on' : 'off';
+      b.setAttribute('aria-expanded', String(on));
+      b.textContent = on ? 'Fewer options' : 'More options';
+    }
     if (v === 'light-mode') { fx.setRgb(lightTarget, { mode: b.dataset.mode }); updateLighting(); }
   });
   el.addEventListener('input', (e) => {
     const v = e.target.dataset?.v;
     if (v === 'explode') setExplode(Number(e.target.value));
-    if (v === 'light-color') fx.setRgb(lightTarget, { color: e.target.value, ...(fx.getRgb(lightTarget).mode === 'off' ? { mode: 'static' } : {}) });
+    if (v === 'light-color') fx.setRgb(lightTarget, { color: e.target.value, ...(['off', 'aurora'].includes(fx.getRgb(lightTarget).mode) ? { mode: 'static' } : {}) });
   });
   el.addEventListener('change', (e) => {
     const v = e.target.dataset?.v;
@@ -443,6 +479,7 @@ export async function mountViewerPanel(el, app) {
   viewer.start((dt) => {
     // The cinematic's speed (and pause) applies to the camera, the side panel and the boot too.
     const k = auto?.timeScale ?? 1;
+    rig.setAutoOrbit(ready && modeNow() === 'viewer' && !photo?.active);
     rig.update(dt * k);
     bscene.update(dt * k);
     fx.update(dt * k);
@@ -471,7 +508,7 @@ export async function mountViewerPanel(el, app) {
   photo = mountPhotoPanel(ref('photo'), { root: el, app, viewer, stage, bscene, rig });
   if (assemblyProgress.mode === 'hand') setMode('hand', { animate: false });
   // ?debug3d exposes the viewer for checking draw calls and GPU memory in the console.
-  if (new URLSearchParams(location.search).has('debug3d')) window.rigsmith3d = { viewer, scene: bscene, fx, hand, setMode, app, rig, stage, get photo() { return photo; }, get auto() { return auto; } };
+  if (new URLSearchParams(location.search).has('debug3d')) window.rigsmith3d = { THREE, viewer, scene: bscene, fx, hand, setMode, app, rig, stage, get photo() { return photo; }, get auto() { return auto; } };
   ref('loading').hidden = true;
   el.dataset.state = 'ready';
 

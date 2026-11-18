@@ -1,13 +1,16 @@
 // Still renders of whole builds for preset cards and compare columns. One offscreen viewer
 // per page (one WebGL context, whatever the number of cards) built from the same renderer,
 // stage and build scene as the 3D view, so a thumbnail looks like the build in the builder.
-// Builds render one at a time; js/ui/build-thumb.js caches the images.
+// Builds render one at a time, in the viewer's colour theme, powered on with the lighting lit;
+// js/ui/build-thumb.js caches the images.
 import * as THREE from 'three';
 import { createViewer } from './renderer.js';
 import { createStage } from './stage.js';
 import { createBuildScene } from './build-scene.js';
 import { FOOT } from './layout.js';
 import { emptyBuild } from '../state.js';
+import { createEffects } from './effects.js';
+import { loadTheme } from './look.js';
 
 const VIEW_DIR = new THREE.Vector3(0.62, 0.32, 0.72).normalize(); // the viewer's 3/4 preset
 
@@ -26,7 +29,8 @@ export function createBuildThumbs({ width = 400, height = 300 } = {}) {
 
   const viewer = createViewer(canvas, { fov: 30, quality: 'high', staticShadows: true });
   const stage = createStage(viewer.scene, { shadowMapSize: 1024 });
-  const bscene = createBuildScene({ viewer, anisotropy: Math.min(4, viewer.maxAnisotropy), reducedMotion: true });
+  const bscene = createBuildScene({ viewer, anisotropy: Math.min(4, viewer.maxAnisotropy), reducedMotion: true, theme: loadTheme() });
+  const fx = createEffects({ viewer, scene: bscene, reducedMotion: true });
   const { camera } = viewer;
   const center = new THREE.Vector3();
 
@@ -47,6 +51,9 @@ export function createBuildThumbs({ width = 400, height = 300 } = {}) {
     camera.far = dist + radius * 3;
     camera.lookAt(center);
     camera.updateProjectionMatrix();
+    fx.refresh();
+    fx.setPower(true, { instant: true });
+    fx.update(0);
     viewer.invalidateShadows();
     try { await viewer.compile(); } catch { /* warm-up only */ }
     // Render and read back in the same task (no preserveDrawingBuffer needed).

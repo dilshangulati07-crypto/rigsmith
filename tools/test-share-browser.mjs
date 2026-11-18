@@ -52,7 +52,7 @@ try {
     bars: c.querySelectorAll('.preset__bars .gauge').length, note: c.querySelector('.preset__note').textContent,
     open: c.querySelector('a.btn--primary').getAttribute('href'), watch: [...c.querySelectorAll('a.btn')][1].getAttribute('href'),
     compare: c.querySelector('.preset__compare').getAttribute('href') }))`);
-  ok(cards.every((c) => /^฿[\d,]+$/.test(c.price) && c.bars === 3 && /Reference price, not live/.test(c.note)), 'every card has a reference total, three focus bars and the price note');
+  ok(cards.every((c) => /^฿[\d,]+$/.test(c.price) && c.bars === 0 && /Reference price, not live/.test(c.note)), 'every card is a large image card with a reference total and the price note');
   ok(cards.every((c) => /^builder\.html\?preset=[a-z0-9-]+$/.test(c.open) && /^builder\.html\?preset=[a-z0-9-]+&play=1$/.test(c.watch)), `"Open in builder" and "Watch it build" links (${cards[0].watch})`);
   ok(cards.every((c) => readShareParams(new URL(c.compare, BASE).search)[0]?.name === c.name), 'each card links to Compare with its build');
   await waitFor(`[...document.querySelectorAll('.preset .thumb')].slice(0, 4).every((t) => t.dataset.state === 'ready')`, 'first row of thumbnails', 90000);
@@ -60,7 +60,7 @@ try {
   ok(await evaluate(`document.querySelectorAll('canvas').length`) === 2, 'one extra WebGL canvas renders every thumbnail (hero + thumbnails)');
   await evaluate(`window.scrollTo(0, document.body.scrollHeight)`);
   await waitFor(`[...document.querySelectorAll('.preset .thumb')].every((t) => t.dataset.state === 'ready')`, 'all thumbnails', 90000);
-  const cached = await evaluate(`Object.keys(JSON.parse(sessionStorage.getItem('rigsmith.thumbs.v1') || '{}')).length`);
+  const cached = await evaluate(`Object.keys(JSON.parse(sessionStorage.getItem('rigsmith.thumbs.v2') || '{}')).length`);
   ok(cached === 8, `thumbnails cached (${cached})`);
   await shot('landing-presets');
   await go('/index.html');

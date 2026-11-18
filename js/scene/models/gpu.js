@@ -51,8 +51,13 @@ function rect(x0, x1, y0, y1) {
   p.moveTo(x0, y0); p.lineTo(x0, y1); p.lineTo(x1, y1); p.lineTo(x1, y0); p.lineTo(x0, y0);
   return p;
 }
-function extruded(parent, shape, depth, z, material) {
-  const m = new THREE.Mesh(new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: false, curveSegments: 32 }), material);
+// `bevel` (cm): angled facets round the outline and every opening, so a shroud panel catches
+// the light along its edges like a real moulded or machined part.
+function extruded(parent, shape, depth, z, material, bevel = 0) {
+  const b = Math.min(bevel, depth * 0.45);
+  const geo = new THREE.ExtrudeGeometry(shape, { depth: depth - b * 2, bevelEnabled: b > 0, bevelThickness: b, bevelSize: b, bevelSegments: 1, curveSegments: 32 });
+  if (b > 0) geo.translate(0, 0, b);
+  const m = new THREE.Mesh(geo, material);
   m.position.z = z;
   m.castShadow = true;
   m.receiveShadow = true;
@@ -96,7 +101,7 @@ export function buildGPU(part, { theme } = {}) {
   if (backX !== null) plate.holes.push(circle(backX, yc, d / 2 + 0.12));
   else if (through) plate.holes.push(rect(openFrom, L - 0.9, 1.3, H - 0.9));
   if (mode === 'ends') for (const x of centres) plate.holes.push(rect(x - d / 2, x + d / 2, 1.3, H - 0.9));
-  extruded(g, plate, 0.31, -0.45, line.inset ? body : finish('alu', isPale(colour) ? colour : 'black'));
+  extruded(g, plate, 0.31, -0.45, line.inset ? body : finish('alu', isPale(colour) ? colour : 'black'), 0.08);
   boxMM(g, 0.6, L - 0.6, H - 1.2, H - 1.05, -0.46, -0.45, mat('aluLight'), { cast: false });
 
   // Backplate vents and a recessed panel line; bars across a flow-through opening.
@@ -125,7 +130,7 @@ export function buildGPU(part, { theme } = {}) {
   const face = faceShape(0.05, L, 0.55, H, line.corner);
   for (const x of centres) face.holes.push(circle(x, yc, d / 2 + 0.12));
   if (mode === 'flow') face.holes.push(rect(openFrom, L - 0.9, 1.3, H - 0.9));
-  extruded(g, face, 0.3, zc - 0.3, faceMat);
+  extruded(g, face, 0.3, zc - 0.3, faceMat, 0.12);
   if (line.inset) {
     // The frame's raised border around the inset face.
     const b = [[0.05, L, H - 0.5, H, zc, zc + 0.1], [0.05, L, 0.55, 1.05, zc, zc + 0.1], [0.05, 0.55, 1.05, H - 0.5, zc, zc + 0.1], [L - 0.5, L, 1.05, H - 0.5, zc, zc + 0.1]];

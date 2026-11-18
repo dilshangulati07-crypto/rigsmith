@@ -43,6 +43,9 @@ function row(cat, value, worst, app) {
     <li class="cat" data-status="${status}" data-part-cat="${cat.id}" data-part-id="${!cat.multiple && items[0] ? items[0].id : ''}" ${current ? html`data-current="true"` : ''}>
       <button class="cat__btn" type="button" data-action="category" data-cat="${cat.id}" data-focus-key="cat-${cat.id}"
         ${current ? html`aria-current="true"` : ''}>
+        <span class="cat__thumb" aria-hidden="true">${items[0] && app.partThumbs?.get(items[0].id)
+          ? html`<img alt="" src="${app.partThumbs.get(items[0].id)}" data-thumb-for="${items[0].id}">`
+          : html`<span class="cat__glyph">${cat.label.slice(0, 1)}</span>`}</span>
         <span class="cat__head">
           <span class="cat__label">${cat.label}</span>
           <span class="cat__dot" aria-hidden="true"></span>

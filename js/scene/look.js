@@ -4,7 +4,7 @@
 const THEME_STORE = 'rigsmith.theme.v1';
 
 export const COLOURS = Object.freeze({
-  black: 0x121418, white: 0xe3e5e8, silver: 0xa3a9b1, grey: 0x565b63, gunmetal: 0x2c3037,
+  black: 0x1b1d21, white: 0xe3e5e8, silver: 0xa3a9b1, grey: 0x565b63, gunmetal: 0x2c3037,
   red: 0xb3202a, blue: 0x1f4fb8, green: 0x1f6a3a, yellow: 0xe2c02a, orange: 0xe0661f,
   gold: 0xb08a4a, beige: 0xd6c5a4, brown: 0x6a3a2b, walnut: 0x4a2f1d, oak: 0xb89468,
 });
@@ -40,12 +40,15 @@ export function lookOf(part, theme = 'auto') {
 
 export const isPale = (colour) => colour === 'white' || colour === 'silver' || colour === 'beige' || colour === 'oak';
 
+// The showcase look: white wherever the real product is sold in white.
+export const DEFAULT_THEME = 'white';
+
 export function loadTheme() {
   try {
     const t = localStorage.getItem(THEME_STORE);
-    return THEMES.some((x) => x.id === t) ? t : 'auto';
+    return THEMES.some((x) => x.id === t) ? t : DEFAULT_THEME;
   } catch {
-    return 'auto';
+    return DEFAULT_THEME;
   }
 }
 export function saveTheme(theme) {

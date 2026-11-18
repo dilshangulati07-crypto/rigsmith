@@ -59,15 +59,16 @@ function renderFooter(el) {
       <div class="footer__grid">
         <div>
           ${wordmark()}
-          <p style="margin-top:12px;max-width:42ch">A 3D PC builder with live compatibility checks.
+          <p style="margin-top:14px;max-width:38ch">Pick real parts, check that they fit, and see the finished PC in 3D.
           Prices are reference prices, not live. Performance figures are estimates.</p>
         </div>
         <div>
           <p class="label">Build</p>
           <ul class="footer__list">
             <li><a href="builder.html">Builder</a></li>
-            <li><a href="builder.html?mode=auto">Auto-build</a></li>
+            <li><a href="builder.html?mode=auto">Watch it build</a></li>
             <li><a href="compare.html">Compare</a></li>
+            <li><a href="index.html#presets">Presets</a></li>
           </ul>
         </div>
         <div>
@@ -78,18 +79,51 @@ function renderFooter(el) {
             <li>Prices in ${esc(CONFIG.currency)}, not live</li>
           </ul>
         </div>
+        <div class="footer__credits">
+          <p class="label">Credits</p>
+          <p style="margin:0 0 6px">3D parts are modelled in code from each product's real dimensions.</p>
+          <p style="margin:0 0 6px">Studio lighting: <a href="https://polyhaven.com/a/studio_small_08" rel="noopener">Studio Small 08</a> by Sergej Majboroda, Poly Haven, CC0.</p>
+          <p style="margin:0">Rendering: <a href="https://threejs.org" rel="noopener">three.js</a> r${esc(CONFIG.threeRevision)}, MIT. <a href="models/CREDITS.md">All credits</a></p>
+        </div>
       </div>
       <div class="footer__base">
-        <span>${esc(CONFIG.appName)} v${esc(CONFIG.version)} · three.js r${esc(CONFIG.threeRevision)}</span>
+        <span>${esc(CONFIG.appName)} v${esc(CONFIG.version)}</span>
         <span>© ${year} ${esc(CONFIG.author)}</span>
       </div>
     </div>`;
+}
+
+const ICONS = {
+  home: '<path d="M4 11.5 12 5l8 6.5V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z"/>',
+  builder: '<rect x="6" y="3" width="12" height="18" rx="2"/><circle cx="12" cy="9" r="2.5"/><path d="M9 15.5h6M9 18h6"/>',
+  auto: '<circle cx="12" cy="12" r="9"/><path d="m10 8.5 5.5 3.5-5.5 3.5z"/>',
+  compare: '<rect x="3" y="5" width="7.5" height="14" rx="1.5"/><rect x="13.5" y="5" width="7.5" height="14" rx="1.5"/>',
+};
+
+// Phones: a bottom bar with the main destinations (the top bar's menu is hidden there).
+function renderBottomNav(page) {
+  const params = new URLSearchParams(location.search);
+  const items = [
+    { id: 'home', label: 'Home', href: 'index.html' },
+    { id: 'builder', label: 'Build', href: 'builder.html' },
+    { id: 'auto', label: 'Auto-build', href: 'builder.html?mode=auto' },
+    { id: 'compare', label: 'Compare', href: 'compare.html' },
+  ];
+  const current = page === 'builder' && params.get('mode') === 'auto' ? 'auto' : page;
+  const nav = document.createElement('nav');
+  nav.className = 'bottom-nav';
+  nav.setAttribute('aria-label', 'Main (mobile)');
+  nav.innerHTML = items.map((i) => `<a class="bottom-nav__link" href="${i.href}"${i.id === current ? ' aria-current="page"' : ''}>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[i.id]}</svg>${esc(i.label)}</a>`).join('');
+  document.body.append(nav);
+  document.body.classList.add('has-bottom-nav');
 }
 
 export function mountShell() {
   const header = document.getElementById('site-header');
   const footer = document.getElementById('site-footer');
   if (header) renderHeader(header);
+  if (header) renderBottomNav(header.dataset.page || '');
   if (footer) renderFooter(footer);
   // Page titles in HTML use the working name; swap in the configured one.
   document.title = document.title.replace(/Rigsmith/g, CONFIG.appName);

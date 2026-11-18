@@ -1,8 +1,9 @@
 // Shared viewer: renderer, image-based lighting (environment.js), post-processing (post.js),
 // resize, render loop, quality levels, optional orbit controls and pause-when-hidden.
 // Quality: 'low' renders straight to the canvas with no shadows; 'high' adds shadows, studio
-// lighting, bloom and the first detail layer; 'ultra' adds ambient occlusion, SMAA and the
-// finest detail layer (chosen by hand, never automatically).
+// lighting, cheap ambient occlusion, bloom, SMAA and the first detail layer; 'ultra' adds full
+// ambient occlusion and the finest detail layer (chosen by hand, never automatically).
+// Exposure is CONFIG.scene.exposure; the background is compensated so it still matches --bg.
 // Units: 1 unit = 1 cm. Physically based lights, so point light intensity is in candela.
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -24,17 +25,17 @@ export function isWebGL2Available() {
   }
 }
 
-// three.js ACES fit (RRT + ODT) for a neutral grey at exposure 1.
-function acesGrey(x) {
-  const v = x / 0.6;
+// three.js ACES fit (RRT + ODT) for a neutral grey at the given exposure.
+function acesGrey(x, exposure = 1) {
+  const v = (x * exposure) / 0.6;
   return (v * (v + 0.0245786) - 0.000090537) / (v * (0.983729 * v + 0.432951) + 0.238081);
 }
 
 /**
- * Linear colour that comes out as `hex` after ACES tone mapping. Used so the
+ * Linear colour that comes out as `hex` after ACES tone mapping at `exposure`. Used so the
  * tone-mapped background and fog match the page's CSS --bg exactly.
  */
-export function compensateToneMapping(hex) {
+export function compensateToneMapping(hex, exposure = CONFIG.scene.exposure) {
   const target = new THREE.Color(hex);
   const out = new THREE.Color();
   for (const k of ['r', 'g', 'b']) {
@@ -42,7 +43,7 @@ export function compensateToneMapping(hex) {
     let hi = 1;
     for (let i = 0; i < 30; i++) {
       const mid = (lo + hi) / 2;
-      if (acesGrey(mid) < target[k]) lo = mid; else hi = mid;
+      if (acesGrey(mid, exposure) < target[k]) lo = mid; else hi = mid;
     }
     out[k] = (lo + hi) / 2;
   }
@@ -75,7 +76,7 @@ export function createViewer(canvas, opts = {}) {
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1;
+  renderer.toneMappingExposure = CONFIG.scene.exposure;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   if (opts.staticShadows) renderer.shadowMap.autoUpdate = false;
@@ -168,7 +169,7 @@ export function createViewer(canvas, opts = {}) {
   let last = 0;
   let onFrame = null;
   let afterRender = null; // runs right after each frame is drawn, while the canvas still holds it
-  const fps = { value: 0, frames: 0, acc: 0, checked: false, warmup: 1 }; // warmup in seconds
+  const fps = { value: 0, frames: 0, acc: 0, checked: false, warmup: 2.5 }; // warmup in seconds (skips shader compiles)
 
   function tick(now) {
     rafId = requestAnimationFrame(tick);
@@ -346,6 +347,8 @@ export function createViewer(canvas, opts = {}) {
     },
     /** Fog colour that matches the page background after tone mapping. */
     get fogColor() { return bgToned.clone(); },
+    /** The normal tone-mapping exposure (fades scale this). */
+    exposure: CONFIG.scene.exposure,
     maxAnisotropy: renderer.capabilities.getMaxAnisotropy(),
   };
 }

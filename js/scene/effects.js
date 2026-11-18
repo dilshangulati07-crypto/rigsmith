@@ -2,11 +2,14 @@
 // Fans: real rpm from the data (rpmMax) times the profile; on screen the rotation is scaled
 // down (real speeds alias at 60 fps) and a blur disc fades in with speed.
 // LEDs: each part owns its LED materials (ledMaterial(), frosted diffuserMaterial(), screens);
-// colour and mode per part or for all. At Ultra the lit pieces also carry a small point light
-// each, so the glow falls on nearby surfaces; at High it is emissive + bloom only.
+// colour and mode per part or for all. Aurora (the default) spreads a soft blue -> purple ->
+// pink gradient over the lit parts and lets it drift slowly. The lit pieces also carry a small
+// point light each at Ultra, so the glow falls on nearby surfaces; at High it is emissive +
+// bloom (each point light cost High ~5 % of the frame on integrated graphics).
 // Settings (profile, lighting) persist in localStorage; the PC always starts powered off.
 import * as THREE from 'three';
 import { mat } from './materials.js';
+import { BLOOM_THRESHOLD } from './post.js';
 
 export const FAN_PROFILES = Object.freeze([
   { id: 'quiet', label: 'Quiet', k: 0.45 },
@@ -14,6 +17,7 @@ export const FAN_PROFILES = Object.freeze([
   { id: 'performance', label: 'Performance', k: 1 },
 ]);
 export const RGB_MODES = Object.freeze([
+  { id: 'aurora', label: 'Aurora' },
   { id: 'static', label: 'Static' },
   { id: 'breathe', label: 'Breathe' },
   { id: 'rainbow', label: 'Rainbow' },
@@ -25,11 +29,14 @@ const VISUAL = 0.13;      // on-screen revolutions per real revolution
 const MAX_VISUAL_RPS = 4.5;
 const SPIN_RATE = 1.4;    // 1/s: fans approach their target speed
 const BOOT_SECONDS = 2.4;
-const BLOOM = 0.7;
-const ACCENT_LED = 6;
+const BLOOM = 0.85;
+const ACCENT_LED = 9;
 const STORE = 'rigsmith.view.v1';
-const DEFAULT_RGB = { color: '#d8e4f2', mode: 'static' };
-const MAX_GLOW = 8;        // point lights (Ultra): each one costs every lit surface a little
+const DEFAULT_RGB = { color: '#7c6bff', mode: 'aurora' };
+// Aurora gradient stops (soft blue, purple, pink) and how fast it drifts (cycles per second).
+const AURORA = ['#4f86ff', '#8a63ff', '#ff6fc0'].map((c) => new THREE.Color(c));
+const AURORA_DRIFT = 0.025;
+const MAX_GLOW = { ultra: 8 }; // point lights: each one costs every lit surface a little
 const GLOW_CD = 26;        // candela at full brightness; the scene is in cm, so this is a small LED strip
 const GLOW_REACH = 26;     // cm
 const GLOW_ORDER = ['fans', 'ram', 'cooler', 'gpu', 'motherboard', 'case', 'psu'];
@@ -78,12 +85,12 @@ export function createEffects({ viewer, scene, reducedMotion = false, onStatus }
     for (const g of glows) { g.light.removeFromParent(); g.light.dispose(); }
     glows.length = 0;
     glowQuality = viewer.quality;
-    if (viewer.quality !== 'ultra') return;
+    const max = MAX_GLOW[viewer.quality] ?? 0;
     for (const cat of GLOW_ORDER) {
       for (const s of models) {
         if (s.category !== cat || !s.model.userData.leds?.length) continue;
         for (const piece of s.model.userData.units ?? [s.model]) {
-          if (glows.length >= MAX_GLOW) return;
+          if (glows.length >= max) return;
           piece.updateWorldMatrix(true, true);
           box.makeEmpty();
           piece.traverse((o) => { if (o.isMesh && o.material?.userData?.led && !o.material.userData.screen) box.expandByObject(o); });
@@ -132,10 +139,21 @@ export function createEffects({ viewer, scene, reducedMotion = false, onStatus }
   // Brightness that clears the bloom threshold for any hue (dark colours need more).
   function intensityFor(c) {
     const lum = 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b;
-    return Math.min(7, Math.max(2.1, 1.7 / Math.max(lum, 0.01)));
+    return Math.min(9, Math.max(BLOOM_THRESHOLD * 1.5, (BLOOM_THRESHOLD * 1.2) / Math.max(lum, 0.01)));
+  }
+
+  // A point on the aurora gradient (t wraps: blue, purple, pink, purple, blue...).
+  function aurora(t, out) {
+    const x = ((t % 1) + 1) % 1 * 2;
+    const p = x > 1 ? 2 - x : x; // 0..1..0
+    const seg = p * (AURORA.length - 1);
+    const i = Math.min(AURORA.length - 2, Math.floor(seg));
+    return out.copy(AURORA[i]).lerp(AURORA[i + 1], seg - i);
   }
 
   function applyLeds() {
+    const lit = models.filter((s) => s.model.userData.leds?.length).length || 1;
+    let litIndex = 0;
     models.forEach((s, i) => {
       const leds = s.model.userData.leds;
       if (!leds?.length) return;
@@ -143,6 +161,7 @@ export function createEffects({ viewer, scene, reducedMotion = false, onStatus }
       let f = 1;
       if (set.mode === 'off') f = 0;
       else if (set.mode === 'rainbow') color.setHSL(((reducedMotion ? 0 : clock * 0.08) + i * 0.13) % 1, 1, 0.5);
+      else if (set.mode === 'aurora') aurora((reducedMotion ? 0 : clock * AURORA_DRIFT) + (litIndex / lit) * 0.5, color);
       else color.set(set.color);
       if (set.mode === 'breathe' && !reducedMotion) f = 0.15 + 0.85 * (0.5 - 0.5 * Math.cos((clock / 3.5) * Math.PI * 2));
       const intensity = intensityFor(color) * f * ledLevel;
@@ -152,6 +171,7 @@ export function createEffects({ viewer, scene, reducedMotion = false, onStatus }
         m.emissive.copy(color);
         m.emissiveIntensity = intensity * (m.userData.gain ?? 1);
       }
+      litIndex++;
       const state = glowOf.get(s.model) ?? { color: new THREE.Color(), k: 0 };
       state.color.copy(color);
       state.k = f * ledLevel;

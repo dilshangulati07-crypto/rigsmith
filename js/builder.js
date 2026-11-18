@@ -3,7 +3,7 @@
 import { loadCatalog } from './catalog.js';
 import { CATEGORIES, getCategory } from './categories.js';
 import { buildStore, assemblyProgress } from './state.js';
-import { checkBuild, summarize } from './compat.js';
+import { checkBuild, summarize, estimateDraw } from './compat.js';
 import { priceBuild, formatTHB } from './pricing.js';
 import { SavedBuilds } from './saved-builds.js';
 import { allParts } from './compat/util.js';
@@ -107,6 +107,14 @@ app.setCategory = (category, { focusBrowser = false } = {}) => {
 };
 
 app.openDetail = (part) => detail.open(part);
+
+// Product shots of chosen parts for the parts list, rendered by the 3D view once it has loaded.
+app.partThumbs = new Map();
+app.setPartThumb = (id, url) => {
+  app.partThumbs.set(id, url);
+  for (const img of document.querySelectorAll(`img[data-thumb-for="${CSS.escape(id)}"]`)) img.src = url;
+  scheduleRender();
+};
 
 app.applyBuild = (build, label) => {
   for (const c of CATEGORIES) app.store.set(c.id, build[c.id]);
@@ -254,6 +262,16 @@ function onListHover(e) {
   viewer.highlight(t ? { category: t.category, id: t.id } : null);
 }
 
+// "More info": the summary column (price breakdown, power, performance). A tab on narrow screens.
+function toggleInfo() {
+  if (narrow.matches) { setTab(app.ui.tab === 'summary' ? 'parts' : 'summary'); return; }
+  const grid = $('#builder-grid');
+  const on = grid.dataset.info !== 'on';
+  grid.dataset.info = on ? 'on' : 'off';
+  $('[data-cmd="info"]').setAttribute('aria-expanded', String(on));
+  if (on) $('#col-summary').focus?.();
+}
+
 function setTab(tab) {
   if (tab === '3d' && !narrow.matches) { setView('3d'); tab = 'parts'; }
   app.ui.tab = tab;
@@ -285,8 +303,12 @@ function renderNow() {
   const total = priceBuild(build).total;
   $('#mbar-total').textContent = formatTHB(total);
   const status = $('#mbar-status');
-  status.className = `tag tag--dot ${s.error ? 'tag--error' : s.warn ? 'tag--warn' : total ? 'tag--ok' : ''}`;
-  status.textContent = s.error ? `${s.error} error${s.error > 1 ? 's' : ''}` : s.warn ? `${s.warn} warning${s.warn > 1 ? 's' : ''}` : total ? 'No errors' : 'Empty';
+  const level = s.error ? 'error' : s.warn ? 'warn' : total ? 'ok' : 'empty';
+  $('#mbar-check').dataset.level = level;
+  status.dataset.level = level;
+  status.textContent = s.error ? `${s.error} compatibility error${s.error > 1 ? 's' : ''}` : s.warn ? `${s.warn} warning${s.warn > 1 ? 's' : ''}` : total ? 'Everything fits' : 'Empty';
+  const draw = estimateDraw(build);
+  $('#mbar-power').textContent = draw.watts ? `${Math.round(draw.watts)} W` : '— W';
   app.refreshTitle();
 }
 
@@ -357,6 +379,7 @@ async function init() {
     if (cmd === 'presets') presets.open();
     if (cmd === 'shortcuts') $('#shortcuts-dialog').showModal();
     if (cmd === 'preview') setPreview(!app.ui.preview);
+    if (cmd === 'info') toggleInfo();
     if (cmd === 'close-dialog') b.closest('dialog').close();
     if (cmd === 'clear') {
       if (!allParts(app.store.build).length) return;
@@ -383,8 +406,11 @@ async function init() {
   // Leaving the narrow layout while on the 3D tab: show the large viewer instead.
   narrow.addEventListener('change', () => { if (!narrow.matches && app.ui.tab === '3d') setTab('3d'); });
 
-  setView('parts');
+  // The 3D view is the main area once there is something to show; picking a category opens the parts.
+  setView(app.store.build.case || app.store.build.motherboard ? '3d' : 'parts');
   setPreview(app.ui.preview);
+  // Phones: 3D first when there is a build to show.
+  if (narrow.matches && (app.store.build.case || app.store.build.motherboard)) setTab('3d');
   // Continue a build by hand where it was left: open the 3D view straight away.
   if (assemblyProgress.mode === 'hand') app.enter3D();
   watchViewer();

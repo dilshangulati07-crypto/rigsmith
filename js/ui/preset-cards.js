@@ -21,31 +21,32 @@ export function presetSummary(preset, catalog) {
 
 /**
  * @param {HTMLElement} el container (gets a <ul class="presets">)
- * @param {{presets: object[], catalog: object, actions: (s) => any, heading?: 'h2'|'h3'}} opts
- *   actions(summary) returns the card's button markup (html``).
+ * @param {{presets: object[], catalog: object, actions: (s) => any, heading?: 'h2'|'h3', variant?: 'full'|'large'}} opts
+ *   actions(summary) returns the card's button markup (html``). variant 'large' (landing page):
+ *   a big image card without the workload bars.
  */
-export function renderPresetCards(el, { presets, catalog, actions, heading = 'h3' }) {
+export function renderPresetCards(el, { presets, catalog, actions, heading = 'h3', variant = 'full' }) {
+  const large = variant === 'large';
   const items = presets.map((p) => presetSummary(p, catalog));
   const H = heading === 'h2' ? (s) => html`<h2 class="preset__name">${s}</h2>` : (s) => html`<h3 class="preset__name">${s}</h3>`;
   render(el, html`
-    <ul class="presets" role="list">${items.map(({ preset, report: r, code }, i) => html`
+    <ul class="presets${large ? ' presets--large' : ''}" role="list">${items.map(({ preset, report: r, code }) => html`
       <li class="preset" data-preset-id="${preset.id}">
-        <div class="thumb brackets" data-thumb-code="${code}"><p class="thumb__msg mono">3D preview</p></div>
+        <div class="thumb" data-thumb-code="${code}"><p class="thumb__msg">3D preview</p></div>
         <div class="preset__body">
-          <p class="preset__idx mono muted">${String(i + 1).padStart(2, '0')}</p>
           ${H(preset.name)}
           <p class="preset__for">${preset.for}</p>
-          <ul class="bars preset__bars" aria-label="${PERF_LABEL}: ${preset.focus.map((w) => `${LABEL[w]} ${r.perf.scores[w]}`).join(', ')}">${preset.focus.map((w) => html`
+          ${large ? '' : html`<ul class="bars preset__bars" aria-label="${PERF_LABEL}: ${preset.focus.map((w) => `${LABEL[w]} ${r.perf.scores[w]}`).join(', ')}">${preset.focus.map((w) => html`
             <li class="gauge gauge--accent" style="--value: ${r.perf.scores[w] ?? 0}">
               <div class="gauge__head"><span>${LABEL[w]}</span><span class="gauge__value">${r.perf.scores[w] ?? '—'}</span></div>
               <div class="gauge__track" aria-hidden="true"><div class="gauge__fill"></div></div>
-            </li>`)}</ul>
+            </li>`)}</ul>`}
           <dl class="preset__facts">
             <div><dt class="label">Total</dt><dd class="mono">${formatTHB(r.price.total)}</dd></div>
             <div><dt class="label">Est. peak</dt><dd class="mono">${num(r.draw.watts)} W</dd></div>
             <div><dt class="label">Case</dt><dd class="mono">${r.size ? `${r.size.litres} L` : '—'}</dd></div>
           </dl>
-          <p class="preset__note">${PRICE_NOTE} · performance is an ${PERF_LABEL.toLowerCase()}, 100 = strongest in the catalogue</p>
+          <p class="preset__note">${large ? PRICE_NOTE : `${PRICE_NOTE} · performance is an ${PERF_LABEL.toLowerCase()}, 100 = strongest in the catalogue`}</p>
           <div class="preset__actions">${actions({ preset, report: r, code })}</div>
         </div>
       </li>`)}

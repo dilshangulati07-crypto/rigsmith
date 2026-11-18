@@ -71,18 +71,19 @@ function meshPanel(parent, w, h, anisotropy, { thickness = WALL, frameMat = mat(
   return g;
 }
 
-// Tempered glass sheet with the black print band real panels have. Lies in local XY, facing +Z.
-function glassPanel(parent, w, h, { tint = false } = {}) {
+// Tempered glass sheet with the print band real panels have (black, or the case colour on
+// light cases). Lies in local XY, facing +Z.
+function glassPanel(parent, w, h, { tint = false, print = mat('glassPrint') } = {}) {
   const g = new THREE.Group();
   const glass = boxMM(g, -w / 2, w / 2, -h / 2, h / 2, -SIDE / 2, SIDE / 2, tint ? mat('glassTint') : mat('glass'), { cast: false, receive: false });
   glass.renderOrder = 2;
   const band = Math.min(1.4, w * 0.06);
   const z0 = -SIDE / 2 - 0.02;
   const z1 = -SIDE / 2;
-  boxMM(g, -w / 2, w / 2, h / 2 - band, h / 2, z0, z1, mat('glassPrint'), { cast: false });
-  boxMM(g, -w / 2, w / 2, -h / 2, -h / 2 + band, z0, z1, mat('glassPrint'), { cast: false });
-  boxMM(g, -w / 2, -w / 2 + band, -h / 2 + band, h / 2 - band, z0, z1, mat('glassPrint'), { cast: false });
-  boxMM(g, w / 2 - band, w / 2, -h / 2 + band, h / 2 - band, z0, z1, mat('glassPrint'), { cast: false });
+  boxMM(g, -w / 2, w / 2, h / 2 - band, h / 2, z0, z1, print, { cast: false });
+  boxMM(g, -w / 2, w / 2, -h / 2, -h / 2 + band, z0, z1, print, { cast: false });
+  boxMM(g, -w / 2, -w / 2 + band, -h / 2 + band, h / 2 - band, z0, z1, print, { cast: false });
+  boxMM(g, w / 2 - band, w / 2, -h / 2 + band, h / 2 - band, z0, z1, print, { cast: false });
   parent.add(g);
   return g;
 }
@@ -184,7 +185,8 @@ export function buildCase(part, cl, { anisotropy = 4, theme } = {}) {
   const colour = look.colour ?? 'black';
   const dark = colour === 'black';
   // Painted steel, the darker inside, and the edge profile (bare aluminium only on a black case).
-  const M = { colour, steel: finish('steel', colour), inner: finish('inner', colour), frame: dark ? mat('frameAlu') : finish(look.finish === 'metal' ? 'alu' : 'steel', colour) };
+  const M = { colour, steel: finish('steel', colour), inner: finish('inner', colour), frame: dark ? mat('frameAlu') : finish(look.finish === 'metal' ? 'alu' : 'steel', colour),
+    print: dark ? mat('glassPrint') : finish('gloss', colour) };
   const mesh = { frameMat: M.steel, pattern: line.pattern, pitch: line.pitch, colour };
   const chamfer = line.chamfer ?? 0;
   const leds = [];
@@ -197,7 +199,7 @@ export function buildCase(part, cl, { anisotropy = 4, theme } = {}) {
   if (cl.topVented) {
     const io = 6.5;
     boxMM(root, D / 2 - io, D / 2, H - WALL, H, -W / 2, W / 2, M.steel);
-    const top = line.glassTop ? noPick(glassPanel(root, D - io, W - FRAME * 2)) : meshPanel(root, D - io, W, anisotropy, mesh);
+    const top = line.glassTop ? noPick(glassPanel(root, D - io, W - FRAME * 2, { print: M.print })) : meshPanel(root, D - io, W, anisotropy, mesh);
     top.rotation.x = -Math.PI / 2;
     top.position.set(-io / 2, H - WALL / 2, 0);
   } else {
@@ -219,7 +221,7 @@ export function buildCase(part, cl, { anisotropy = 4, theme } = {}) {
     f.rotation.y = Math.PI / 2;
     f.position.set(D / 2 - WALL / 2, H / 2, 0);
   } else if (front === 'glass') {
-    const f = noPick(glassPanel(root, fw - chamfer, fh));
+    const f = noPick(glassPanel(root, fw - chamfer, fh, { print: M.print }));
     f.rotation.y = Math.PI / 2;
     f.position.set(D / 2 - SIDE / 2, H / 2, -chamfer / 2);
   } else {
@@ -236,7 +238,7 @@ export function buildCase(part, cl, { anisotropy = 4, theme } = {}) {
   }
   if (chamfer) {
     // The angled pane between the front and side glass.
-    const pane = noPick(glassPanel(root, chamfer * Math.SQRT2, fh));
+    const pane = noPick(glassPanel(root, chamfer * Math.SQRT2, fh, { print: M.print }));
     pane.rotation.y = Math.PI / 4;
     pane.position.set(D / 2 - chamfer / 2, H / 2, W / 2 - chamfer / 2);
   }
@@ -249,7 +251,7 @@ export function buildCase(part, cl, { anisotropy = 4, theme } = {}) {
   const sw = D - FRAME * 2 - chamfer;
   const sh = H - FRAME * 2;
   if (cl.sidePanel === 'glass' || cl.sidePanel === 'acrylic') {
-    glassPanel(side, sw, sh, { tint: cl.sidePanel === 'acrylic' });
+    glassPanel(side, sw, sh, { tint: cl.sidePanel === 'acrylic', print: M.print });
   } else if (cl.sidePanel === 'mesh') {
     meshPanel(side, sw, sh, anisotropy, mesh);
   } else {

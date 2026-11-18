@@ -101,8 +101,7 @@
   font-family: var(--font-head);
   font-weight: 600;
   font-size: 13px;
-  letter-spacing: .1em;
-  text-transform: uppercase;
+  letter-spacing: 0;
   color: var(--muted);
 }
 .cmp__note {
@@ -137,8 +136,7 @@
   font-family: var(--font-head);
   font-weight: 600;
   font-size: 11px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
+  letter-spacing: 0;
   color: var(--accent);
 }
 .cmp__cell.is-best .cmp__value { font-weight: 500; }
@@ -162,8 +160,7 @@
   margin: 0;
   padding: var(--s-4) var(--s-4) 10px;
   font-size: 15px;
-  letter-spacing: .16em;
-  text-transform: uppercase;
+  letter-spacing: 0;
 }
 .cmp__section .cmp__sub { margin-left: 8px; font-family: var(--font-mono); font-weight: 400; letter-spacing: 0; text-transform: none; }
 
@@ -220,7 +217,7 @@
   .compare__actions { width: 100%; }
   .compare__actions .btn { flex: 1; }
   .cmp { --label: 96px; --colmin: 212px; }
-  .cmp__label { padding: 8px 10px; font-size: 11.5px; letter-spacing: .06em; }
+  .cmp__label { padding: 8px 10px; font-size: 11.5px; letter-spacing: 0; }
   .cmp__note { font-size: 10.5px; }
   .cmp__corner { padding: 8px 10px; }
   .cmp__cell { padding: 8px 12px; }

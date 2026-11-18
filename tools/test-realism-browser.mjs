@@ -49,7 +49,7 @@ try {
   await evaluate(`${R}.viewer.envReady`);
   s = await state();
   ok(s.quality === 'high' && s.label === 'Quality: High' && s.shadows && s.envIntensity === 1 && (s.layers & 0b1100) === 0b0100, 'High: shadows, studio HDRI lighting, first detail layer');
-  ok(!s.gtao && !s.smaa && !s.contact && !s.reflection && s.transmission === 0 && s.shadowSize === 2048, 'High: still none of the Ultra extras');
+  ok(!s.gtao && !s.smaa && !s.contact && s.reflection && s.transmission === 0 && s.shadowSize === 2048, `High: cheap floor reflection, none of the other Ultra extras (shadow ${s.shadowSize})`);
   await sleep(600);
   await shot('realism-high');
 
@@ -81,7 +81,8 @@ try {
   const m0 = await mem();
   for (let i = 0; i < 4; i++) { await swap(ids[0]); await swap(ids[1]); }
   const m1 = await mem();
-  ok(m1.g === m0.g && m1.t === m0.t, `geometries and textures are the same after 8 more swaps (${m0.g}/${m0.t} -> ${m1.g}/${m1.t})`);
+  // Not more (a leak); fewer is fine: the parts-list thumbnail renders free their targets late.
+  ok(m1.g <= m0.g && m1.t <= m0.t, `geometries and textures do not grow over 8 more swaps (${m0.g}/${m0.t} -> ${m1.g}/${m1.t})`);
 
   // ---------------------------------------------------------------- photo mode
   console.log('Photo mode');
@@ -99,7 +100,7 @@ try {
   await sleep(700);
   await shot('realism-photo-light');
   await evaluate(`(() => { const s = document.querySelector('[data-p="backdrop"]'); s.value = 'desk'; s.dispatchEvent(new Event('change', { bubbles: true })); })()`);
-  ok(dark !== light && await evaluate(`${R}.stage.backdrop === 'desk' && !!${R}.stage.floor.material.map`), `backgrounds: studio dark, studio light (${light}), desk with a wood top`);
+  ok(dark !== light && await evaluate(`${R}.stage.backdrop === 'desk' && !!${R}.stage.floor.material.map`), `backgrounds: studio, studio white (${light}), desk with a wood top`);
   // Depth of field and click-to-focus.
   ok(await evaluate(`document.querySelector('[data-p="blur"]').disabled`), 'the blur slider waits for depth of field');
   await evaluate(`document.querySelector('[data-p="dof"]').click()`);
@@ -127,7 +128,7 @@ try {
   ok(await evaluate(`getComputedStyle(document.querySelector('.photo__bar')).display !== 'none' && ${R}.photo.active`), 'Esc brings the controls back first');
   await press('Escape');
   s = await state();
-  ok(await evaluate(`!${R}.photo.active && ${R}.stage.backdrop === 'dark' && !document.documentElement.classList.contains('is-photo')`) && !s.bokeh && (await bg()) === dark, 'Esc again leaves photo mode: dark studio, no depth of field, page back');
+  ok(await evaluate(`!${R}.photo.active && ${R}.stage.backdrop === 'studio' && !document.documentElement.classList.contains('is-photo')`) && !s.bokeh && (await bg()) === dark, 'Esc again leaves photo mode: default studio, no depth of field, page back');
   ok(await evaluate(`document.querySelector('.viewer__stage').getBoundingClientRect().height < innerHeight`), 'the stage is back in the page');
 
   // ---------------------------------------------------------------- 380 px

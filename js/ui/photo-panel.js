@@ -4,7 +4,7 @@
 // H hides the bar too; Esc leaves. Depth of field needs High or Ultra quality.
 import * as THREE from 'three';
 import { CAMERA_PRESETS } from '../scene/camera-rig.js';
-import { BACKDROPS } from '../scene/stage.js';
+import { BACKDROPS, DEFAULT_BACKDROP } from '../scene/stage.js';
 import { CONFIG } from '../config.js';
 import { html, render } from './dom.js';
 
@@ -88,7 +88,7 @@ export function mountPhotoPanel(el, { root, app, viewer, stage, bscene, rig, onC
     delete root.dataset.photo;
     document.documentElement.classList.remove('is-photo');
     el.hidden = true;
-    stage.setBackdrop('dark');
+    stage.setBackdrop(DEFAULT_BACKDROP);
     viewer.post.setDof({ on: false });
     viewer.invalidateShadows();
     onChange?.(false);

@@ -2,9 +2,13 @@
 //   createModel(part, ctx) -> Promise<THREE.Group>
 // It uses models/<partId>.glb when models/index.json lists that id (1 unit = 1 cm, same
 // axes and origin as the procedural model), otherwise the procedural model for the type.
-// The manifest avoids a 404 request per part. To add a part type: write a builder in
-// js/scene/models/ and register it in TYPES.
+// models/index.json can also name one base model per category ("categories"): it is scaled
+// into the procedural model's bounding box, so it matches every part's real dimensions, and
+// the procedural model's placement data (pieces, sockets) is kept. The manifest avoids a 404
+// request per part. To add a part type: write a builder in js/scene/models/ and register it in TYPES.
+import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { disposeTree } from './resources.js';
 import { buildCase } from './case.js';
 import { buildMotherboard } from './models/motherboard.js';
 import { buildPSU } from './models/psu.js';
@@ -36,12 +40,39 @@ export const MODELLED = Object.freeze(Object.keys(TYPES));
 export const canModel = (category) => category in TYPES;
 
 let manifest = null;
-function glbIds() {
+function loadManifest() {
   manifest ??= fetch('models/index.json')
-    .then((r) => (r.ok ? r.json() : { models: [] }))
-    .then((j) => new Set(Array.isArray(j.models) ? j.models : []))
-    .catch(() => new Set());
+    .then((r) => (r.ok ? r.json() : {}))
+    .then((j) => ({
+      ids: new Set(Array.isArray(j.models) ? j.models : []),
+      categories: j.categories && typeof j.categories === 'object' ? j.categories : {},
+    }))
+    .catch(() => ({ ids: new Set(), categories: {} }));
   return manifest;
+}
+const glbIds = async () => (await loadManifest()).ids;
+
+// Category base model: the loaded scene scaled and centred into the procedural model's box.
+// Only for models drawn as one piece (no separately placed units).
+async function fitCategoryModel(entry, procedural) {
+  if (procedural.userData.units?.length) return null;
+  loader ??= new GLTFLoader();
+  const gltf = await loader.loadAsync(`models/${encodeURIComponent(entry.file)}`);
+  const model = gltf.scene;
+  const want = new THREE.Box3().setFromObject(procedural);
+  const have = new THREE.Box3().setFromObject(model);
+  const ws = want.getSize(new THREE.Vector3());
+  const hs = have.getSize(new THREE.Vector3());
+  const k = new THREE.Vector3(ws.x / (hs.x || 1), ws.y / (hs.y || 1), ws.z / (hs.z || 1));
+  if (entry.fit !== 'box') k.setScalar(Math.min(k.x, k.y, k.z)); // 'uniform' keeps proportions
+  model.scale.copy(k);
+  model.position.copy(want.getCenter(new THREE.Vector3())).sub(have.getCenter(new THREE.Vector3()).multiply(k));
+  model.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  const g = new THREE.Group();
+  g.name = procedural.name;
+  g.add(model);
+  g.userData = { ...procedural.userData, rotors: [], leds: [], approx: procedural.userData.approx ?? [] };
+  return g;
 }
 
 let loader = null;
@@ -78,6 +109,19 @@ export async function createModel(part, ctx = {}) {
   }
   const g = type.build(part, ctx);
   g.userData.source = 'procedural';
+  const base = (await loadManifest()).categories[part.category];
+  if (base?.file) {
+    try {
+      const fitted = await fitCategoryModel(base, g);
+      if (fitted) {
+        fitted.userData.source = 'glb';
+        disposeTree(g);
+        return fitted;
+      }
+    } catch (err) {
+      console.warn(`Rigsmith: models/${base.file} failed to load, using the procedural model.`, err);
+    }
+  }
   if (g.userData.rotor && !g.userData.rotors) g.userData.rotors = [g.userData.rotor];
   return g;
 }

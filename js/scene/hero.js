@@ -1,82 +1,123 @@
-// Landing-page hero scene: demo PC on a floor, slow sway, power-on intro.
+// Landing-page hero: a real preset build (CONFIG.scene.heroPreset in data/presets.json) drawn
+// by the same model factory, stage and lighting as the builder, in the showcase colour theme
+// (CONFIG.scene.heroTheme), powered on with its lighting lit. The camera frames the machine
+// close, turns slowly around it and tilts a little towards the pointer.
 import * as THREE from 'three';
+import { CONFIG } from '../config.js';
+import { loadCatalog } from '../catalog.js';
+import { loadPresets, presetBuild, findPreset } from '../presets.js';
 import { createViewer } from './renderer.js';
-import { buildDemoPC } from './demo-pc.js';
 import { createStage } from './stage.js';
+import { createBuildScene } from './build-scene.js';
+import { createEffects } from './effects.js';
+import { setMaterialQuality } from './materials.js';
+import { partsFrame, fitDistance } from './camera-rig.js';
+import { FOOT } from './layout.js';
 
-const TARGET = new THREE.Vector3(0, 23, 0);
 // Camera direction: front-left of the case, looking through the glass side.
-const VIEW_DIR = new THREE.Vector3(0.58, 0.3, 0.76).normalize();
+const VIEW_DIR = new THREE.Vector3(0.6, 0.3, 0.74).normalize();
+const SWAY = { amp: 0.55, period: 40 }; // rad, s
+const TILT = { x: 0.16, y: 0.1, ease: 2.5 }; // rad at the edge of the window, 1/s
+const UP = new THREE.Vector3(0, 1, 0);
 
 /**
  * @param {HTMLCanvasElement} canvas
  * @param {{reducedMotion: boolean, onProgress?: (step: string, frac: number) => void, onQualityChange?: Function}} opts
+ * @returns {Promise<{viewer: object, preset: object, setActive: (on: boolean) => void}>}
  */
 export async function startHero(canvas, { reducedMotion, onProgress, onQualityChange }) {
-  onProgress?.('Starting renderer', 0.25);
+  onProgress?.('Starting renderer', 0.2);
   let pointer = { x: 0, y: 0 };
-  let ready = false;
+  const tilt = { x: 0, y: 0 };
+  let framing = null; // { center, radius }
+  let t = 0;
 
   const viewer = createViewer(canvas, {
     fov: 30,
-    onQualityChange,
-    onResize: () => { if (ready) frameCamera(); },
+    staticShadows: true,
+    onQualityChange: (q) => { applyQuality(); onQualityChange?.(q); },
+    onResize: () => frameCamera(),
   });
-  const { scene, camera } = viewer;
+  const { camera } = viewer;
+  const stage = createStage(viewer.scene, { shadowMapSize: 2048, viewer });
+  function applyQuality() {
+    setMaterialQuality(viewer.quality);
+    stage.setQuality(viewer.quality);
+  }
+  applyQuality();
+
+  onProgress?.('Loading parts', 0.35);
+  const [catalog, presets] = await Promise.all([loadCatalog(), loadPresets()]);
+  const preset = findPreset(presets, CONFIG.scene.heroPreset) ?? presets[0];
+
+  onProgress?.('Building the models', 0.5);
+  const bscene = createBuildScene({
+    viewer,
+    anisotropy: Math.min(8, viewer.maxAnisotropy),
+    reducedMotion,
+    theme: CONFIG.scene.heroTheme ?? 'auto',
+    onChange: (layout) => {
+      const c = layout.case;
+      stage.fit(new THREE.Vector3(0, FOOT + c.H / 2, 0), 0.5 * Math.hypot(c.D, c.H, c.W));
+      // The whole machine, a little tight, leaning towards the parts.
+      const whole = { center: new THREE.Vector3(0, FOOT + c.H / 2, 0), radius: 0.5 * Math.hypot(c.D, c.H, c.W) };
+      const parts = partsFrame(layout) ?? whole;
+      framing = { center: whole.center.clone().lerp(parts.center, 0.3), radius: whole.radius * 0.9 };
+      frameCamera();
+      viewer.invalidateShadows();
+    },
+  });
+  bscene.sync(presetBuild(preset, catalog));
+  while (bscene.busy) await new Promise((r) => setTimeout(r, 16));
+  const fx = createEffects({ viewer, scene: bscene, reducedMotion });
+  fx.refresh();
+  await viewer.envReady;
 
   function frameCamera() {
-    // Keep ~80 cm of scene in view on both axes, whatever the canvas aspect.
-    const fit = 80 / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
-    const dist = fit * Math.max(1, 1 / camera.aspect);
-    camera.position.copy(VIEW_DIR).multiplyScalar(dist).add(TARGET);
-    camera.position.x += pointer.x * 6;
-    camera.position.y += pointer.y * 4;
-    camera.lookAt(TARGET);
+    if (!framing) return;
+    const dist = fitDistance(camera, framing.radius);
+    const dir = VIEW_DIR.clone().applyAxisAngle(UP, reducedMotion ? 0 : SWAY.amp * Math.sin((t * 2 * Math.PI) / SWAY.period) + tilt.x);
+    dir.y += tilt.y;
+    camera.position.copy(framing.center).addScaledVector(dir.normalize(), dist);
+    camera.lookAt(framing.center);
   }
 
-  onProgress?.('Building scene', 0.5);
-  scene.fog = new THREE.Fog(viewer.fogColor, 220, 520);
+  onProgress?.('Compiling shaders', 0.8);
+  try { await viewer.compile(); } catch { /* compile is only a warm-up */ }
 
-  const stage = createStage(scene);
-  stage.fit(TARGET, 34);
-
-  const pc = buildDemoPC({ anisotropy: Math.min(8, viewer.maxAnisotropy) });
-  scene.add(pc.group);
-  ready = true;
-  frameCamera();
-
-  onProgress?.('Compiling shaders', 0.75);
-  await viewer.compile();
-
-  // Power-on intro: LEDs and fans ramp up over ~1.6 s.
-  let power = reducedMotion ? 1 : 0;
-  let t = 0;
-  pc.update(0, power);
+  // Powered on: with motion, the fans spin up and the lighting fades in like a real boot.
+  fx.setPower(true, { instant: reducedMotion });
 
   function frame(dt) {
     t += dt;
-    if (power < 1) power = Math.min(1, power + dt / 1.6);
-    pc.update(dt, power);
-    pc.group.rotation.y = Math.sin(t * 0.16) * 0.5;
+    const k = Math.min(1, dt * TILT.ease);
+    tilt.x += (pointer.x * TILT.x - tilt.x) * k;
+    tilt.y += (pointer.y * TILT.y - tilt.y) * k;
+    bscene.update(dt);
+    fx.update(dt);
     frameCamera();
   }
 
   if (reducedMotion) {
-    // Static image; re-rendered on resize by the viewer.
+    // A still picture; the viewer redraws it on resize.
+    fx.update(0);
+    frameCamera();
     viewer.render();
   } else {
     viewer.start(frame);
-    canvas.addEventListener('pointermove', (e) => {
-      const r = canvas.getBoundingClientRect();
-      pointer = { x: (e.clientX - r.left) / r.width - 0.5, y: 0.5 - (e.clientY - r.top) / r.height };
-    });
-    canvas.addEventListener('pointerleave', () => { pointer = { x: 0, y: 0 }; });
+    // The whole window steers the tilt, not only the canvas.
+    window.addEventListener('pointermove', (e) => {
+      if (e.pointerType === 'touch') return;
+      pointer = { x: e.clientX / innerWidth - 0.5, y: 0.5 - e.clientY / innerHeight };
+    }, { passive: true });
+    document.addEventListener('pointerleave', () => { pointer = { x: 0, y: 0 }; });
   }
 
   onProgress?.('Ready', 1);
 
   return {
     viewer,
+    preset,
     /** Pause/resume the loop, e.g. when the hero scrolls out of view. */
     setActive(active) {
       if (reducedMotion) return;

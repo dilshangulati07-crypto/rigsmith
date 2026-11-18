@@ -51,23 +51,43 @@ const brushedMetal = (o, tile = 3) => detailUV(std({ ...o, roughnessMap: tex.bru
 
 const cache = new Map();
 
+/**
+ * Alpha-blended glass (Low and High) that keeps its reflections: plain alpha blending would
+ * scale the reflection by the opacity too, so a clear pane showed almost none. Here only the
+ * tint is scaled by the opacity and the reflection is added at full strength
+ * (premultiplied alpha). With real transmission (Ultra) the shader is unchanged.
+ */
+function thinGlass(m) {
+  m.premultipliedAlpha = true;
+  m.onBeforeCompile = (shader) => {
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <opaque_fragment>', `#include <opaque_fragment>
+        #ifndef USE_TRANSMISSION
+          gl_FragColor.rgb = outgoingLight - totalDiffuse * (1.0 - diffuseColor.a);
+        #endif`)
+      .replace('#include <premultiplied_alpha_fragment>', '');
+  };
+  m.customProgramCacheKey = () => 'thin-glass';
+  return m;
+}
+
 const ghost = (color) => new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.2, depthWrite: false, depthTest: false, toneMapped: false });
 const guide = (color) => new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.9, depthTest: false, toneMapped: false });
 
 const defs = {
   // Powder-coated steel: the coating hides most of the metal, so it reads as a matte paint.
-  caseSteel: () => powderCoat({ color: 0x1b1e23, metalness: 0.35, roughness: 0.62 }),
-  caseInner: () => powderCoat({ color: 0x16191e, metalness: 0.25, roughness: 0.74 }),
-  frameAlu: () => brushedMetal({ color: 0x2c3139, metalness: 0.9, roughness: 0.42 }),
-  glass: () => new THREE.MeshPhysicalMaterial({
+  caseSteel: () => powderCoat({ color: 0x212328, metalness: 0.35, roughness: 0.62 }),
+  caseInner: () => powderCoat({ color: 0x1f2227, metalness: 0.25, roughness: 0.74 }),
+  frameAlu: () => brushedMetal({ color: 0x383d45, metalness: 0.9, roughness: 0.42 }),
+  glass: () => thinGlass(new THREE.MeshPhysicalMaterial({
     color: 0x1c232b, metalness: 0, roughness: 0.03, ior: 1.5,
-    transparent: true, opacity: 0.16, depthWrite: false, envMapIntensity: 1.6,
-  }),
+    transparent: true, opacity: 0.16, depthWrite: false, envMapIntensity: 0.22,
+  })),
   // Acrylic: slightly darker and less clear than tempered glass.
-  glassTint: () => new THREE.MeshPhysicalMaterial({
+  glassTint: () => thinGlass(new THREE.MeshPhysicalMaterial({
     color: 0x20262e, metalness: 0, roughness: 0.12, ior: 1.49,
-    transparent: true, opacity: 0.3, depthWrite: false, envMapIntensity: 1.2,
-  }),
+    transparent: true, opacity: 0.3, depthWrite: false, envMapIntensity: 0.2,
+  })),
   glassPrint: () => new THREE.MeshStandardMaterial({ color: 0x07080a, metalness: 0, roughness: 0.2 }),
   pcb: () => detailUV(std({ color: 0xffffff, map: tex.pcb(), bumpMap: tex.pcb(), bumpScale: 0.5, metalness: 0.15, roughness: 0.5 }), 6),
   heatsink: () => brushedMetal({ color: 0x3a404a, metalness: 0.9, roughness: 0.46 }, 2.5),
@@ -77,37 +97,37 @@ const defs = {
   copper: () => std({ color: 0xc8794a, metalness: 1, roughness: 0.28 }),
   usbBlue: () => std({ color: 0x1846c8, metalness: 0, roughness: 0.4 }),
   steelBright: () => std({ color: 0xb4b9c0, metalness: 1, roughness: 0.3 }),
-  plastic: () => moulded({ color: 0x0e1013, metalness: 0, roughness: 0.62 }),
-  plasticGloss: () => std({ color: 0x101216, metalness: 0, roughness: 0.14 }),
+  plastic: () => moulded({ color: 0x18191d, metalness: 0, roughness: 0.62 }),
+  plasticGloss: () => std({ color: 0x16181c, metalness: 0, roughness: 0.14 }),
   // Fan blades: smoked polycarbonate, slightly see-through.
-  fanBlade: () => std({ color: 0x14171b, metalness: 0, roughness: 0.42, transparent: true, opacity: 0.9 }),
-  rubber: () => moulded({ color: 0x0b0c0e, metalness: 0, roughness: 0.95 }),
-  sleeve: () => std({ color: 0x121418, metalness: 0, roughness: 0.85, bumpMap: tex.weave(), bumpScale: 1.2 }),
-  tubeBraid: () => std({ color: 0x0d0e11, metalness: 0, roughness: 0.8, bumpMap: tex.weave(), bumpScale: 1.4 }),
+  fanBlade: () => std({ color: 0x1d2025, metalness: 0, roughness: 0.42, transparent: true, opacity: 0.9 }),
+  rubber: () => moulded({ color: 0x131417, metalness: 0, roughness: 0.95 }),
+  sleeve: () => std({ color: 0x1b1d21, metalness: 0, roughness: 0.85, bumpMap: tex.weave(), bumpScale: 1.2 }),
+  tubeBraid: () => std({ color: 0x17181b, metalness: 0, roughness: 0.8, bumpMap: tex.weave(), bumpScale: 1.4 }),
   radiatorCore: () => detailUV(std({ color: 0xffffff, map: tex.radiatorCore(), bumpMap: tex.radiatorCore(), bumpScale: 1, metalness: 0.6, roughness: 0.6 }), 0.9),
-  psuBody: () => sandblasted({ color: 0x141619, metalness: 0.45, roughness: 0.66 }),
+  psuBody: () => sandblasted({ color: 0x1e2024, metalness: 0.45, roughness: 0.66 }),
   brass: () => new THREE.MeshStandardMaterial({ color: 0xb08a4a, metalness: 1, roughness: 0.38 }),
   gold: () => new THREE.MeshStandardMaterial({ color: 0xd4a640, metalness: 1, roughness: 0.28 }),
   socketPga: () => new THREE.MeshStandardMaterial({ color: 0xd9d2c0, metalness: 0, roughness: 0.6 }),
-  chip: () => new THREE.MeshStandardMaterial({ color: 0x0c0d0f, metalness: 0.2, roughness: 0.42 }),
+  chip: () => new THREE.MeshStandardMaterial({ color: 0x141518, metalness: 0.2, roughness: 0.42 }),
   ssdPcb: () => new THREE.MeshStandardMaterial({ color: 0x10261d, metalness: 0.2, roughness: 0.55 }),
   driveShell: () => sandblasted({ color: 0x2a2e35, metalness: 0.8, roughness: 0.42 }),
   hddAlu: () => sandblasted({ color: 0x6c727b, metalness: 1, roughness: 0.42 }),
   // Lines: not tone-mapped so they match the CSS palette exactly.
   ghostLine: () => new THREE.LineDashedMaterial({ color: 0x8a93a0, dashSize: 1.2, gapSize: 0.8, transparent: true, opacity: 0.55, toneMapped: false }),
   ghostLineFaint: () => new THREE.LineDashedMaterial({ color: 0x8a93a0, dashSize: 0.6, gapSize: 0.6, transparent: true, opacity: 0.28, toneMapped: false }),
-  highlight: () => new THREE.LineBasicMaterial({ color: 0xff5a1f, depthTest: false, transparent: true, opacity: 0.95, toneMapped: false }),
+  highlight: () => new THREE.LineBasicMaterial({ color: 0x2f6bff, depthTest: false, transparent: true, opacity: 0.95, toneMapped: false }),
   // Build by hand: x-ray ghost of where a part goes (valid, wrong, hint) and its guide box.
   ghostOk: () => ghost(0x3ddc97),
   ghostBad: () => ghost(0xff4d4d),
-  ghostHint: () => ghost(0xff5a1f),
+  ghostHint: () => ghost(0x2f6bff),
   guideOk: () => guide(0x3ddc97),
   guideBad: () => guide(0xff4d4d),
-  guideHint: () => guide(0xff5a1f),
+  guideHint: () => guide(0x2f6bff),
   // Emissive LEDs: intensity above the bloom threshold so only these glow.
-  ledWhite: () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xd8e4f2, emissiveIntensity: 3 }),
-  // Orange has low luminance, so it needs more intensity than white to clear the bloom threshold.
-  ledAccent: () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xff5a1f, emissiveIntensity: 6 }),
+  ledWhite: () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xd8e4f2, emissiveIntensity: 4 }),
+  // The accent blue has low luminance, so it needs more intensity than white to clear the bloom threshold.
+  ledAccent: () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0x2f6bff, emissiveIntensity: 9 }),
   // Motion blur disc over spinning fan blades; effects.js sets its opacity from the fan speed.
   fanBlur: () => new THREE.MeshBasicMaterial({ color: 0x2a2f36, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide }),
 };
@@ -176,7 +196,7 @@ export function meshPanelMaterial(widthCm, heightCm, pitch = 0.7, anisotropy = 4
     return c;
   };
   return new THREE.MeshStandardMaterial({
-    color: colour === 'black' ? 0x1a1d22 : COLOURS[colour] ?? 0x1a1d22, metalness: pale ? 0.1 : 0.6, roughness: 0.5,
+    color: colour === 'black' ? 0x25282e : COLOURS[colour] ?? 0x25282e, metalness: pale ? 0.1 : 0.6, roughness: 0.5,
     alphaMap: tile(alpha), normalMap: tile(normal), normalScale: new THREE.Vector2(0.8, 0.8),
     transparent: true, depthWrite: false, side: THREE.DoubleSide,
   });

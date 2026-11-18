@@ -5,13 +5,13 @@
 // the browser. Also the in-page helpers (window.__t, need ?debug3d) and real pointer and key input.
 // CHROME=<path> picks the browser; -v prints passing checks; --shots <dir> saves screenshots.
 import { spawn } from 'node:child_process';
-import { createServer } from 'node:http';
 import { readFile, mkdtemp, rm, writeFile, mkdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
-import { join, dirname, extname, normalize, sep } from 'node:path';
+import { join, dirname } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { idsOf } from './test-builds.mjs';
+import { serveDir as serveRoot } from './serve.mjs';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const VERBOSE = process.argv.includes('-v');
 const shotsArg = process.argv.indexOf('--shots');
@@ -27,20 +27,14 @@ export function ok(cond, msg) {
 }
 
 // ---------------------------------------------------------------- static server
-const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.glb': 'model/gltf-binary' };
-const server = createServer(async (req, res) => {
-  const path = normalize(decodeURIComponent(new URL(req.url, 'http://x').pathname)).replace(/^[\\/]+/, '');
-  const file = join(ROOT, path || 'index.html');
-  if (!file.startsWith(ROOT + sep) && file !== ROOT) { res.writeHead(403).end(); return; }
-  try {
-    const body = await readFile(file);
-    res.writeHead(200, { 'content-type': TYPES[extname(file)] ?? 'application/octet-stream', 'cache-control': 'no-store' }).end(body);
-  } catch {
-    res.writeHead(404).end();
-  }
-});
-await new Promise((r) => server.listen(0, '127.0.0.1', r));
-export const BASE = `http://127.0.0.1:${server.address().port}`;
+const servers = [];
+/** Static server for `root` on a free port (no caching). Resolves to its base URL. */
+export async function serveDir(root) {
+  const { server, url } = await serveRoot(root);
+  servers.push(server);
+  return url;
+}
+export const BASE = await serveDir(ROOT);
 
 // ---------------------------------------------------------------- chrome + CDP
 function findChrome() {
@@ -230,7 +224,7 @@ export function fail(err) {
 export async function finish() {
   ws.close();
   chrome.kill();
-  server.close();
+  for (const s of servers) s.close();
   await sleep(300);
   await rm(profile, { recursive: true, force: true }).catch(() => {});
   console.log(failures ? `FAILED: ${failures} of ${checks} checks` : `OK: ${checks} checks`);

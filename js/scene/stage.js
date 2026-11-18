@@ -1,19 +1,35 @@
-// Product-photo stage shared by the landing hero, the builder viewer and the thumbnails: a
-// seamless graphite floor that fades out radially (no visible horizon), a soft
-// shadow-casting key light and a cool rim. With a viewer it also follows the quality level:
-// Ultra adds a contact shadow under the case, a soft reflection in the floor and a larger
-// shadow map. Photo mode can swap the backdrop (studio dark, studio light, desk).
+// Product-photo stage shared by the landing hero, the builder viewer and the build
+// thumbnails: a seamless light-grey studio sweep that fades out radially (no visible horizon)
+// and the real-time lights of the rig (+X front, +Z glass side):
+//   key     soft, shadow-casting, from the front-glass side and above, low enough to reach in
+//   inside  Ultra only: a point light inside the case, in front of the board
+// Fill, the coloured rims (cool blue on the glass side, warm on the other) and the light on
+// the internals are softboxes baked into the environment map (environment.js): every
+// real-time light costs every lit pixel, and on integrated graphics the extra fill, rims and
+// inside light took High from 66 to 37 fps. With a viewer the stage also follows the quality
+// level: High and Ultra add a contact shadow under the case and a soft reflection in the
+// floor (a smaller mirror without the fine detail at High). Photo mode can swap the backdrop.
 import * as THREE from 'three';
 import { CONFIG } from '../config.js';
 import { detailUV } from './materials.js';
 import * as tex from './textures.js';
 import { createContactShadow } from './contact-shadow.js';
+import { DETAIL_HIGH } from './resources.js';
+
+// Key light: intensity, and where it sits as multiples of the subject's radius (the matching
+// softbox in environment.js is in the same direction).
+const KEY = 2.2;
+const KEY_DIR = [1.0, 1.7, 1.9];
+
+const INSIDE = 0.3; // inside light, as a share of the key's illuminance on the board
 
 export const BACKDROPS = Object.freeze([
-  { id: 'dark', label: 'Studio dark', background: CONFIG.scene.background, floor: 0x121418, roughness: 0.78 },
-  { id: 'light', label: 'Studio light', background: 0xcfd3d8, floor: 0xc4c8ce, roughness: 0.62 },
-  { id: 'desk', label: 'Desk', background: 0x121418, floor: 0xffffff, roughness: 0.48, wood: true },
+  { id: 'studio', label: 'Studio', background: CONFIG.scene.background, floor: 0xcfd4dc, roughness: 0.34, reflect: 0.26 },
+  { id: 'light', label: 'Studio white', background: 0xf3f4f6, floor: 0xeceef1, roughness: 0.4, reflect: 0.16 },
+  { id: 'dark', label: 'Studio navy', background: 0x0d1424, floor: 0x161e30, roughness: 0.5, reflect: 0.3 },
+  { id: 'desk', label: 'Desk', background: 0x1a1e26, floor: 0xffffff, roughness: 0.48, wood: true, reflect: 0.12 },
 ]);
+export const DEFAULT_BACKDROP = 'studio';
 
 function fadeTexture() {
   const [c, g] = tex.canvas(256);
@@ -53,7 +69,7 @@ const ReflectionShader = {
  * @param {{shadowMapSize?: number, viewer?: object}} opts viewer: from createViewer(), enables the Ultra extras and backdrops
  */
 export function createStage(scene, { shadowMapSize = 1024, viewer = null } = {}) {
-  const key = new THREE.DirectionalLight(0xfff4ea, 2.2);
+  const key = new THREE.DirectionalLight(0xfff4ea, KEY);
   key.castShadow = true;
   key.shadow.mapSize.set(shadowMapSize, shadowMapSize);
   key.shadow.bias = -0.0004;
@@ -61,13 +77,15 @@ export function createStage(scene, { shadowMapSize = 1024, viewer = null } = {})
   key.shadow.radius = 4;
   scene.add(key, key.target);
 
-  const rim = new THREE.DirectionalLight(0xbcd0ff, 1.1);
-  scene.add(rim, rim.target);
+  const inside = new THREE.PointLight(0xfff6ee, 0, 1, 2);
+  inside.name = 'inside-light';
+  inside.visible = false;
+  scene.add(inside);
 
   const floorMat = detailUV(new THREE.MeshStandardMaterial({
     color: BACKDROPS[0].floor, metalness: 0, roughness: BACKDROPS[0].roughness,
     roughnessMap: tex.grain(), alphaMap: fadeTexture(), transparent: true, depthWrite: false,
-    envMapIntensity: 0.3, // a matte sweep: the studio softbox must not show up as a bright patch
+    envMapIntensity: 0.5, // a satin sweep: the studio softbox must not show up as a bright patch
   }), 2.4);
   // detailUV() only remaps colour, bump and roughness, so the alpha fade keeps the plane's own UVs.
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), floorMat);
@@ -79,15 +97,25 @@ export function createStage(scene, { shadowMapSize = 1024, viewer = null } = {})
   let contact = null;
   let reflection = null;
   let ultra = false;
-  let backdrop = 'dark';
+  let high = false;
+  let backdrop = DEFAULT_BACKDROP;
   let last = { center: new THREE.Vector3(0, 23, 0), radius: 33 };
 
-  async function enableUltra() {
-    if (!viewer || reflection) return;
+  function enableContact() {
+    if (!viewer || contact) return;
     contact = createContactShadow(viewer, [floor]);
+    apply();
+    fit(last.center, last.radius);
+    viewer.invalidateShadows();
+  }
+
+  async function enableReflection() {
+    enableContact();
+    if (!viewer || reflection) return;
     const { Reflector } = await import('three/addons/objects/Reflector.js');
     if (reflection) return;
     reflection = new Reflector(new THREE.PlaneGeometry(1, 1), { textureWidth: 1024, textureHeight: 1024, shader: ReflectionShader, multisample: 0 });
+    reflectSize();
     reflection.material.transparent = true;
     reflection.material.depthWrite = false;
     reflection.material.blending = THREE.AdditiveBlending;
@@ -104,7 +132,8 @@ export function createStage(scene, { shadowMapSize = 1024, viewer = null } = {})
       hide.forEach((o) => { o.visible = false; });
       s.background = null;
       renderer.setClearAlpha(0);
-      reflection.camera.layers.mask = camera.layers.mask;
+      // At High the mirror leaves out the fine detail (it is blurred anyway).
+      reflection.camera.layers.mask = ultra ? camera.layers.mask : camera.layers.mask & ~(1 << DETAIL_HIGH);
       mirror.call(reflection, renderer, s, camera);
       renderer.setClearAlpha(alpha);
       s.background = bg;
@@ -114,6 +143,12 @@ export function createStage(scene, { shadowMapSize = 1024, viewer = null } = {})
     apply();
     fit(last.center, last.radius);
     viewer.invalidateShadows();
+  }
+
+  // The mirror pass renders the scene again: half size at High, full at Ultra.
+  function reflectSize() {
+    const n = ultra ? 1024 : 384;
+    if (reflection && reflection.getRenderTarget().width !== n) reflection.getRenderTarget().setSize(n, n);
   }
 
   function apply() {
@@ -127,25 +162,27 @@ export function createStage(scene, { shadowMapSize = 1024, viewer = null } = {})
     }
     floorMat.userData.detailTile.value = 1 / (b.wood ? 60 : 2.4);
     viewer?.setBackground(b.background);
-    contact?.setVisible(ultra);
+    contact?.setVisible(high);
     if (reflection) {
-      reflection.visible = ultra;
-      reflection.material.uniforms.strength.value = b.id === 'light' ? 0.16 : 0.3;
+      reflection.visible = high && b.reflect > 0;
+      reflection.material.uniforms.strength.value = b.reflect;
     }
   }
 
-  // Aim the lights and size the shadow camera and floor around an object.
+  // Aim the key light and size the shadow camera and floor around an object.
   function fit(center, radius) {
     last = { center: center.clone(), radius };
     const r = Math.max(radius, 10);
-    key.position.set(center.x + r * 1.3, center.y + r * 2.4, center.z + r * 1.75);
+    key.position.set(center.x + r * KEY_DIR[0], center.y + r * KEY_DIR[1], center.z + r * KEY_DIR[2]);
     key.target.position.copy(center);
     const cam = key.shadow.camera;
     cam.left = -r * 1.2; cam.right = r * 1.2; cam.top = r * 1.2; cam.bottom = -r * 1.2;
     cam.near = r * 0.8; cam.far = r * 6;
     cam.updateProjectionMatrix();
-    rim.position.set(center.x - r * 1.8, center.y + r * 1.4, center.z - r * 1.6);
-    rim.target.position.copy(center);
+    // Inside the case, in front of the board (case-local: board near -Z, glass at +Z).
+    inside.position.set(center.x + r * 0.3, center.y + r * 0.35, center.z + r * 0.2);
+    inside.distance = r * 3;
+    inside.intensity = INSIDE * KEY * (r * 0.5) ** 2;
     floor.scale.set(r * 8, r * 8, 1);
     floor.position.set(center.x, 0, center.z);
     contact?.fit(center, r);
@@ -157,18 +194,22 @@ export function createStage(scene, { shadowMapSize = 1024, viewer = null } = {})
   fit(last.center, last.radius);
 
   return {
-    key, rim, floor, fit,
+    key, inside, floor, fit,
     /** Follow the viewer's quality level. */
     setQuality(quality) {
       ultra = quality === 'ultra';
+      high = quality !== 'low';
       const size = ultra ? Math.max(4096, shadowMapSize) : shadowMapSize;
       if (key.shadow.mapSize.x !== size) {
         key.shadow.mapSize.set(size, size);
         key.shadow.map?.dispose();
         key.shadow.map = null;
       }
+      if (high) enableContact();
+      inside.visible = ultra;
+      reflectSize();
       apply();
-      return ultra ? enableUltra() : Promise.resolve();
+      return high ? enableReflection() : Promise.resolve();
     },
     /** @param {'dark'|'light'|'desk'} id */
     setBackdrop(id) {

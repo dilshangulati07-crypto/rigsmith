@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Builder · Rigsmith</title>
   <meta name="description" content="Pick PC parts with a live compatibility check, reference prices, a performance estimate and a 3D view of the build.">
-  <meta name="theme-color" content="#0B0D10">
+  <meta name="theme-color" content="#F5F6F8">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/builder.css">
   <link rel="stylesheet" href="css/presets.css">
@@ -40,7 +40,7 @@
   <main id="main" class="builder">
     <div class="builder__bar">
       <div class="builder__heading">
-        <p class="label">Quick Build</p>
+        <p class="eyebrow">Your build</p>
         <h1 class="builder__title"><span id="build-name">Untitled build</span> <span class="builder__state mono" id="build-state"></span></h1>
       </div>
       <div class="builder__actions">
@@ -63,15 +63,15 @@
     </div>
 
     <nav class="builder__tabs" aria-label="Builder sections">
+      <button class="tabbtn" type="button" data-tab="3d" aria-controls="view-3d" aria-pressed="false">3D</button>
       <button class="tabbtn" type="button" data-tab="build" aria-controls="col-build" aria-pressed="false">Build</button>
       <button class="tabbtn" type="button" data-tab="parts" aria-controls="col-parts" aria-pressed="true">Parts</button>
-      <button class="tabbtn" type="button" data-tab="3d" aria-controls="view-3d" aria-pressed="false">3D</button>
       <button class="tabbtn" type="button" data-tab="summary" aria-controls="col-summary" aria-pressed="false">Summary</button>
     </nav>
 
-    <div class="builder__grid" id="builder-grid" data-tab="parts">
+    <div class="builder__grid" id="builder-grid" data-tab="parts" data-info="off">
       <aside class="col col--build" id="col-build" aria-labelledby="col-build-h">
-        <div class="col__head"><h2 class="label" id="col-build-h">Your build</h2><span class="muted col__hint">Text view of the 3D build</span></div>
+        <div class="col__head"><h2 id="col-build-h">Parts</h2><span class="muted col__hint">Also the text view of the 3D build</span></div>
         <div id="cat-list"></div>
       </aside>
 
@@ -94,10 +94,21 @@
       </aside>
     </div>
 
-    <div class="mbar" aria-label="Build status">
-      <span class="mbar__total mono" id="mbar-total">฿0</span>
-      <span class="tag tag--dot" id="mbar-status">Empty</span>
-      <button class="btn btn--sm" type="button" data-tab="summary" aria-controls="col-summary">Summary</button>
+    <div class="mbar" role="region" aria-label="Build status">
+      <div class="mbar__item">
+        <span class="mbar__label">Total</span>
+        <span class="mbar__total mono" id="mbar-total">฿0</span>
+        <span class="mbar__note">Reference price, not live</span>
+      </div>
+      <div class="mbar__item mbar__item--power">
+        <span class="mbar__label">Est. power</span>
+        <span class="mbar__value mono" id="mbar-power">— W</span>
+      </div>
+      <div class="mbar__item mbar__item--status">
+        <span class="mbar__check" id="mbar-check" data-level="empty" aria-hidden="true"></span>
+        <span class="mbar__status" id="mbar-status">Empty</span>
+      </div>
+      <button class="btn btn--sm mbar__more" type="button" data-cmd="info" aria-controls="col-summary" aria-expanded="false">More info</button>
     </div>
   </main>
 

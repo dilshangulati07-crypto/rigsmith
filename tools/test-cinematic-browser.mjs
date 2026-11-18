@@ -42,7 +42,7 @@ async function playToEnd(timeout) {
   const labels = [];
   const t0 = Date.now();
   for (;;) {
-    const s = await evaluate(`({ state: __a.p().state, cap: __a.cap(), anim: __t.r().hand.hb.animating, lever: (() => { try { return __t.lever(); } catch { return 0; } })(), exp: __t.r().viewer.renderer.toneMappingExposure })`);
+    const s = await evaluate(`({ state: __a.p().state, cap: __a.cap(), anim: __t.r().hand.hb.animating, lever: (() => { try { return __t.lever(); } catch { return 0; } })(), exp: __t.r().viewer.renderer.toneMappingExposure / __t.r().viewer.exposure })`);
     if (labels[labels.length - 1]?.cap !== s.cap) labels.push(s);
     else Object.assign(labels[labels.length - 1], { anim: labels[labels.length - 1].anim || s.anim, lever: Math.max(labels[labels.length - 1].lever, s.lever) });
     if (s.state === 'done') break;
@@ -55,14 +55,14 @@ async function playToEnd(timeout) {
 async function finishedChecks(id) {
   const st = await evaluate(`({
     shown: __t.visiblePieces(), placed: __t.placedPieces(), cables: __a.p().cablesShown, want: __a.p().cableCount,
-    panel: __t.r().scene.sidePanel, power: __t.r().fx.power, exp: __t.r().viewer.renderer.toneMappingExposure,
+    panel: __t.r().scene.sidePanel, power: __t.r().fx.power, exp: __t.r().viewer.renderer.toneMappingExposure / __t.r().viewer.exposure,
     done: !document.querySelector('.auto__done').hidden,
     btns: [...document.querySelectorAll('.auto__done button')].map((b) => b.textContent.trim()),
     tl: [...document.querySelectorAll('.auto .tl__seg')].every((b) => b.dataset.state === 'done'),
   })`);
   ok(st.shown === st.placed && st.placed > 5, `${id}: every part in, same as the viewer (${st.shown}/${st.placed})`);
   ok(st.cables === st.want && st.want > 3, `${id}: every cable drawn (${st.cables}/${st.want})`);
-  ok(st.panel && ['on', 'booting'].includes(st.power) && st.exp === 1, `${id}: glass panel closed and the PC running (${st.power})`);
+  ok(st.panel && ['on', 'booting'].includes(st.power) && Math.abs(st.exp - 1) < 1e-9, `${id}: glass panel closed and the PC running (${st.power})`);
   ok(st.done && st.btns.join('|') === 'Open in Build by hand|Edit parts|Take screenshot', `${id}: finished with ${st.btns.join(', ')}`);
   ok(st.tl, `${id}: every timeline step marked done`);
 }
@@ -84,7 +84,7 @@ try {
     await evaluate('__a.start()');
     await waitFor('__a.ui()?.active && __a.p().state === "playing" && __a.cap().startsWith("Step 1/")', 'Auto-build to start');
     if (speed !== 1) await evaluate(`__a.btn('speed') && document.querySelector('.auto [data-a="speed"][data-k="${speed}"]').click()`);
-    const first = await evaluate(`({ cap: __a.cap(), mode: document.getElementById('view-3d').dataset.mode, tools: getComputedStyle(document.querySelector('.viewer__tools--fx')).display, exp: __t.r().viewer.renderer.toneMappingExposure, shown: __t.visiblePieces(), panel: __t.r().scene.sidePanel, steps: __a.p().steps.length, ts: __a.p().timeScale })`);
+    const first = await evaluate(`({ cap: __a.cap(), mode: document.getElementById('view-3d').dataset.mode, tools: getComputedStyle(document.querySelector('.viewer__tools--fx')).display, exp: __t.r().viewer.renderer.toneMappingExposure / __t.r().viewer.exposure, shown: __t.visiblePieces(), panel: __t.r().scene.sidePanel, steps: __a.p().steps.length, ts: __a.p().timeScale })`);
     ok(first.mode === 'auto' && first.tools === 'none', `${id}: Auto-build mode with the viewer tools hidden`);
     ok(new RegExp(`^Step 1/${first.steps} Empty case — ${build.case.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`).test(first.cap), `${id}: caption "${first.cap}"`);
     ok(first.exp < 1 && first.shown === 0 && !first.panel, `${id}: empty case fading in with the side panel off (exposure ${first.exp.toFixed(2)})`);

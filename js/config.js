@@ -15,9 +15,16 @@ export const CONFIG = Object.freeze({
   ],
 
   scene: {
-    background: 0x0b0d10,
+    // Light-grey photo studio behind the 3D view (the 'studio' backdrop in js/scene/stage.js).
+    background: 0xdadee5,
     maxPixelRatio: 2,
+    // Tone-mapping exposure: lifts black parts to a dark grey with visible detail.
+    exposure: 0.92,
     // Below this average frame rate the viewer drops to low quality.
     lowFpsThreshold: 35,
+    // Preset build (data/presets.json) shown powered on in the landing-page hero.
+    heroPreset: '4k-flagship',
+    // Build colour theme for the showcase (js/scene/look.js): white where the product is sold in white.
+    heroTheme: 'white',
   },
 });

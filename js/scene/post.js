@@ -1,5 +1,7 @@
 // Post-processing pipeline for High and Ultra (Low renders straight to the canvas).
 //   High:  scene -> [depth of field] -> bloom -> tone mapping
+//          (no ambient occlusion: a cheap AO pass cost ~25 % of the frame on integrated
+//          graphics; the bright studio lighting does not need it)
 //          (the vignette is a CSS overlay at High: a full-screen pass costs ~10 fps on integrated graphics)
 //   Ultra: scene -> ambient occlusion (GTAO) -> [depth of field] -> bloom -> tone mapping
 //          -> vignette -> SMAA
@@ -10,6 +12,10 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+// Linear radiance above which a pixel glows: above what a white part under the studio lights
+// reaches, so only emissive LEDs bloom (effects.js drives them past it).
+export const BLOOM_THRESHOLD = 2.4;
 
 const VignetteShader = {
   name: 'Vignette',
@@ -41,7 +47,7 @@ export function createPost(renderer, scene, camera, { vignette = 0 } = {}) {
   const composer = new EffectComposer(renderer, target);
   composer.addPass(new RenderPass(scene, camera));
   // Threshold well above 1: only emissive LEDs bloom, never lit surfaces or metal highlights.
-  const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.7, 0.45, 1.5);
+  const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.7, 0.32, BLOOM_THRESHOLD);
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
   const vig = new ShaderPass(VignetteShader);

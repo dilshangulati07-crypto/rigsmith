@@ -49,13 +49,14 @@ async function init() {
       onQualityChange: updateReadout,
     });
     stage.dataset.mode = 'live';
+    document.getElementById('hero-meta').textContent = `${hero.preset.name} preset · live 3D`;
+    canvas.setAttribute('aria-label', `3D preview of the ${hero.preset.name} preset build, powered on. Its parts are listed on the ${hero.preset.name} card further down.`);
     hideLoader();
     clearTimeout(safety);
 
     function updateReadout() {
-      const q = hero.viewer.quality === 'low' ? 'LQ' : 'HQ';
-      const fps = hero.viewer.fps ? `${Math.round(hero.viewer.fps)} FPS` : '-- FPS';
-      readout.textContent = reducedMotion ? `${q} · STATIC` : `${q} · ${fps}`;
+      const q = hero.viewer.quality === 'low' ? 'Low' : hero.viewer.quality === 'ultra' ? 'Ultra' : 'High';
+      readout.textContent = reducedMotion || !hero.viewer.fps ? q : `${q} · ${Math.round(hero.viewer.fps)} fps`;
     }
     updateReadout();
     if (!reducedMotion) setInterval(updateReadout, 1000);
@@ -86,6 +87,7 @@ const presetIO = new IntersectionObserver(async ([e]) => {
     cards.renderPresetCards(presetEl, {
       presets,
       catalog,
+      variant: 'large',
       actions: (s) => html`
         <a class="btn btn--sm btn--primary" href="builder.html?preset=${s.preset.id}">Open in builder</a>
         <a class="btn btn--sm" href="builder.html?preset=${s.preset.id}&play=1">Watch it build</a>

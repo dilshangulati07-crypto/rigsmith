@@ -29,6 +29,8 @@ try {
     // A stage of exactly W x H CSS pixels, at device pixel ratio 1.
     await evaluate(`(() => { document.querySelector('[data-view="3d"]')?.click(); const s = document.querySelector('.viewer__stage'); s.style.cssText = 'position:fixed;left:0;top:0;width:${W}px;height:${H}px;z-index:999'; })()`);
     await evaluate(`${R}.fx.setPower(true, { instant: true })`);
+    // Hold the level: the frame-rate monitor may have dropped it while the models loaded.
+    await evaluate(`${R}.viewer.setQuality('${q}', { manual: true })`);
     if (q === 'ultra') await waitFor(`${R}.viewer.post.composer.passes.some((p) => p.constructor.name === 'GTAOPass') && ${R}.viewer.scene.children.some((o) => o.isReflector)`, 'Ultra passes', 30000);
     if (extra) await evaluate(extra);
     await sleep(2500);
