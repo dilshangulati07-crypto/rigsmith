@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Sets the live site address everywhere it appears: canonical links and Open Graph / Twitter
 // tags in the HTML pages, robots.txt, sitemap.xml and the README's live demo link.
-// Usage: node tools/set-site-url.mjs https://your-site.netlify.app
+// Usage: node tools/set-site-url.mjs https://your-site.pages.dev
 import { readFile, writeFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const next = (process.argv[2] ?? '').replace(/\/+$/, '');
 if (!/^https:\/\/[a-z0-9.-]+$/i.test(next)) {
-  console.log('Usage: node tools/set-site-url.mjs https://your-site.netlify.app');
+  console.log('Usage: node tools/set-site-url.mjs https://your-site.pages.dev');
   process.exit(1);
 }
 

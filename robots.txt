@@ -3,4 +3,4 @@ Allow: /
 Disallow: /tools/
 Disallow: /docs/
 
-Sitemap: https://rigsmith.netlify.app/sitemap.xml
+Sitemap: https://rigsmith.pages.dev/sitemap.xml

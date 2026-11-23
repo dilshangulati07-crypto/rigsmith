@@ -2,7 +2,7 @@
 
 **A 3D PC builder that runs in the browser.** Pick real parts, see straight away whether they fit together, then build the machine in 3D: place every part and plug in every cable yourself, or press Auto-build and watch it assemble itself and power on.
 
-**Live demo:** [https://rigsmith.netlify.app](https://rigsmith.netlify.app) (placeholder until the first Netlify deploy)
+**Live demo:** [https://rigsmith.pages.dev](https://rigsmith.pages.dev)
 
 ![Rigsmith landing page: a white PC build with RGB lighting in a live 3D hero](docs/readme/landing.jpg)
 
@@ -55,7 +55,7 @@ The same rules grey out parts in the catalogue: to test a part, the engine adds 
 
 - Plain HTML, CSS and JavaScript (ES modules). No framework, no build step.
 - [three.js](https://threejs.org) r170, vendored in `vendor/` and loaded through an import map: PBR materials, PMREM environment lighting, bloom, shadows.
-- Static hosting on Netlify (`netlify.toml`): long-lived caching for versioned CSS/JS (`?v=<hash>` stamped by `tools/stamp-version.mjs`), no-cache for HTML.
+- Static hosting on Cloudflare Pages (`_headers`): long-lived caching for versioned CSS/JS (`?v=<hash>` stamped by `tools/stamp-version.mjs`), no-cache for HTML.
 - Testing: Node scripts for data validation and logic, plus headless Chrome tests driven over the DevTools protocol (no npm packages).
 - Part data in `data/parts/*.json` is the single source of truth. The UI never hard-codes part names.
 
@@ -64,7 +64,7 @@ The same rules grey out parts in the catalogue: to test a part, the engine adds 
 You need [Node.js](https://nodejs.org) 22 or newer. Nothing to install.
 
 ```
-git clone https://github.com/dilshangulati07-crypto/rigsmith.git
+git clone https://github.com/dilshangulati07/rigsmith.git
 cd rigsmith
 node tools/serve.mjs        # http://localhost:8000
 ```
@@ -104,10 +104,10 @@ Images are rendered from the real 3D scene: `tools/render-features.mjs` (landing
 
 ## Deploy
 
-The site is static, so Netlify deploys it straight from GitHub with no build command (see `netlify.toml`). After the first deploy, put the live address into the canonical links, share tags, sitemap and this README with:
+The site is static and lives on Cloudflare Pages at https://rigsmith.pages.dev, connected to this repository: every push to `main` deploys it, with no build command and `/` as the output directory. `_headers` sets the cache and security headers. (`netlify.toml` is the old Netlify setup and isn't used.) If the address changes, update the canonical links, share tags, sitemap and this README with:
 
 ```
-node tools/set-site-url.mjs https://your-site.netlify.app
+node tools/set-site-url.mjs https://your-site.pages.dev
 ```
 
 ## Credits

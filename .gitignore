@@ -19,3 +19,6 @@ tools/shots/
 # Editors / tools
 .vscode/
 .idea/
+
+# Wrangler local dev files
+.wrangler/
