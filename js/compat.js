@@ -9,17 +9,17 @@
 // A null spec is unknown, never a pass or a fail: rules return an 'info' issue
 // ("Can't confirm X for this part") and the build is still allowed.
 // Rules live in js/compat/*.js; each exports `rules`, an array of (build) => issues[].
-import { emptyBuild } from './state.js?v=00a22f4faf';
-import { getCategory } from './categories.js?v=00a22f4faf';
-import { allParts, unknownFields } from './compat/util.js?v=00a22f4faf';
-import { rules as platform } from './compat/platform.js?v=00a22f4faf';
-import { rules as cooling } from './compat/cooling.js?v=00a22f4faf';
-import { rules as fit } from './compat/fit.js?v=00a22f4faf';
-import { rules as power } from './compat/power.js?v=00a22f4faf';
-import { rules as storage } from './compat/storage.js?v=00a22f4faf';
-import { rules as essentials, INCOMPLETE_RULES, missingCategories } from './compat/essentials.js?v=00a22f4faf';
+import { emptyBuild } from './state.js?v=4fbe99bdc0';
+import { getCategory } from './categories.js?v=4fbe99bdc0';
+import { allParts, unknownFields } from './compat/util.js?v=4fbe99bdc0';
+import { rules as platform } from './compat/platform.js?v=4fbe99bdc0';
+import { rules as cooling } from './compat/cooling.js?v=4fbe99bdc0';
+import { rules as fit } from './compat/fit.js?v=4fbe99bdc0';
+import { rules as power } from './compat/power.js?v=4fbe99bdc0';
+import { rules as storage } from './compat/storage.js?v=4fbe99bdc0';
+import { rules as essentials, INCOMPLETE_RULES, missingCategories } from './compat/essentials.js?v=4fbe99bdc0';
 
-export { estimateDraw, PSU_HEADROOM } from './compat/power.js?v=00a22f4faf';
+export { estimateDraw, PSU_HEADROOM } from './compat/power.js?v=4fbe99bdc0';
 export { missingCategories };
 
 const RULES = [...essentials, ...platform, ...cooling, ...fit, ...power, ...storage];

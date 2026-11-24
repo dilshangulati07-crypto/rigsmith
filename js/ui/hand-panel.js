@@ -5,14 +5,14 @@
 // js/state.js (assemblyProgress); the 3D side is js/scene/hand-build.js.
 import {
   planAssembly, canInstall, checkFit, freePieces, reconcile, progress as progressOf, currentStage,
-} from '../scene/assembly.js?v=00a22f4faf';
-import { createHandBuild } from '../scene/hand-build.js?v=00a22f4faf';
-import { createSound } from '../scene/sound.js?v=00a22f4faf';
-import { mountCablePanel } from './cable-panel.js?v=00a22f4faf';
-import { ramSlotNames } from '../scene/layout-board.js?v=00a22f4faf';
-import { assemblyProgress } from '../state.js?v=00a22f4faf';
-import { getCategory } from '../categories.js?v=00a22f4faf';
-import { html, render } from './dom.js?v=00a22f4faf';
+} from '../scene/assembly.js?v=4fbe99bdc0';
+import { createHandBuild } from '../scene/hand-build.js?v=4fbe99bdc0';
+import { createSound } from '../scene/sound.js?v=4fbe99bdc0';
+import { mountCablePanel } from './cable-panel.js?v=4fbe99bdc0';
+import { ramSlotNames } from '../scene/layout-board.js?v=4fbe99bdc0';
+import { assemblyProgress } from '../state.js?v=4fbe99bdc0';
+import { getCategory } from '../categories.js?v=4fbe99bdc0';
+import { html, render } from './dom.js?v=4fbe99bdc0';
 
 const typing = (el) => el?.closest?.('input, select, textarea, [contenteditable="true"]');
 

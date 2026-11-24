@@ -1,5 +1,5 @@
 // Storage rules: M.2 slots, SATA ports, drive bays, SATA power plugs.
-import { issue, unknown, known, plural } from './util.js?v=00a22f4faf';
+import { issue, unknown, known, plural } from './util.js?v=4fbe99bdc0';
 
 const nvme = (s) => s.filter((d) => d.type === 'nvme');
 const sata = (s) => s.filter((d) => d.type === 'sata' || d.type === 'hdd');

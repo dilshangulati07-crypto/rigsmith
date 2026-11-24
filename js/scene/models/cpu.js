@@ -1,9 +1,9 @@
 // CPU in its socket: substrate and nickel heat spreader (IHS) at the socket's real size.
 // Local origin: socket centre on the board's front face; +X = board u, +Y = up the board, +Z = out.
 import * as THREE from 'three';
-import { mat } from '../materials.js?v=00a22f4faf';
-import { boxMM, labelTexture, detail } from '../resources.js?v=00a22f4faf';
-import { socketSize } from '../board-layout.js?v=00a22f4faf';
+import { mat } from '../materials.js?v=4fbe99bdc0';
+import { boxMM, labelTexture, detail } from '../resources.js?v=4fbe99bdc0';
+import { socketSize } from '../board-layout.js?v=4fbe99bdc0';
 
 /** Height of the IHS top above the board (coolers sit on it). */
 export const IHS_TOP = 0.85;

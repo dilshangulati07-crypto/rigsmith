@@ -25,6 +25,8 @@ On phones the 3D view comes first, with tabs for the build, the parts and the su
 - **Live compatibility check:** every pick is checked against the rest of the build, and parts that wouldn't fit are greyed out with the reason.
 - **Three ways to build:** pick parts and view the result, build it by hand in 3D (parts, then cables), or Auto-build with a cinematic camera.
 - **Realistic 3D:** every part is modelled in code from its real dimensions (1 unit = 1 cm): perforated case panels, boards with VRM heatsinks and slots, RAM with heatspreaders, GPUs with shrouds and fans, AIOs, tower coolers, PSUs and SSDs. Studio lighting is baked into the environment map, so the High setting stays smooth on integrated graphics.
+- **Community gallery:** post a build from the builder (Export → Post to the gallery); approved builds appear on the Gallery page with likes, a 3D thumbnail and today's prices. Built on Cloudflare Pages Functions and a D1 database (`functions/api/gallery/`).
+- **Price history:** each part's drawer shows how its reference price has moved, from `data/price-history.json`, which the admin dashboard writes when prices change.
 - **Presets, saved builds and sharing:** 8 complete preset builds, builds saved in the browser, share links, printable spec sheets, and a screenshot / photo mode.
 - **Performance estimate:** a score per workload (1080p, 1440p and 4K gaming, video editing, AI, general use), where 100 is the strongest parts in the catalogue. The method is written up in [docs/perf-model.md](docs/perf-model.md).
 - **Honest prices:** reference prices in THB, always labelled "reference price, not live", with a "Search this part" link instead of fake store listings.
@@ -54,6 +56,7 @@ The same rules grey out parts in the catalogue: to test a part, the engine adds 
 ## Tech
 
 - Plain HTML, CSS and JavaScript (ES modules). No framework, no build step.
+- A small backend in `functions/` (Cloudflare Pages Functions + D1): the gallery, likes and anonymous usage counts (`js/track.js`: no cookies, nothing that identifies a person, nothing sent when the browser asks not to be tracked). The data rules live in `tools/parts-rules.mjs`, shared by `tools/validate-data.mjs` and the admin dashboard.
 - [three.js](https://threejs.org) r170, vendored in `vendor/` and loaded through an import map: PBR materials, PMREM environment lighting, bloom, shadows.
 - Static hosting on Cloudflare Pages (`_headers`): long-lived caching for versioned CSS/JS (`?v=<hash>` stamped by `tools/stamp-version.mjs`), no-cache for HTML.
 - Testing: Node scripts for data validation and logic, plus headless Chrome tests driven over the DevTools protocol (no npm packages).

@@ -2,12 +2,12 @@
 // caption over the 3D view, "Save as video" with its progress and download, and what to do
 // once the PC is built. The sequence itself is js/scene/cinematic.js; recording is
 // js/scene/recorder.js.
-import { createCinematic, SPEEDS } from '../scene/cinematic.js?v=00a22f4faf';
-import { createRecorder, videoFormat } from '../scene/recorder.js?v=00a22f4faf';
-import { assemblyProgress } from '../state.js?v=00a22f4faf';
-import { priceBuild, formatTHB, PRICE_NOTE } from '../pricing.js?v=00a22f4faf';
-import { CONFIG } from '../config.js?v=00a22f4faf';
-import { html, render } from './dom.js?v=00a22f4faf';
+import { createCinematic, SPEEDS } from '../scene/cinematic.js?v=4fbe99bdc0';
+import { createRecorder, videoFormat } from '../scene/recorder.js?v=4fbe99bdc0';
+import { assemblyProgress } from '../state.js?v=4fbe99bdc0';
+import { priceBuild, formatTHB, PRICE_NOTE } from '../pricing.js?v=4fbe99bdc0';
+import { CONFIG } from '../config.js?v=4fbe99bdc0';
+import { html, render } from './dom.js?v=4fbe99bdc0';
 
 const typing = (el) => el?.closest?.('input, select, textarea, [contenteditable="true"]');
 const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'build';

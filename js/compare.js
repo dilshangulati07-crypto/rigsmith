@@ -3,17 +3,17 @@
 // can be added from saved builds, presets or the current build. The URL always holds the
 // comparison, so "Copy link" shares exactly what is on screen. Swaps never touch the
 // builder's own build.
-import { loadCatalog } from './catalog.js?v=00a22f4faf';
-import { BuildStore } from './state.js?v=00a22f4faf';
-import { SavedBuilds } from './saved-builds.js?v=00a22f4faf';
-import { loadPresets, presetBuild } from './presets.js?v=00a22f4faf';
-import { encodeBuild, decodeBuild, buildFromIds, missingMessage, shareUrl, compareUrl, readShareParams } from './share.js?v=00a22f4faf';
-import { allParts } from './compat/util.js?v=00a22f4faf';
-import { renderCompare, linkScroll, MAX_COLUMNS } from './ui/compare-table.js?v=00a22f4faf';
-import { mountSwapDialog, withPart } from './ui/swap-dialog.js?v=00a22f4faf';
-import { copyWithFeedback, copyText, downloadCSV, printBuilds, wireMenus } from './ui/share-tools.js?v=00a22f4faf';
-import { setPrintSheets, specSheet } from './ui/spec-sheet.js?v=00a22f4faf';
-import { html, render } from './ui/dom.js?v=00a22f4faf';
+import { loadCatalog } from './catalog.js?v=4fbe99bdc0';
+import { BuildStore } from './state.js?v=4fbe99bdc0';
+import { SavedBuilds } from './saved-builds.js?v=4fbe99bdc0';
+import { loadPresets, presetBuild } from './presets.js?v=4fbe99bdc0';
+import { encodeBuild, decodeBuild, buildFromIds, missingMessage, shareUrl, compareUrl, readShareParams } from './share.js?v=4fbe99bdc0';
+import { allParts } from './compat/util.js?v=4fbe99bdc0';
+import { renderCompare, linkScroll, MAX_COLUMNS } from './ui/compare-table.js?v=4fbe99bdc0';
+import { mountSwapDialog, withPart } from './ui/swap-dialog.js?v=4fbe99bdc0';
+import { copyWithFeedback, copyText, downloadCSV, printBuilds, wireMenus } from './ui/share-tools.js?v=4fbe99bdc0';
+import { setPrintSheets, specSheet } from './ui/spec-sheet.js?v=4fbe99bdc0';
+import { html, render } from './ui/dom.js?v=4fbe99bdc0';
 
 const $ = (s) => document.querySelector(s);
 const DEFAULT_PRESETS = ['mid-1440p', 'high-1440p'];

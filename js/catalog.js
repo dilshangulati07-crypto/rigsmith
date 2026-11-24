@@ -1,6 +1,6 @@
 // Parts catalogue: loads data/parts/*.json and looks parts up by id.
 // createCatalog() is pure so Node tools can build one from files on disk.
-import { CATEGORY_IDS } from './categories.js?v=00a22f4faf';
+import { CATEGORY_IDS } from './categories.js?v=4fbe99bdc0';
 
 export function createCatalog(partsByCategory) {
   const byId = new Map();

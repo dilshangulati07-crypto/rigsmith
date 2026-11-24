@@ -1,4 +1,4 @@
-import { unit } from '../dom.js?v=00a22f4faf';
+import { unit } from '../dom.js?v=4fbe99bdc0';
 
 const WIFI = { none: 'None', wifi5: 'Wi-Fi 5', wifi6: 'Wi-Fi 6', wifi6e: 'Wi-Fi 6E', wifi7: 'Wi-Fi 7' };
 const slots = (list) => (list ? list.map((s) => `${s.size} (x${s.lanes} Gen${s.gen}${s.from ? `, ${s.from}` : ''})`).join(', ') : null);

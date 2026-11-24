@@ -9,7 +9,7 @@
 //
 // Link params: b = build code, h = build-by-hand state (js/share-hand.js), n = name.
 // compare.html takes several b (each optionally followed by its n), one per column.
-import { CATEGORIES } from './categories.js?v=00a22f4faf';
+import { CATEGORIES } from './categories.js?v=4fbe99bdc0';
 
 export const SHARE_VERSION = '1';
 const SHORT_LEN = 4;

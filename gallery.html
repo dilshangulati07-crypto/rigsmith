@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gallery · Rigsmith</title>
+  <meta name="description" content="PC builds posted by Rigsmith visitors: real parts, checked for fit, with reference prices and estimated performance. Open any of them in the builder.">
+  <link rel="canonical" href="https://rigsmith.pages.dev/gallery.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Rigsmith">
+  <meta property="og:title" content="Rigsmith gallery: PC builds by visitors">
+  <meta property="og:description" content="PC builds posted by Rigsmith visitors: real parts, checked for fit, with reference prices and estimated performance. Open any of them in the builder.">
+  <meta property="og:url" content="https://rigsmith.pages.dev/gallery.html">
+  <meta property="og:image" content="https://rigsmith.pages.dev/img/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A white PC build with RGB lighting in the Rigsmith 3D viewer, next to the headline Build your next PC in 3D.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Rigsmith gallery: PC builds by visitors">
+  <meta name="twitter:description" content="PC builds posted by Rigsmith visitors: real parts, checked for fit, with reference prices and estimated performance. Open any of them in the builder.">
+  <meta name="twitter:image" content="https://rigsmith.pages.dev/img/og-image.jpg">
+  <meta name="theme-color" content="#E9EAEC">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
+  <link rel="stylesheet" href="css/style.css?v=4fbe99bdc0">
+  <link rel="stylesheet" href="css/presets.css?v=4fbe99bdc0">
+  <link rel="stylesheet" href="css/gallery.css?v=4fbe99bdc0">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./vendor/three/three.module.min.js",
+        "three/addons/": "./vendor/three/addons/"
+      }
+    }
+  </script>
+  <script type="module" src="js/ui/shell.js?v=4fbe99bdc0"></script>
+  <script type="module" src="js/gallery.js?v=4fbe99bdc0"></script>
+</head>
+<body class="page-gallery">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header id="site-header" data-page="gallery"></header>
+  <main id="main" class="gallery container">
+    <div class="gallery__head">
+      <div>
+        <p class="eyebrow">Built by visitors</p>
+        <h1>Gallery</h1>
+        <p class="gallery__intro">PC builds people made in Rigsmith and chose to share. Every one uses real parts from the catalogue and is checked for fit. Open any build in the builder to see it in 3D, change it, or make it your own.</p>
+      </div>
+      <div class="gallery__actions">
+        <div class="seg" role="group" aria-label="Sort builds">
+          <button class="seg__btn" type="button" data-sort="top" aria-pressed="true">Most liked</button>
+          <button class="seg__btn" type="button" data-sort="new" aria-pressed="false">Newest</button>
+        </div>
+        <a class="btn btn--primary btn--sm" href="builder.html">Post your build</a>
+      </div>
+    </div>
+    <div id="gallery-msg" role="status" aria-live="polite"></div>
+    <p class="muted mono" id="gallery-loading">Loading builds…</p>
+    <div id="gallery-list"></div>
+    <section class="gallery__how" aria-labelledby="how-h">
+      <h2 id="how-h">Share your own build</h2>
+      <ol>
+        <li>Make a build in the <a href="builder.html">builder</a> with at least a processor, motherboard, memory, storage, power supply and case.</li>
+        <li>Open <b>Export</b> and choose <b>Post to the gallery</b>. Give it a name, and your name if you like.</li>
+        <li>It shows up here once it has been checked, usually within a day.</li>
+      </ol>
+    </section>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite" data-show="false"></div>
+  <footer id="site-footer"></footer>
+</body>
+</html>

@@ -3,9 +3,9 @@
 // cable-route.js, exactly what Auto-route in "Build by hand" connects), then closing the
 // glass panel, the boot sequence and a slow orbit. Also what the case holds at any step, so the
 // timeline can jump. Pure (no three.js) so tools/test-cinematic.mjs can run it in Node.
-import { STAGES } from './assembly.js?v=00a22f4faf';
-import { planCables, CABLE_GROUPS, powerReady, endsOf } from './cable-plan.js?v=00a22f4faf';
-import { routeContext, routeOf, checkCable } from './cable-route.js?v=00a22f4faf';
+import { STAGES } from './assembly.js?v=4fbe99bdc0';
+import { planCables, CABLE_GROUPS, powerReady, endsOf } from './cable-plan.js?v=4fbe99bdc0';
+import { routeContext, routeOf, checkCable } from './cable-route.js?v=4fbe99bdc0';
 
 // Seconds at 1x. The seat itself (press and settle) is timed in hand-build.js; these are the
 // cinematic's own beats, and the estimates the progress bar and timeline use.

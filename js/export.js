@@ -1,8 +1,8 @@
 // Exports: CSV parts list (pure, testable in Node) and the browser download helper.
-import { CONFIG } from './config.js?v=00a22f4faf';
-import { partRows } from './build-report.js?v=00a22f4faf';
-import { priceBuild, PRICE_NOTE } from './pricing.js?v=00a22f4faf';
-import { partType } from './ui/part-types/index.js?v=00a22f4faf';
+import { CONFIG } from './config.js?v=4fbe99bdc0';
+import { partRows } from './build-report.js?v=4fbe99bdc0';
+import { priceBuild, PRICE_NOTE } from './pricing.js?v=4fbe99bdc0';
+import { partType } from './ui/part-types/index.js?v=4fbe99bdc0';
 
 // RFC 4180 quoting; a leading = + - @ gets a ' so spreadsheets don't run it as a formula.
 const cell = (v) => {

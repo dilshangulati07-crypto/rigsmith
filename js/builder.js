@@ -1,20 +1,22 @@
 // Builder page controller: loads the catalogue, owns UI state (not build state, which
 // lives in js/state.js), routes actions between panels and re-renders on every change.
-import { loadCatalog } from './catalog.js?v=00a22f4faf';
-import { CATEGORIES, getCategory } from './categories.js?v=00a22f4faf';
-import { buildStore, assemblyProgress } from './state.js?v=00a22f4faf';
-import { checkBuild, summarize, estimateDraw } from './compat.js?v=00a22f4faf';
-import { priceBuild, formatTHB } from './pricing.js?v=00a22f4faf';
-import { SavedBuilds } from './saved-builds.js?v=00a22f4faf';
-import { allParts } from './compat/util.js?v=00a22f4faf';
-import { mountCategoryList } from './ui/category-list.js?v=00a22f4faf';
-import { mountPartBrowser } from './ui/part-browser.js?v=00a22f4faf';
-import { mountPartDetail } from './ui/part-detail.js?v=00a22f4faf';
-import { mountSummary } from './ui/summary.js?v=00a22f4faf';
-import { mountAutofill } from './ui/autofill-dialog.js?v=00a22f4faf';
-import { mountBuildsDialog } from './ui/builds-dialog.js?v=00a22f4faf';
-import { mountPresetsDialog } from './ui/presets-dialog.js?v=00a22f4faf';
-import { mountBuilderShare } from './ui/builder-share.js?v=00a22f4faf';
+import { loadCatalog } from './catalog.js?v=4fbe99bdc0';
+import { CATEGORIES, getCategory } from './categories.js?v=4fbe99bdc0';
+import { buildStore, assemblyProgress } from './state.js?v=4fbe99bdc0';
+import { checkBuild, summarize, estimateDraw } from './compat.js?v=4fbe99bdc0';
+import { priceBuild, formatTHB } from './pricing.js?v=4fbe99bdc0';
+import { SavedBuilds } from './saved-builds.js?v=4fbe99bdc0';
+import { allParts } from './compat/util.js?v=4fbe99bdc0';
+import { mountCategoryList } from './ui/category-list.js?v=4fbe99bdc0';
+import { mountPartBrowser } from './ui/part-browser.js?v=4fbe99bdc0';
+import { mountPartDetail } from './ui/part-detail.js?v=4fbe99bdc0';
+import { mountSummary } from './ui/summary.js?v=4fbe99bdc0';
+import { mountAutofill } from './ui/autofill-dialog.js?v=4fbe99bdc0';
+import { mountBuildsDialog } from './ui/builds-dialog.js?v=4fbe99bdc0';
+import { mountPresetsDialog } from './ui/presets-dialog.js?v=4fbe99bdc0';
+import { mountBuilderShare } from './ui/builder-share.js?v=4fbe99bdc0';
+import { mountGalleryPost } from './ui/gallery-post.js?v=4fbe99bdc0';
+import { track } from './track.js?v=4fbe99bdc0';
 
 const $ = (s) => document.querySelector(s);
 const UI_KEY = 'rigsmith.ui.v1';
@@ -62,6 +64,7 @@ app.select = (part) => {
 };
 
 function selectPart(part) {
+  track('pick', part.id);
   const cat = getCategory(part.category);
   const swap = app.ui.swap?.category === cat.id ? app.ui.swap : null;
   if (swap && swap.id === part.id) {
@@ -193,6 +196,7 @@ app.enter3D = () => {
 
 /** Play the Auto-build cinematic of the current build in the 3D view. */
 app.autoBuild = async () => {
+  track('autobuild');
   app.enter3D();
   const v = await viewerReady;
   if (!v) {
@@ -218,7 +222,7 @@ function watchViewer() {
     loading = true;
     io.disconnect();
     try {
-      const { mountViewerPanel } = await import('./ui/viewer-panel.js?v=00a22f4faf');
+      const { mountViewerPanel } = await import('./ui/viewer-panel.js?v=4fbe99bdc0');
       viewer = await mountViewerPanel(el, app);
       viewer?.sync(app.store.build);
       markHover(hover3d);
@@ -362,6 +366,10 @@ async function init() {
   builds = mountBuildsDialog($('#builds-dialog'), app);
   presets = mountPresetsDialog($('#presets-dialog'), app);
   share = mountBuilderShare(app);
+  const galleryPost = mountGalleryPost($('#gallery-dialog'), app);
+  assemblyProgress.addEventListener('change', (e) => {
+    if (e.detail.action === 'mode' && assemblyProgress.mode === 'hand') track('hand', '', { oncePerPage: true });
+  });
   // A share link or a preset link replaces the build before anything renders.
   const fromLink = await share.restore();
 
@@ -375,6 +383,10 @@ async function init() {
     if (!b) return;
     const cmd = b.dataset.cmd;
     if (cmd === 'autofill') autofill.open();
+    if (cmd === 'gallery-post') {
+      b.closest('details')?.removeAttribute('open');
+      galleryPost.open();
+    }
     if (cmd === 'builds') builds.open();
     if (cmd === 'presets') presets.open();
     if (cmd === 'shortcuts') $('#shortcuts-dialog').showModal();

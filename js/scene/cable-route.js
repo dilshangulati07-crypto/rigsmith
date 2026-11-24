@@ -9,9 +9,9 @@
 // view that floats in the open or lies across the board face costs twice that again, and
 // passing through a part costs a lot. Only the waypoints between the two leads are stored when the
 // user moves them, so the ends always follow the ports.
-import { WALL, cross } from './layout.js?v=00a22f4faf';
-import { boxOf, boxOfLocal, worldExtent } from './layout-math.js?v=00a22f4faf';
-import { CABLE_SPECS, endsOf } from './cable-plan.js?v=00a22f4faf';
+import { WALL, cross } from './layout.js?v=4fbe99bdc0';
+import { boxOf, boxOfLocal, worldExtent } from './layout-math.js?v=4fbe99bdc0';
+import { CABLE_SPECS, endsOf } from './cable-plan.js?v=4fbe99bdc0';
 
 const VIEW_COST = 3;   // cable in view vs out of sight
 const FLOAT_COST = 3;  // extra for cable in view away from the tray and shroud, or over the board

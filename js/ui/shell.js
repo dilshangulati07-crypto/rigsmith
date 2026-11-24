@@ -1,6 +1,6 @@
 // Renders the shared top bar and footer from CONFIG so every page stays in sync.
 // Usage: <header id="site-header" data-page="builder"></header> ... <footer id="site-footer"></footer>
-import { CONFIG } from '../config.js?v=00a22f4faf';
+import { CONFIG } from '../config.js?v=4fbe99bdc0';
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -67,6 +67,7 @@ function renderFooter(el) {
             <li><a href="builder.html">Builder</a></li>
             <li><a href="builder.html?mode=auto">Watch it build</a></li>
             <li><a href="compare.html">Compare</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
             <li><a href="index.html#presets">Presets</a></li>
           </ul>
         </div>

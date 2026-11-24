@@ -1,8 +1,9 @@
 // Auto-fill dialog: budget, use and size in; a checked build with reasons out.
-import { CATEGORIES } from '../categories.js?v=00a22f4faf';
-import { autoBuild, USES, SIZES } from '../autobuild.js?v=00a22f4faf';
-import { formatTHB, PRICE_NOTE } from '../pricing.js?v=00a22f4faf';
-import { html, render, num } from './dom.js?v=00a22f4faf';
+import { CATEGORIES } from '../categories.js?v=4fbe99bdc0';
+import { autoBuild, USES, SIZES } from '../autobuild.js?v=4fbe99bdc0';
+import { formatTHB, PRICE_NOTE } from '../pricing.js?v=4fbe99bdc0';
+import { html, render, num } from './dom.js?v=4fbe99bdc0';
+import { track } from '../track.js?v=4fbe99bdc0';
 
 const PRESETS = [25000, 40000, 60000, 100000, 150000];
 const USE_NOTES = {
@@ -31,6 +32,7 @@ export function mountAutofill(dialog, app) {
     if (a === 'back') showForm();
     if ((a === 'apply' || a === 'watch') && result?.ok) {
       app.applyBuild(result.build, `Auto-fill: ${USES[result.use].label}, ${formatTHB(result.budget)}`);
+      track('autofill', result.use);
       dialog.close();
       if (a === 'watch') app.autoBuild();
     }

@@ -6,12 +6,12 @@
 // Also the dashed "ghost" case for the empty state.
 // Axes as in layout.js. The group's origin is the centre of the case floor.
 import * as THREE from 'three';
-import { mat, finish, meshPanelMaterial, diffuserMaterial } from './materials.js?v=00a22f4faf';
-import { lookOf } from './look.js?v=00a22f4faf';
-import { boxMM, cylinderZ, instanced, instancedBoxes, detail } from './resources.js?v=00a22f4faf';
-import { STANDOFFS, BOARD_DIMS } from './board-layout.js?v=00a22f4faf';
-import { WALL, SIDE, FOOT, STANDOFF } from './layout.js?v=00a22f4faf';
-import { boardPoint } from './layout-math.js?v=00a22f4faf';
+import { mat, finish, meshPanelMaterial, diffuserMaterial } from './materials.js?v=4fbe99bdc0';
+import { lookOf } from './look.js?v=4fbe99bdc0';
+import { boxMM, cylinderZ, instanced, instancedBoxes, detail } from './resources.js?v=4fbe99bdc0';
+import { STANDOFFS, BOARD_DIMS } from './board-layout.js?v=4fbe99bdc0';
+import { WALL, SIDE, FOOT, STANDOFF } from './layout.js?v=4fbe99bdc0';
+import { boardPoint } from './layout-math.js?v=4fbe99bdc0';
 
 const FRAME = 0.6;  // aluminium edge profile
 const BORDER = 1.6; // solid border around mesh panels
@@ -173,7 +173,7 @@ function frontIO(parent, cl) {
 
 /**
  * @param {object} part case part
- * @param {ReturnType<import('./layout.js?v=00a22f4faf').caseLayout>} cl
+ * @param {ReturnType<import('./layout.js?v=4fbe99bdc0').caseLayout>} cl
  * @param {{anisotropy?: number}} ctx
  */
 export function buildCase(part, cl, { anisotropy = 4, theme } = {}) {

@@ -2,13 +2,13 @@
 // who the build is for, reference total, estimated draw and the preset's three focus
 // workloads as bars. Buttons come from the caller (links on the landing page, buttons in
 // the builder).
-import { presetBuild } from '../presets.js?v=00a22f4faf';
-import { buildReport } from '../build-report.js?v=00a22f4faf';
-import { WORKLOADS, PERF_LABEL } from '../perf.js?v=00a22f4faf';
-import { formatTHB, PRICE_NOTE } from '../pricing.js?v=00a22f4faf';
-import { encodeBuild, compareUrl } from '../share.js?v=00a22f4faf';
-import { html, render, num } from './dom.js?v=00a22f4faf';
-import { fillThumb, thumbAlt } from './build-thumb.js?v=00a22f4faf';
+import { presetBuild } from '../presets.js?v=4fbe99bdc0';
+import { buildReport } from '../build-report.js?v=4fbe99bdc0';
+import { WORKLOADS, PERF_LABEL } from '../perf.js?v=4fbe99bdc0';
+import { formatTHB, PRICE_NOTE } from '../pricing.js?v=4fbe99bdc0';
+import { encodeBuild, compareUrl } from '../share.js?v=4fbe99bdc0';
+import { html, render, num } from './dom.js?v=4fbe99bdc0';
+import { fillThumb, thumbAlt } from './build-thumb.js?v=4fbe99bdc0';
 
 const LABEL = Object.fromEntries(WORKLOADS.map((w) => [w.id, w.label]));
 

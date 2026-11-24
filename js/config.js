@@ -11,7 +11,7 @@ export const CONFIG = Object.freeze({
   nav: [
     { id: 'builder', label: 'Builder', href: 'builder.html' },
     { id: 'compare', label: 'Compare', href: 'compare.html' },
-    { id: 'gallery', label: 'Gallery', href: null, soon: true },
+    { id: 'gallery', label: 'Gallery', href: 'gallery.html' },
   ],
 
   scene: {

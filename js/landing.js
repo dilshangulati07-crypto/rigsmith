@@ -1,6 +1,6 @@
 // Landing page: loading screen, WebGL check, lazy-loads the 3D hero; preset cards load
 // when their section comes near the screen.
-import { CONFIG } from './config.js?v=00a22f4faf';
+import { CONFIG } from './config.js?v=4fbe99bdc0';
 
 const loader = document.getElementById('loader');
 const loaderStep = document.getElementById('loader-step');
@@ -42,7 +42,7 @@ async function init() {
 
   try {
     progress('Loading 3D engine', 0.1);
-    const { startHero } = await import('./scene/hero.js?v=00a22f4faf');
+    const { startHero } = await import('./scene/hero.js?v=4fbe99bdc0');
     const hero = await startHero(canvas, {
       reducedMotion,
       onProgress: progress,
@@ -88,7 +88,7 @@ const presetIO = new IntersectionObserver(async ([e]) => {
   presetIO.disconnect();
   try {
     const [{ loadCatalog }, { loadPresets }, cards, { html }] = await Promise.all([
-      import('./catalog.js?v=00a22f4faf'), import('./presets.js?v=00a22f4faf'), import('./ui/preset-cards.js?v=00a22f4faf'), import('./ui/dom.js?v=00a22f4faf'),
+      import('./catalog.js?v=4fbe99bdc0'), import('./presets.js?v=4fbe99bdc0'), import('./ui/preset-cards.js?v=4fbe99bdc0'), import('./ui/dom.js?v=4fbe99bdc0'),
     ]);
     const [catalog, presets] = await Promise.all([loadCatalog(), loadPresets()]);
     cards.renderPresetCards(presetEl, {

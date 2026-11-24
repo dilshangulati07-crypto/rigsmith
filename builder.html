@@ -26,10 +26,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"></noscript>
-  <link rel="stylesheet" href="css/style.css?v=00a22f4faf">
-  <link rel="stylesheet" href="css/builder.css?v=00a22f4faf">
-  <link rel="stylesheet" href="css/presets.css?v=00a22f4faf">
-  <link rel="stylesheet" href="css/print.css?v=00a22f4faf">
+  <link rel="stylesheet" href="css/style.css?v=4fbe99bdc0">
+  <link rel="stylesheet" href="css/builder.css?v=4fbe99bdc0">
+  <link rel="stylesheet" href="css/presets.css?v=4fbe99bdc0">
+  <link rel="stylesheet" href="css/print.css?v=4fbe99bdc0">
   <script type="importmap">
     {
       "imports": {
@@ -38,8 +38,8 @@
       }
     }
   </script>
-  <script type="module" src="js/ui/shell.js?v=00a22f4faf"></script>
-  <script type="module" src="js/builder.js?v=00a22f4faf"></script>
+  <script type="module" src="js/ui/shell.js?v=4fbe99bdc0"></script>
+  <script type="module" src="js/builder.js?v=4fbe99bdc0"></script>
 </head>
 <body class="page-builder">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -67,6 +67,7 @@
         <details class="menu">
           <summary class="btn btn--sm">Export</summary>
           <div class="menu__list">
+            <button type="button" data-cmd="gallery-post">Post to the gallery</button>
             <button type="button" data-cmd="csv">Parts list (CSV)</button>
             <button type="button" data-cmd="print">Print spec sheet</button>
             <button type="button" data-cmd="compare">Open in Compare</button>
@@ -132,6 +133,7 @@
   <dialog class="modal" id="autofill-dialog"></dialog>
   <dialog class="modal" id="builds-dialog"></dialog>
   <dialog class="modal modal--wide" id="presets-dialog"></dialog>
+  <dialog class="modal modal--sm" id="gallery-dialog"></dialog>
   <dialog class="modal modal--sm" id="shortcuts-dialog" aria-labelledby="sc-title">
     <div class="modal__inner">
       <header class="modal__head">

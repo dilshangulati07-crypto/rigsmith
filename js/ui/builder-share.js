@@ -3,13 +3,14 @@
 //              [&play=1] on load. Unknown ids are reported and the rest loads. Unsaved work
 //              in progress is kept in Saved builds before a link replaces it.
 //   commands:  copy-link (L), csv, print, compare.
-import { assemblyProgress } from '../state.js?v=00a22f4faf';
-import { encodeBuild, decodeBuild, buildFromIds, missingMessage, shareUrl, compareUrl, readShareParams } from '../share.js?v=00a22f4faf';
-import { encodeHand, decodeHand, plansFor } from '../share-hand.js?v=00a22f4faf';
-import { loadPresets, findPreset, presetBuild } from '../presets.js?v=00a22f4faf';
-import { allParts } from '../compat/util.js?v=00a22f4faf';
-import { setPrintSheets, specSheet } from './spec-sheet.js?v=00a22f4faf';
-import { copyWithFeedback, downloadCSV, printBuilds, wireMenus } from './share-tools.js?v=00a22f4faf';
+import { assemblyProgress } from '../state.js?v=4fbe99bdc0';
+import { encodeBuild, decodeBuild, buildFromIds, missingMessage, shareUrl, compareUrl, readShareParams } from '../share.js?v=4fbe99bdc0';
+import { encodeHand, decodeHand, plansFor } from '../share-hand.js?v=4fbe99bdc0';
+import { loadPresets, findPreset, presetBuild } from '../presets.js?v=4fbe99bdc0';
+import { allParts } from '../compat/util.js?v=4fbe99bdc0';
+import { setPrintSheets, specSheet } from './spec-sheet.js?v=4fbe99bdc0';
+import { copyWithFeedback, downloadCSV, printBuilds, wireMenus } from './share-tools.js?v=4fbe99bdc0';
+import { track } from '../track.js?v=4fbe99bdc0';
 
 const LINK_PARAMS = ['b', 'h', 'n', 'preset', 'play'];
 
@@ -49,6 +50,7 @@ export function mountBuilderShare(app) {
     const b = e.target.closest('[data-cmd]');
     if (!b) return;
     const cmd = b.dataset.cmd;
+    if (['copy-link', 'csv', 'print', 'compare'].includes(cmd) && allParts(app.store.build).length) track(cmd === 'copy-link' ? 'share' : cmd);
     if (cmd === 'copy-link') copyLink(b);
     if (cmd === 'csv') {
       if (!allParts(app.store.build).length) return app.toast('Add some parts first: the CSV lists the build’s parts.', 'warn');
@@ -101,6 +103,7 @@ export function mountBuilderShare(app) {
         return { play: false };
       }
       const build = presetBuild(preset, app.catalog);
+      track('preset', preset.id);
       const kept = keepWorkInProgress(encodeBuild(build, app.catalog));
       applyIds(Object.fromEntries(Object.entries(build).map(([k, v]) => [k, Array.isArray(v) ? v.map((p) => p.id) : v?.id ?? null])), preset.name);
       notes.push(`Preset loaded: ${preset.name}.`);

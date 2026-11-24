@@ -8,10 +8,10 @@
 //   flags: closed (0/1) + cable style index, then the custom colour as 6 hex digits
 //   extras: base64url JSON [[cableIndex, src|0, dst|0, pts|0], ...]
 // Plans are rebuilt from the build, so the code only makes sense with the build code next to it.
-import { layoutBuild } from './scene/layout.js?v=00a22f4faf';
-import { planAssembly, reconcile } from './scene/assembly.js?v=00a22f4faf';
-import { planCables } from './scene/cable-plan.js?v=00a22f4faf';
-import { CABLE_STYLES } from './state.js?v=00a22f4faf';
+import { layoutBuild } from './scene/layout.js?v=4fbe99bdc0';
+import { planAssembly, reconcile } from './scene/assembly.js?v=4fbe99bdc0';
+import { planCables } from './scene/cable-plan.js?v=4fbe99bdc0';
+import { CABLE_STYLES } from './state.js?v=4fbe99bdc0';
 
 const VERSION = '1';
 const B32 = '0123456789abcdefghijklmnopqrstuv';

@@ -1,11 +1,11 @@
 // Every headline number for one build, from the existing engines (compat, pricing, perf).
 // Used by preset cards, compare.html, the printed spec sheet and the CSV export so they all
 // show the same figures as the builder's summary.
-import { CATEGORIES } from './categories.js?v=00a22f4faf';
-import { checkBuild, summarize, estimateDraw, getVerification, PSU_HEADROOM } from './compat.js?v=00a22f4faf';
-import { priceBuild, pricePerPerformance } from './pricing.js?v=00a22f4faf';
-import { estimatePerformance, WORKLOADS } from './perf.js?v=00a22f4faf';
-import { allParts } from './compat/util.js?v=00a22f4faf';
+import { CATEGORIES } from './categories.js?v=4fbe99bdc0';
+import { checkBuild, summarize, estimateDraw, getVerification, PSU_HEADROOM } from './compat.js?v=4fbe99bdc0';
+import { priceBuild, pricePerPerformance } from './pricing.js?v=4fbe99bdc0';
+import { estimatePerformance, WORKLOADS } from './perf.js?v=4fbe99bdc0';
+import { allParts } from './compat/util.js?v=4fbe99bdc0';
 
 /** PSU load and headroom, worded the same way as the builder summary. */
 export function psuHeadroom(build, draw = estimateDraw(build)) {

@@ -5,13 +5,13 @@
 // Origin: centre of the case footprint, y = 0 at the underside of the case body (feet below).
 // A placement is { p: [x, y, z], ex: [..], ey: [..] }: where a model's local origin goes and
 // which world directions its local +X and +Y point to (local +Z = ex × ey).
-import { BOARD_DIMS, FORM_FACTORS, boardLayout, slotRowV, SLOT_ROWS } from './board-layout.js?v=00a22f4faf';
+import { BOARD_DIMS, FORM_FACTORS, boardLayout, slotRowV, SLOT_ROWS } from './board-layout.js?v=4fbe99bdc0';
 import {
   WALL, SIDE, FOOT, STANDOFF, PCB, X, Y, Z, neg, cross, clamp, r2, worldExtent, zFitIn,
   boxOf, hits, shellOf, boardPoint, boardBasis,
-} from './layout-math.js?v=00a22f4faf';
-import { layoutFans, layoutRadiator, explodeDir } from './layout-fans.js?v=00a22f4faf';
-import { layoutCPU, layoutRAM, layoutGPU, layoutCooler, aioTubes } from './layout-board.js?v=00a22f4faf';
+} from './layout-math.js?v=4fbe99bdc0';
+import { layoutFans, layoutRadiator, explodeDir } from './layout-fans.js?v=4fbe99bdc0';
+import { layoutCPU, layoutRAM, layoutGPU, layoutCooler, aioTubes } from './layout-board.js?v=4fbe99bdc0';
 
 export { WALL, SIDE, FOOT, STANDOFF, PCB, cross, worldExtent };
 

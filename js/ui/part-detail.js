@@ -1,12 +1,39 @@
 // Part detail drawer: full spec table, how the part fits the current build, links.
-import { getCategory } from '../categories.js?v=00a22f4faf';
-import { isPartCompatible } from '../compat.js?v=00a22f4faf';
-import { unknownFields } from '../compat/util.js?v=00a22f4faf';
-import { formatTHB, PRICE_NOTE } from '../pricing.js?v=00a22f4faf';
-import { partType, commonSpecs } from './part-types/index.js?v=00a22f4faf';
-import { html, render } from './dom.js?v=00a22f4faf';
+import { getCategory } from '../categories.js?v=4fbe99bdc0';
+import { isPartCompatible } from '../compat.js?v=4fbe99bdc0';
+import { unknownFields } from '../compat/util.js?v=4fbe99bdc0';
+import { formatTHB, PRICE_NOTE } from '../pricing.js?v=4fbe99bdc0';
+import { partType, commonSpecs } from './part-types/index.js?v=4fbe99bdc0';
+import { html, render, num } from './dom.js?v=4fbe99bdc0';
+import { priceHistory } from '../price-history.js?v=4fbe99bdc0';
 
 const LEVEL = { error: 'Error', warn: 'Warning', info: 'Note' };
+const dayLabel = (d) => new Date(`${d}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+
+// The part's reference price over time (only shown once it has changed at least once).
+async function fillTrend(dialog, part) {
+  const list = await priceHistory(part.id);
+  const el = dialog.querySelector(`[data-trend-for="${CSS.escape(part.id)}"]`);
+  if (!el || list.length < 2) return;
+  const prices = list.map(([, p]) => p);
+  const [first, last] = [prices[0], prices[prices.length - 1]];
+  const min = Math.min(...prices);
+  const max = Math.max(...prices);
+  const w = 300;
+  const x = (i) => (i / (list.length - 1)) * w;
+  const y = (p) => (max === min ? 22 : 40 - ((p - min) / (max - min)) * 36);
+  const diff = last - first;
+  render(el, html`
+    <div class="trend__head">
+      <span>Since ${dayLabel(list[0][0])}: <b class="${diff < 0 ? 'trend__down' : diff > 0 ? 'trend__up' : ''}">${diff === 0 ? 'no change' : `${diff < 0 ? 'down' : 'up'} ${formatTHB(Math.abs(diff))}`}</b></span>
+      <span class="muted">low ${formatTHB(min)} · high ${formatTHB(max)}</span>
+    </div>
+    <svg viewBox="-3 0 ${w + 6} 44" role="img" aria-label="Reference price from ${formatTHB(first)} to ${formatTHB(last)} over ${num(list.length)} changes">
+      <polyline points="${list.map(([, p], i) => `${x(i).toFixed(1)},${y(p).toFixed(1)}`).join(' ')}"></polyline>
+      ${list.map(([d, p], i) => html`<circle cx="${x(i).toFixed(1)}" cy="${y(p).toFixed(1)}" r="2.5"><title>${dayLabel(d)}: ${formatTHB(p)}</title></circle>`)}
+    </svg>`);
+  el.hidden = false;
+}
 
 export function mountPartDetail(dialog, app) {
   let current = null;
@@ -47,6 +74,7 @@ export function mountPartDetail(dialog, app) {
         <div class="drawer__price">
           <span class="mono drawer__amount">${formatTHB(part.refPriceTHB)}</span>
           <span class="muted">${PRICE_NOTE} · updated ${part.priceUpdated}</span>
+          <div class="trend" data-trend-for="${part.id}" hidden></div>
         </div>
 
         <div class="drawer__actions">
@@ -89,10 +117,14 @@ export function mountPartDetail(dialog, app) {
       fill(part, app.store.build);
       dialog.setAttribute('aria-labelledby', 'drawer-title');
       if (!dialog.open) dialog.showModal();
+      fillTrend(dialog, part);
       dialog.querySelector('[data-action="close"]')?.focus();
     },
     refresh(build) {
-      if (dialog.open && current) fill(current, build);
+      if (dialog.open && current) {
+        fill(current, build);
+        fillTrend(dialog, current);
+      }
     },
   };
 }

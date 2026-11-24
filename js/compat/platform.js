@@ -1,5 +1,5 @@
 // CPU, motherboard and memory rules.
-import { issue, unknown, known, ramModules, ramCapacity, plural } from './util.js?v=00a22f4faf';
+import { issue, unknown, known, ramModules, ramCapacity, plural } from './util.js?v=4fbe99bdc0';
 
 // CPU generations each chipset runs on its launch BIOS. Anything else needs a BIOS update,
 // which fails to boot on an old board without BIOS Flashback.
